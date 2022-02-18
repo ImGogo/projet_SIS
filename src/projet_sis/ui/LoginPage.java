@@ -32,8 +32,8 @@ public class LoginPage extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        loginTxt = new javax.swing.JTextField();
+        passTxt = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -50,19 +50,19 @@ public class LoginPage extends javax.swing.JFrame {
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/projet_sis/ui/images/logo.png"))); // NOI18N
 
-        jTextField1.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jTextField1.setText("Identifiant");
-        jTextField1.setToolTipText("Identifiant");
-        jTextField1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(31, 58, 105)));
-        jTextField1.setSelectedTextColor(new java.awt.Color(137, 137, 137));
+        loginTxt.setBackground(new java.awt.Color(255, 255, 255));
+        loginTxt.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        loginTxt.setText("Identifiant");
+        loginTxt.setToolTipText("Identifiant");
+        loginTxt.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(31, 58, 105)));
+        loginTxt.setSelectedTextColor(new java.awt.Color(137, 137, 137));
 
-        jTextField2.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jTextField2.setText("Mot de passe");
-        jTextField2.setToolTipText("Identifiant");
-        jTextField2.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(31, 58, 105)));
-        jTextField2.setSelectedTextColor(new java.awt.Color(137, 137, 137));
+        passTxt.setBackground(new java.awt.Color(255, 255, 255));
+        passTxt.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        passTxt.setText("Mot de passe");
+        passTxt.setToolTipText("Identifiant");
+        passTxt.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(31, 58, 105)));
+        passTxt.setSelectedTextColor(new java.awt.Color(137, 137, 137));
 
         jButton1.setBackground(new java.awt.Color(31, 58, 105));
         jButton1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -87,8 +87,8 @@ public class LoginPage extends javax.swing.JFrame {
                 .addGap(182, 182, 182)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
-                    .addComponent(jTextField2)
-                    .addComponent(jTextField1))
+                    .addComponent(passTxt)
+                    .addComponent(loginTxt))
                 .addContainerGap(174, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -97,15 +97,15 @@ public class LoginPage extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(loginTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(45, 45, 45)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(passTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(42, 42, 42)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(136, Short.MAX_VALUE))
         );
 
-        jTextField1.getAccessibleContext().setAccessibleName("");
+        loginTxt.getAccessibleContext().setAccessibleName("");
 
         javax.swing.GroupLayout loginPanelLayout = new javax.swing.GroupLayout(loginPanel);
         loginPanel.setLayout(loginPanelLayout);
@@ -143,7 +143,31 @@ public class LoginPage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        String text = this.loginTxt.getText();
+        
+        switch(text){
+            case "1":
+                java.awt.EventQueue.invokeLater(new Runnable() {
+                    public void run() {
+                        new SecretaireMedPage().setVisible(true);
+                    }
+                });
+                this.dispose();
+                break;
+            case "2":
+                java.awt.EventQueue.invokeLater(new Runnable() {
+                    public void run() {
+                        new SecretaireAdminPage().setVisible(true);
+                    }
+                });
+                this.dispose();
+                break;
+            case "3":
+                
+                this.dispose();
+                break;
+                
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -186,8 +210,8 @@ public class LoginPage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JPanel loginPanel;
+    private javax.swing.JTextField loginTxt;
+    private javax.swing.JTextField passTxt;
     // End of variables declaration//GEN-END:variables
 }
