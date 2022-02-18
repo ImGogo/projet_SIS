@@ -2,7 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
-package projet_sis;
+package projet_sis.fc;
+import projet_sis.ui.LoginPage;
 
 /**
  *
@@ -14,7 +15,9 @@ public class Projet_SIS {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        LoginPage lp = new LoginPage();
+        lp.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        lp.setVisible(true);
     }
     
 }
