@@ -773,7 +773,8 @@ public class creerDmaPage extends javax.swing.JFrame {
 //        fc.Date dateNaissance = new fc.Date(jourTxt.getText(), moisTxt.getText(), anneeTxt.getText());
 //        fc.Sexe sexe =  fc.Sexe.valueOf( (String) this.sexeCbo.getSelectedItem() );
 //        System.out.println(sexe.getVal());
-          Popup.createPopupCreationPatientReussite();
+
+          Popup.createPopupValider();
 //        try {
 //            ConnectBD.insertPatient(ipp, nom, prenom, dateNaissance);
 //        } catch (SQLException ex) {

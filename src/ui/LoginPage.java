@@ -5,24 +5,31 @@
  */
 package ui;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Objects;
+import java.awt.Color;
+import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+import javax.swing.SwingWorker;
+import ui.Popup;
+import ui.PopupLoading;
 
 /**
  *
  * @author Go
  */
 public class LoginPage extends javax.swing.JFrame {
-
+    
     /**
      * Creates new form LoginPage
      */
     public LoginPage() {
         initComponents();
         setLocationRelativeTo(null);
-       
+        jLabel1.requestFocus();
+        passTxt.setText("Mot de passe");
+        passTxt.setEchoChar((char)0);
+        passTxt.setForeground(new Color(187, 187, 187));
         
     }
     
@@ -49,8 +56,8 @@ public class LoginPage extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         loginTxt = new javax.swing.JTextField();
-        passTxt = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        passTxt = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -58,27 +65,26 @@ public class LoginPage extends javax.swing.JFrame {
         loginPanel.setBackground(new java.awt.Color(31, 58, 105));
         loginPanel.setPreferredSize(new java.awt.Dimension(1280, 720));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ui/images/login_left.png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon("D:\\users\\gmultari\\Desktop\\projet_SIS\\src\\ui\\images\\login_left.png")); // NOI18N
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ui/images/logo.png"))); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon("D:\\users\\gmultari\\Desktop\\projet_SIS\\src\\ui\\images\\logo.png")); // NOI18N
 
         loginTxt.setBackground(new java.awt.Color(255, 255, 255));
-        loginTxt.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        loginTxt.setFont(new java.awt.Font("Ebrima", 1, 15)); // NOI18N
+        loginTxt.setForeground(new java.awt.Color(187, 185, 187));
         loginTxt.setText("Identifiant");
         loginTxt.setToolTipText("Identifiant");
-        loginTxt.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(31, 58, 105)));
+        loginTxt.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(31, 58, 105)));
         loginTxt.setSelectedTextColor(new java.awt.Color(137, 137, 137));
         loginTxt.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 loginTxtFocusGained(evt);
             }
-        });
-        loginTxt.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                loginTxtMouseClicked(evt);
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                loginTxtFocusLost(evt);
             }
         });
         loginTxt.addActionListener(new java.awt.event.ActionListener() {
@@ -86,16 +92,9 @@ public class LoginPage extends javax.swing.JFrame {
                 loginTxtActionPerformed(evt);
             }
         });
-
-        passTxt.setBackground(new java.awt.Color(255, 255, 255));
-        passTxt.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        passTxt.setText("Mot de passe");
-        passTxt.setToolTipText("Identifiant");
-        passTxt.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(31, 58, 105)));
-        passTxt.setSelectedTextColor(new java.awt.Color(137, 137, 137));
-        passTxt.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                passTxtMouseClicked(evt);
+        loginTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                loginTxtKeyTyped(evt);
             }
         });
 
@@ -107,6 +106,26 @@ public class LoginPage extends javax.swing.JFrame {
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
+            }
+        });
+
+        passTxt.setBackground(new java.awt.Color(255, 255, 255));
+        passTxt.setFont(new java.awt.Font("Dialog", 1, 15)); // NOI18N
+        passTxt.setForeground(new java.awt.Color(187, 185, 187));
+        passTxt.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(31, 58, 105)));
+        passTxt.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        passTxt.setPreferredSize(new java.awt.Dimension(74, 22));
+        passTxt.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                passTxtFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                passTxtFocusLost(evt);
+            }
+        });
+        passTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passTxtActionPerformed(evt);
             }
         });
 
@@ -122,8 +141,8 @@ public class LoginPage extends javax.swing.JFrame {
                 .addGap(182, 182, 182)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
-                    .addComponent(passTxt)
-                    .addComponent(loginTxt))
+                    .addComponent(loginTxt)
+                    .addComponent(passTxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(174, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -133,9 +152,9 @@ public class LoginPage extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(loginTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(45, 45, 45)
-                .addComponent(passTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(42, 42, 42)
+                .addComponent(passTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(51, 51, 51)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -177,54 +196,130 @@ public class LoginPage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
         
-    private void initIcons(){
-        
+    private void setPlaceHolder(JTextField txt, String text){
+        txt.setForeground(new Color(187, 187, 187));
+        txt.setText(text);
     }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String text = this.loginTxt.getText();
+        String id = this.loginTxt.getText();
+        String pass = String.valueOf(this.passTxt.getPassword());
         
-        switch(text){
-            case "1":
-                java.awt.EventQueue.invokeLater(new Runnable() {
-                    public void run() {
-                        new SecretaireMedPage().setVisible(true);
-                    }
-                });
-                this.dispose();
-                break;
-            case "2":
-                java.awt.EventQueue.invokeLater(new Runnable() {
-                    public void run() {
-                        new SecretaireAdminPage().setVisible(true);
-                    }
-                });
-                this.dispose();
-                break;
-            case "3":
-                this.dispose();
-                break;
-                
+        if(id.length() > 2){
+            startRequestThread(id, pass);
+        } else {
+            Popup.createPopupMdpIncorrect();
         }
+//        switch(text){
+//            case "1":
+//                java.awt.EventQueue.invokeLater(new Runnable() {
+//                    public void run() {
+//                        new SecretaireMedPage().setVisible(true);
+//                    }
+//                });
+//                this.dispose();
+//                break;
+//            case "2":
+//                java.awt.EventQueue.invokeLater(new Runnable() {
+//                    public void run() {
+//                        new SecretaireAdminPage().setVisible(true);
+//                    }
+//                });
+//                this.dispose();
+//                break;
+//            case "3":
+//                this.dispose();
+//                break;
+//                
+//        }
     }//GEN-LAST:event_jButton1ActionPerformed
+    
+    private void startRequestThread(String id, String pass){
+        JFrame popup = new PopupLoading();
+        SwingWorker sw = new SwingWorker(){
+            @Override
+            protected String doInBackground() throws Exception 
+            {
+                jButton1.setEnabled(false);
+                popup.setVisible(true);
+                String res;
+                try{
+                    if(bdd.ConnectBD.login(id, pass)){
+                        
+                    } else {
+                        Popup.createPopupMdpIncorrect();
+                    }
+                } catch (Exception e){
+                    Popup.createPopupErreurConnexion();
+                }
 
+                return null;
+            }
+  
+  
+            @Override
+            protected void done() 
+            {
+                jButton1.setEnabled(true);
+                popup.setVisible(false);
+            }
+        };
+          
+        // executes the swingworker on worker thread
+        sw.execute(); 
+        
+        
+    }
     private void loginTxtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_loginTxtFocusGained
-//        if(loginTxt.getText().equals("Identifiant"))
-//            loginTxt.setText("");
+        
+        if(loginTxt.getText().equals("Identifiant")){
+            loginTxt.setText("");
+            loginTxt.setForeground(new Color(137, 137, 137));
+        }
     }//GEN-LAST:event_loginTxtFocusGained
 
     private void loginTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginTxtActionPerformed
-        // TODO add your handling code here:
+        jButton1.doClick();
     }//GEN-LAST:event_loginTxtActionPerformed
 
-    private void loginTxtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginTxtMouseClicked
-        if(loginTxt.getText().equals("Identifiant"))
-            loginTxt.setText("");
-    }//GEN-LAST:event_loginTxtMouseClicked
+    private void loginTxtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_loginTxtFocusLost
+        if(this.loginTxt.getText().equals("")){
+            this.loginTxt.setForeground(new Color(187, 187, 187));
+            this.loginTxt.setText("Identifiant");
+        }
+    }//GEN-LAST:event_loginTxtFocusLost
 
-    private void passTxtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_passTxtMouseClicked
-        if(passTxt.getText().equals("Mot de passe"))
+    private void passTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passTxtActionPerformed
+        jButton1.doClick();
+    }//GEN-LAST:event_passTxtActionPerformed
+
+    private void passTxtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passTxtFocusLost
+    String password = String.valueOf(passTxt.getPassword());
+    if(password.toLowerCase().equals("") )
+    {
+        passTxt.setText("Mot de passe");
+        passTxt.setEchoChar((char)0);
+        passTxt.setForeground(new Color(187, 187, 187));
+    }
+    }//GEN-LAST:event_passTxtFocusLost
+
+    private void passTxtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passTxtFocusGained
+     
+        passTxt.setEchoChar('\u26AB');
+        String password = String.valueOf(passTxt.getPassword());
+
+        if(password.toLowerCase().equals("mot de passe"))
+        {
             passTxt.setText("");
-    }//GEN-LAST:event_passTxtMouseClicked
+            passTxt.setForeground(new Color(137, 137, 137));
+        }
+    }//GEN-LAST:event_passTxtFocusGained
+
+    private void loginTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_loginTxtKeyTyped
+        char c = evt.getKeyChar();
+        if ( ((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE)) {
+             evt.consume();  // ignorer l'événement
+        }
+    }//GEN-LAST:event_loginTxtKeyTyped
 
     /**
      * @param args the command line arguments
@@ -268,6 +363,6 @@ public class LoginPage extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel loginPanel;
     private javax.swing.JTextField loginTxt;
-    private javax.swing.JTextField passTxt;
+    private javax.swing.JPasswordField passTxt;
     // End of variables declaration//GEN-END:variables
 }

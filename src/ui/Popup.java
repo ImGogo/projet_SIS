@@ -5,12 +5,16 @@
  */
 package ui;
 
+import ui.PopupCreationPatientReussite;
+import ui.PopupValider;
+import ui.PopupConnexionImpossible;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -25,48 +29,33 @@ import javax.swing.JPanel;
 public class Popup {
     
     public static void createPopupCreationPatientReussite(){
-        
-        JDialog dialog = new JDialog();
-        JPanel pane = new JPanel(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        
-        pane.setBackground(new Color(255, 255, 255));
-        JLabel msgLbl = new JLabel("Patient ajouté avec succès");
-        
-        c.insets = new Insets(1, 1, 1, 1); 
-        
-        c.gridx = 0;
-        c.gridy = 0;
-        
-        pane.add(msgLbl, c);
-        
-        JButton okBtn = new JButton("Valider");
-        
-        okBtn.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                dialog.dispose();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new PopupCreationPatientReussite().setVisible(true);
             }
         });
-        
-        okBtn.setOpaque(true);
-        okBtn.setBackground(new Color(31,58,105));
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 1;
-        
-        pane.add(okBtn, c);
-        
-        
-        
-        dialog.add(pane);
-        dialog.pack();
-        
-        dialog.setVisible(true);
-        dialog.setLocationRelativeTo(null);
-        dialog.setUndecorated(true);
-        
-//        dialog.setUndecorated(true);
-//        JOptionPane.showMessageDialog(null, pane);
+    }
+    
+    public static void createPopupValider(){
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new PopupValider().setVisible(true);
+            }
+        });
+    }
+    
+    public static void createPopupErreurConnexion(){
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new PopupConnexionImpossible().setVisible(true);
+            }
+        });
+    }
+    public static void createPopupMdpIncorrect(){
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new PopupMdpIncorrect().setVisible(true);
+            }
+        });
     }
 }

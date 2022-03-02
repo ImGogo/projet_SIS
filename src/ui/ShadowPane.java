@@ -5,6 +5,7 @@
  */
 package ui;
 
+import com.sun.awt.AWTUtilities;
 import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -13,6 +14,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.RoundRectangle2D;
 
 /**
  *
@@ -22,9 +24,11 @@ public class ShadowPane extends JPanel {
 
   public ShadowPane() {
     setLayout(new BorderLayout());
-    setOpaque(false);
+//    setOpaque(false);
     setBackground(Color.BLACK);
-    setBorder(new EmptyBorder(0, 0, 10, 10));
+    setBorder(new EmptyBorder(0, 0, 15, 15));
+    this.setBackground(new Color(1.0f,1.0f,1.0f,0.0f));
+    
   }
 
 //  @Override
