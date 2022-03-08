@@ -5,38 +5,58 @@
  */
 package ui;
 
+import bdd.ConnectBD;
+import fc.Patient;
 import fc.Personnel;
 import java.awt.Color;
 import java.awt.MouseInfo;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.geom.RoundRectangle2D;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JTable;
 import javax.swing.KeyStroke;
+import javax.swing.SwingWorker;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableModel;
 
 /**
  *
  * @author Go
  */
-public class SecretaireMedPage extends javax.swing.JFrame {
+public class PraticienPage extends javax.swing.JFrame {
         
     /**
      * Creates new form SecretaireAdminPage
      */
-    public SecretaireMedPage() {
+    public PraticienPage() {
         initComponents();
         setLocationRelativeTo(null);
+        table.setBorder(null);
+        DefaultTableCellRenderer head_render = new DefaultTableCellRenderer(); 
+        
+        head_render.setBackground(new Color(255,255,255));
+        head_render.setForeground(new Color(31,58,105));
+        table.getTableHeader().setDefaultRenderer(head_render);
+        table.setFillsViewportHeight(true);
+        table.setDefaultEditor(Object.class, null);
+        
+        initTable();
     }
-    
-    public SecretaireMedPage(Personnel p) {
-        initComponents();
-        setLocationRelativeTo(null);
-        this.nameLb.setText(p.getNom().toUpperCase() + " " + p.getPrenom());
-    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -47,7 +67,6 @@ public class SecretaireMedPage extends javax.swing.JFrame {
     private void initComponents() {
 
         HomePanel = new javax.swing.JPanel();
-        createDmaBtn = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         profilePictLb = new javax.swing.JButton();
@@ -55,26 +74,17 @@ public class SecretaireMedPage extends javax.swing.JFrame {
         nameLb = new javax.swing.JLabel();
         disconnectBtn = new javax.swing.JButton();
         portalLb = new javax.swing.JLabel();
-        searchDmaBtn = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        table = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
         setResizable(false);
 
         HomePanel.setBackground(new java.awt.Color(255, 255, 255));
-
-        createDmaBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ui/images/round_creer_DMA.png"))); // NOI18N
-        createDmaBtn.setBorder(null);
-        createDmaBtn.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                createDmaBtnMouseEntered(evt);
-            }
-        });
-        createDmaBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createDmaBtnActionPerformed(evt);
-            }
-        });
+        HomePanel.setPreferredSize(new java.awt.Dimension(1280, 720));
 
         jPanel1.setBackground(new java.awt.Color(31, 58, 105));
 
@@ -150,14 +160,14 @@ public class SecretaireMedPage extends javax.swing.JFrame {
 
         portalLb.setFont(new java.awt.Font("Ebrima", 1, 24)); // NOI18N
         portalLb.setForeground(new java.awt.Color(255, 255, 255));
-        portalLb.setText("PORTAIL SECRETAIRE MEDICAL");
+        portalLb.setText("PORTAIL PRATICIEN HOSPITALIER");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
+                .addGap(29, 29, 29)
                 .addComponent(portalLb)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -166,92 +176,161 @@ public class SecretaireMedPage extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(38, 38, 38)
+                .addGap(35, 35, 35)
                 .addComponent(portalLb))
         );
 
-        searchDmaBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ui/images/round_cherch_DMA.png"))); // NOI18N
-        searchDmaBtn.setBorder(null);
-        searchDmaBtn.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                searchDmaBtnMouseEntered(evt);
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 58, 105), 2, true));
+
+        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel1.setFont(new java.awt.Font("Ebrima", 1, 26)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(31, 58, 105));
+        jLabel1.setText("Liste des patients du service");
+
+        jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
+        jScrollPane1.setBorder(null);
+        jScrollPane1.setOpaque(false);
+
+        table.setBackground(new java.awt.Color(255, 255, 255));
+        table.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        table.setForeground(new java.awt.Color(116, 116, 116));
+        table.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"MARCAL", "Martin", "01-02-1965", null, "22599114"},
+                {"GULTARI", "Alexis", "03-12-1989", null, "22478247"}
+            },
+            new String [] {
+                "Nom", "Prénom", "Date de Naissance", "Localisation", "IPP"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
-        searchDmaBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchDmaBtnActionPerformed(evt);
+        table.setGridColor(new java.awt.Color(255, 255, 255));
+        table.setRowHeight(40);
+        table.setRowMargin(5);
+        table.setSelectionBackground(new java.awt.Color(31, 58, 105));
+        table.setShowHorizontalLines(false);
+        table.setShowVerticalLines(false);
+        table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableMouseClicked(evt);
             }
         });
+        jScrollPane1.setViewportView(table);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(76, 76, 76)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 922, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(40, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(73, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout HomePanelLayout = new javax.swing.GroupLayout(HomePanel);
         HomePanel.setLayout(HomePanelLayout);
         HomePanelLayout.setHorizontalGroup(
             HomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(HomePanelLayout.createSequentialGroup()
-                .addContainerGap(324, Short.MAX_VALUE)
-                .addComponent(createDmaBtn)
-                .addGap(208, 208, 208)
-                .addComponent(searchDmaBtn)
-                .addGap(293, 293, 293))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, HomePanelLayout.createSequentialGroup()
+                .addContainerGap(61, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(65, 65, 65))
         );
         HomePanelLayout.setVerticalGroup(
             HomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(HomePanelLayout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(164, 164, 164)
-                .addGroup(HomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(createDmaBtn)
-                    .addComponent(searchDmaBtn))
-                .addContainerGap(215, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(HomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(HomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1128, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(HomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(HomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 628, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
+    public void initTable(){
+        JFrame popup = new PopupLoading();
+        ArrayList<Patient> listePatients = new ArrayList<>();
+        
+        SwingWorker sw = new SwingWorker(){
+            @Override
+            protected String doInBackground() throws Exception 
+            {
+                String headers[] = {"Nom", "Prénom", "Date de naissance", "localisation", "IPP"};
+                DefaultTableModel model = new DefaultTableModel(null, headers);
+                popup.setVisible(true);
+                try{
+                    for(Patient p : ConnectBD.getListePatientFromService("Cardiologie")){
+                        model.addRow(p.getPatientForPatientList());
+                        table.setModel(model);
+                    }
+                } catch (Exception e){
+                    Popup.createPopupErreurConnexion();
+                }
+                return "";
+            }
+  
+            @Override
+            protected void done() 
+            {
+                try {
+                    String id = get().toString();
+                    
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ExecutionException ex) {
+                    Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                popup.setVisible(false);
+            }
+        };
+          
+        // executes the swingworker on worker thread
+        sw.execute(); 
+    }
+    
     private void profilePictLbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profilePictLbActionPerformed
-            
+
         
     }//GEN-LAST:event_profilePictLbActionPerformed
 
     private void profilePictLbMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_profilePictLbMouseEntered
         this.profilePictLb.setBackground(Color.yellow);
     }//GEN-LAST:event_profilePictLbMouseEntered
-
-    private void createDmaBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createDmaBtnMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_createDmaBtnMouseEntered
-
-    private void createDmaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createDmaBtnActionPerformed
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new creerDmPage().setVisible(true);
-            }
-        });
-    }//GEN-LAST:event_createDmaBtnActionPerformed
-
-    private void searchDmaBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchDmaBtnMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_searchDmaBtnMouseEntered
-
-    private void searchDmaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchDmaBtnActionPerformed
-       java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new searchDmaPage().setVisible(true);
-            }
-        });
-    }//GEN-LAST:event_searchDmaBtnActionPerformed
 
     private void disconnectBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_disconnectBtnMouseEntered
         
@@ -265,6 +344,15 @@ public class SecretaireMedPage extends javax.swing.JFrame {
         });
         this.dispose();
     }//GEN-LAST:event_disconnectBtnActionPerformed
+
+    private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
+        if(evt.getClickCount() == 2){
+            JTable target = (JTable) evt.getSource();
+            int row = target.getSelectedRow();
+            int col = target.getSelectedColumn();
+            JOptionPane.showMessageDialog(null, table.getValueAt(row, col));
+        }
+    }//GEN-LAST:event_tableMouseClicked
 
     /**
      * @param args the command line arguments
@@ -283,35 +371,67 @@ public class SecretaireMedPage extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SecretaireMedPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PraticienPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SecretaireMedPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PraticienPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SecretaireMedPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PraticienPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SecretaireMedPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PraticienPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SecretaireMedPage().setVisible(true);
+                new PraticienPage().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel HomePanel;
-    private javax.swing.JButton createDmaBtn;
     private javax.swing.JButton disconnectBtn;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel nameLb;
     private javax.swing.JLabel portalLb;
     private javax.swing.JButton profilePictLb;
-    private javax.swing.JButton searchDmaBtn;
     private javax.swing.JLabel serviceLb;
+    private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 }

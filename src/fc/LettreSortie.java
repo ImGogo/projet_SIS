@@ -5,7 +5,7 @@
  */
 package fc;
 
-import fc.Patient;
+import fc.Patient_2;
 import java.util.Date;
 
 /**
@@ -14,12 +14,12 @@ import java.util.Date;
  */
 public class LettreSortie {
     Medecin medecin;
-    Patient patient;
+    Patient_2 patient;
     Date date;
     Heure heure;
     String texte;
 
-    public LettreSortie(Medecin medecin, Patient patient, Date date, Heure heure, String texte) {
+    public LettreSortie(Medecin medecin, Patient_2 patient, Date date, Heure heure, String texte) {
         this.medecin = medecin;
         this.patient = patient;
         this.date = date;
@@ -31,7 +31,7 @@ public class LettreSortie {
         return medecin;
     }
 
-    public Patient getPatient() {
+    public Patient_2 getPatient() {
         return patient;
     }
 

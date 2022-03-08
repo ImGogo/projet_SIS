@@ -6,6 +6,11 @@
 package bdd;
 
 import com.mysql.jdbc.CommunicationsException;
+import fc.Consultation;
+import fc.Date;
+import fc.Patient;
+import fc.Patient_2;
+import fc.Personnel;
 import fc.TypePersonnel;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,6 +19,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.SwingWorker;
 
 /**
@@ -53,24 +60,73 @@ public class ConnectBD {
         }
     }
     
-    public static boolean login(String id, String inPass) throws Exception {
+    public static Personnel login(String id, String inPass) throws Exception {
         Connection con = getConnectionToDB();
-        Statement st = null;
-        ResultSet rs = null;
-        boolean connected = false;
+        Statement st;
+        ResultSet rs;
+        Personnel personnel = null;
+        
         if(id.equals("Identifiant") || id.equals("") || id.length() < 3){
-            return false;
+            return null;
         }
-        String query = "select mdp from " + getTableName(id) + " where id=" + id;
+        String query = "select mdp, nom, prenom from " + getTableName(id) + " where id=" + id;
         st = con.createStatement();
         rs = st.executeQuery(query);
         while (rs.next()) {
             String dbPass = rs.getString("mdp");
-            boolean isEqual = fc.PasswordHandler.isEqual(inPass, dbPass);
-            connected = isEqual;
+//            boolean isEqual = fc.PasswordHandler.isEqual(inPass, dbPass);
+            if(fc.PasswordHandler.isEqual(inPass, dbPass))
+                personnel = new Personnel(rs.getString("nom"), rs.getString("prenom"));
         }
       
-        return connected;
+        return personnel;
+    }
+    
+    public static ArrayList<Patient> getListePatientFromService(String service) throws Exception{
+        ArrayList<Patient> listePatients = new ArrayList<>();
+        Connection con = getConnectionToDB();
+        Statement st;
+        ResultSet rs;
+        
+        String query = 
+        "SELECT patient.IPP, nom, prenom, dateNaissance " + 
+        "FROM localisation INNER JOIN patient ON patient.IPP = localisation.IPP " +
+        "WHERE service = \"" + service + "\";";
+        
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+        while (rs.next()) {
+            String ipp = rs.getString("patient.ipp");
+            String nom = rs.getString("nom");
+            String prenom = rs.getString("prenom");
+            java.sql.Date dateNaissance = rs.getDate("dateNaissance");
+            listePatients.add( new Patient(ipp, nom, prenom, new fc.Date(dateNaissance)));
+        }
+        
+        return listePatients;
+    }
+    
+    public static ArrayList<Consultation> getListeConsultationFromIpp(String ipp) throws Exception{
+        ArrayList<Consultation> listeConsultation = new ArrayList<>();
+        Connection con = getConnectionToDB();
+        Statement st;
+        ResultSet rs;
+        
+        String query = 
+        "SELECT numeroSejour, date, service " + 
+        "FROM consultation " +
+        "WHERE ipp = \"" + ipp + "\";";
+        
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+        while (rs.next()) {
+            int numSejour = rs.getInt("numeroSejour");
+            Date date = new Date( rs.getDate("date") );
+            String service = rs.getString("service");
+            listeConsultation.add( new Consultation(Integer.toString(numSejour), ipp, date, service));
+        }
+        
+        return listeConsultation;
     }
     
     private static String getTableName(String id){

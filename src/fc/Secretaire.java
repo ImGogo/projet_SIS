@@ -9,12 +9,10 @@ package fc;
  *
  * @author Go
  */
-public class Secretaire {
-    String nom, prenom;
+public class Secretaire extends Personnel{
 
     public Secretaire(String nom, String prenom) {
-        this.nom = nom;
-        this.prenom = prenom;
+        super(nom, prenom);
     }
 
     @Override

@@ -5,14 +5,14 @@
  */
 package fc;
 
-import fc.Patient;
+import fc.Patient_2;
 
 /**
  *
  * @author Go
  */
 public class Localisation {
-    Patient patient;
+    Patient_2 patient;
     int etage;
     int numChambre;
     CoteLit coteLit;

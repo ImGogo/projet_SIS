@@ -20,14 +20,11 @@ public class TestReq {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-//        bdd.ConnectBD.insertPatient(2341353 , "toto", "dupont", new fc.Date(19, 3, 1994), fc.Sexe.Homme);
-//        System.out.println(fc.PasswordHandler.encryptPass("toto"));
         try {
-            System.out.println( bdd.ConnectBD.login("011", "toto") );
+            System.out.println(ConnectBD.getListePatientFromService("Cardiologie"));
         } catch (Exception ex) {
-            Logger.getLogger(TestReq.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TestReq.class.getName()).log(Level.FINE, null, ex);
         }
-//        System.out.println("011".substring(0, 2));
     }
     
 }

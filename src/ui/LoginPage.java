@@ -5,8 +5,12 @@
  */
 package ui;
 
+import fc.Personnel;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -20,6 +24,7 @@ import ui.PopupLoading;
  */
 public class LoginPage extends javax.swing.JFrame {
     
+    Personnel tmpPersonnel = null;
     /**
      * Creates new form LoginPage
      */
@@ -65,12 +70,12 @@ public class LoginPage extends javax.swing.JFrame {
         loginPanel.setBackground(new java.awt.Color(31, 58, 105));
         loginPanel.setPreferredSize(new java.awt.Dimension(1280, 720));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("D:\\users\\gmultari\\Desktop\\projet_SIS\\src\\ui\\images\\login_left.png")); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ui/images/login_left.png"))); // NOI18N
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
-        jLabel3.setIcon(new javax.swing.ImageIcon("D:\\users\\gmultari\\Desktop\\projet_SIS\\src\\ui\\images\\logo.png")); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ui/images/logo.png"))); // NOI18N
 
         loginTxt.setBackground(new java.awt.Color(255, 255, 255));
         loginTxt.setFont(new java.awt.Font("Ebrima", 1, 15)); // NOI18N
@@ -209,56 +214,45 @@ public class LoginPage extends javax.swing.JFrame {
         } else {
             Popup.createPopupMdpIncorrect();
         }
-//        switch(text){
-//            case "1":
-//                java.awt.EventQueue.invokeLater(new Runnable() {
-//                    public void run() {
-//                        new SecretaireMedPage().setVisible(true);
-//                    }
-//                });
-//                this.dispose();
-//                break;
-//            case "2":
-//                java.awt.EventQueue.invokeLater(new Runnable() {
-//                    public void run() {
-//                        new SecretaireAdminPage().setVisible(true);
-//                    }
-//                });
-//                this.dispose();
-//                break;
-//            case "3":
-//                this.dispose();
-//                break;
-//                
-//        }
     }//GEN-LAST:event_jButton1ActionPerformed
     
     private void startRequestThread(String id, String pass){
         JFrame popup = new PopupLoading();
+        String type;
         SwingWorker sw = new SwingWorker(){
             @Override
             protected String doInBackground() throws Exception 
             {
                 jButton1.setEnabled(false);
                 popup.setVisible(true);
-                String res;
                 try{
-                    if(bdd.ConnectBD.login(id, pass)){
-                        
+                    Personnel personnel = bdd.ConnectBD.login(id, pass);
+                    if(personnel != null){
+                        tmpPersonnel = personnel;
+                        return id.substring(0, 2);
                     } else {
                         Popup.createPopupMdpIncorrect();
                     }
                 } catch (Exception e){
                     Popup.createPopupErreurConnexion();
                 }
-
-                return null;
+                return "";
             }
-  
   
             @Override
             protected void done() 
             {
+                try {
+                    String id = get().toString();
+                    if(id != ""){
+                        createHomePage(id);
+                    }
+                    
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ExecutionException ex) {
+                    Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 jButton1.setEnabled(true);
                 popup.setVisible(false);
             }
@@ -266,8 +260,15 @@ public class LoginPage extends javax.swing.JFrame {
           
         // executes the swingworker on worker thread
         sw.execute(); 
-        
-        
+    }
+    
+    private void createHomePage(String id){
+        switch(id){
+            case "01": new SecretaireMedPage(tmpPersonnel).setVisible(true); LoginPage.this.dispose(); break;
+            case "02": new SecretaireAdminPage().setVisible(true); LoginPage.this.dispose(); break;
+            case "03": new PraticienPage().setVisible(true); LoginPage.this.dispose(); break;
+            default: break;
+        }
     }
     private void loginTxtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_loginTxtFocusGained
         
