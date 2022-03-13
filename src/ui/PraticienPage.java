@@ -290,7 +290,7 @@ public class PraticienPage extends javax.swing.JFrame {
             @Override
             protected String doInBackground() throws Exception 
             {
-                String headers[] = {"Nom", "Prénom", "Date de naissance", "localisation", "IPP"};
+                String headers[] = {"Nom", "Prénom", "Date de naissance", "Localisation", "IPP"};
                 DefaultTableModel model = new DefaultTableModel(null, headers);
                 popup.setVisible(true);
                 try{

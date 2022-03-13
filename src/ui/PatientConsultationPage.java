@@ -40,25 +40,18 @@ import javax.swing.table.TableModel;
  *
  * @author Go
  */
-public class consultationsPage extends javax.swing.JFrame {
+public class PatientConsultationPage extends javax.swing.JFrame {
         
     /**
      * Creates new form SecretaireAdminPage
      */
-    public consultationsPage() {
+    public PatientConsultationPage() {
         initComponents();
         setLocationRelativeTo(null);
-        table.setBorder(null);
-        DefaultTableCellRenderer head_render = new DefaultTableCellRenderer(); 
-        
-        head_render.setBackground(new Color(255,255,255));
-        head_render.setForeground(new Color(31,58,105));
-        table.getTableHeader().setDefaultRenderer(head_render);
-        table.setFillsViewportHeight(true);
-        table.setDefaultEditor(Object.class, null);
         
         
-        setRowColors();
+        
+        setTableLook();
         initTable();
     }
 
@@ -79,6 +72,7 @@ public class consultationsPage extends javax.swing.JFrame {
         nameLb = new javax.swing.JLabel();
         disconnectBtn = new javax.swing.JButton();
         portalLb = new javax.swing.JLabel();
+        profilePictLb1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
@@ -178,16 +172,31 @@ public class consultationsPage extends javax.swing.JFrame {
 
         portalLb.setFont(new java.awt.Font("Ebrima", 1, 24)); // NOI18N
         portalLb.setForeground(new java.awt.Color(255, 255, 255));
-        portalLb.setText("PORTAIL PRATICIEN HOSPITALIER");
+        portalLb.setText("CONSULTATION PATIENT");
+
+        profilePictLb1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ui/images/left_arrow.png"))); // NOI18N
+        profilePictLb1.setBorder(null);
+        profilePictLb1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                profilePictLb1MouseEntered(evt);
+            }
+        });
+        profilePictLb1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                profilePictLb1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(29, 29, 29)
+                .addGap(34, 34, 34)
+                .addComponent(profilePictLb1)
+                .addGap(30, 30, 30)
                 .addComponent(portalLb)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 360, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 369, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -195,7 +204,11 @@ public class consultationsPage extends javax.swing.JFrame {
             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(35, 35, 35)
-                .addComponent(portalLb))
+                .addComponent(profilePictLb1))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(portalLb)
+                .addGap(40, 40, 40))
         );
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
@@ -210,10 +223,7 @@ public class consultationsPage extends javax.swing.JFrame {
         table.setForeground(new java.awt.Color(116, 116, 116));
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"01/02/2121", "22:22", "Cardiologie", "1"},
-                {"02/03/2022", "12:37", "Geriatrie", "2"},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Date", "Heure", "Service", "N° séjour"
@@ -261,14 +271,13 @@ public class consultationsPage extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 58, 105), 2, true));
 
         jLabel1.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(31, 58, 105));
@@ -382,7 +391,7 @@ public class consultationsPage extends javax.swing.JFrame {
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -412,8 +421,8 @@ public class consultationsPage extends javax.swing.JFrame {
                 try{
                     for(Consultation c : ConnectBD.getListeConsultationFromIpp("123456")){
                         model.addRow(c.getConsultationForConsultationListe());
-                        table.setModel(model);
                     }
+                    table.setModel(model);
                 } catch (Exception e){
                     Popup.createPopupErreurConnexion();
                 }
@@ -439,9 +448,18 @@ public class consultationsPage extends javax.swing.JFrame {
         sw.execute(); 
     }
     
-    public void setRowColors(){
+    public void setTableLook(){
+        
+        table.setBorder(null);
+        DefaultTableCellRenderer head_render = new DefaultTableCellRenderer(); 
+        
+        head_render.setBackground(new Color(255,255,255));
+        head_render.setForeground(new Color(31,58,105));
+        table.getTableHeader().setDefaultRenderer(head_render);
+        table.setFillsViewportHeight(true);
+        table.setDefaultEditor(Object.class, null);
+        
         table.setDefaultRenderer(Object.class, new TableCellRenderer(){
-            
             private DefaultTableCellRenderer DEFAULT_RENDERER =  new DefaultTableCellRenderer();
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -492,6 +510,14 @@ public class consultationsPage extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tableMouseClicked
 
+    private void profilePictLb1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_profilePictLb1MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_profilePictLb1MouseEntered
+
+    private void profilePictLb1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profilePictLb1ActionPerformed
+        dispose();
+    }//GEN-LAST:event_profilePictLb1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -509,14 +535,78 @@ public class consultationsPage extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(consultationsPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PatientConsultationPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(consultationsPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PatientConsultationPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(consultationsPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PatientConsultationPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(consultationsPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PatientConsultationPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -585,7 +675,7 @@ public class consultationsPage extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new consultationsPage().setVisible(true);
+                new PatientConsultationPage().setVisible(true);
             }
         });
     }
@@ -612,6 +702,7 @@ public class consultationsPage extends javax.swing.JFrame {
     private javax.swing.JLabel nameLb;
     private javax.swing.JLabel portalLb;
     private javax.swing.JButton profilePictLb;
+    private javax.swing.JButton profilePictLb1;
     private javax.swing.JLabel serviceLb;
     private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
