@@ -21,6 +21,8 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 
 /**
@@ -78,7 +80,9 @@ public class ConnectBD {
             if(fc.PasswordHandler.isEqual(inPass, dbPass))
                 personnel = new Personnel(rs.getString("nom"), rs.getString("prenom"));
         }
-      
+        
+        terminateConnexion(con, st, rs);
+        
         return personnel;
     }
     
@@ -103,6 +107,8 @@ public class ConnectBD {
             listePatients.add( new Patient(ipp, nom, prenom, new fc.Date(dateNaissance)));
         }
         
+        terminateConnexion(con, st, rs);
+        
         return listePatients;
     }
     
@@ -126,7 +132,29 @@ public class ConnectBD {
             listeConsultation.add( new Consultation(Integer.toString(numSejour), ipp, date, service));
         }
         
+        terminateConnexion(con, st, rs);
+        
         return listeConsultation;
+    }
+    
+    public static Consultation getConsultationFromNum(String numSejour) throws Exception{
+        Connection con = getConnectionToDB();
+        Statement st;
+        ResultSet rs;
+        
+        String query = 
+        "SELECT ";
+        return null;
+    }
+    
+    private static void terminateConnexion(Connection con, Statement st, ResultSet rs){
+        try {
+            con.close();
+            st.close();
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(ConnectBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private static String getTableName(String id){

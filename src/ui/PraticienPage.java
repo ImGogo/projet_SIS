@@ -296,8 +296,8 @@ public class PraticienPage extends javax.swing.JFrame {
                 try{
                     for(Patient p : ConnectBD.getListePatientFromService("Cardiologie")){
                         model.addRow(p.getPatientForPatientList());
-                        table.setModel(model);
                     }
+                    table.setModel(model);
                 } catch (Exception e){
                     Popup.createPopupErreurConnexion();
                 }
