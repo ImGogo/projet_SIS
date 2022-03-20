@@ -62,10 +62,12 @@ public class Patient {
     }
     
     public String[] getPatientForPatientList(){
-        String [] s = {nom, prenom, dateDeNaissance.toString(), localisation.toString(), ipp};
-        return s;
+        return new String[] {nom, prenom, dateDeNaissance.toString(), localisation.toString(), ipp};
     }
-
+    
+    public String[] getPatientForConsultationList(){
+        return new String[] {nom, prenom, dateDeNaissance.toString(), dateDeNaissance.getHeureMinute(), ipp};
+    }
     @Override
     public String toString() {
         return "Patient{" + "ipp=" + ipp + ", nom=" + nom + ", prenom=" + prenom + ", dateDeNaissance=" + dateDeNaissance + '}';

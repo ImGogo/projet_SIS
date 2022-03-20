@@ -6,6 +6,8 @@
 package fc;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
 /**
@@ -14,12 +16,25 @@ import java.util.Calendar;
  */
 public class Date {
     int jour, mois , annee;
-    
+    int heure, minute;
     public Date(java.sql.Date date){
+        
         LocalDate localDate = date.toLocalDate();
         jour = localDate.getDayOfMonth();
         mois = localDate.getMonthValue();
         annee = localDate.getYear();
+        
+    }
+    
+    public Date(java.sql.Timestamp ts){
+        LocalDateTime ldt = ts.toLocalDateTime();
+        
+        jour = ldt.getDayOfMonth();
+        mois = ldt.getMonthValue();
+        annee = ldt.getYear();
+        heure = ldt.getHour();
+        minute = ldt.getMinute();
+        
     }
     public Date(int jour, int mois, int annee) {
         this.jour = jour;
@@ -35,9 +50,17 @@ public class Date {
 
     @Override
     public String toString() {
-        return String.format("%02d", jour) + "-" + 
-               String.format("%02d", mois) + "-" +
-               String.format("%02d", annee);
+        return String.format("%02d", jour) + " / " + 
+               String.format("%02d", mois) + " / " +
+               String.format("%04d", annee);
+    }
+    
+    public String getDateHeure(){
+        return this.toString() + " " + getHeureMinute();
+    }
+    
+    public String getHeureMinute(){
+        return String.format("%02d", heure) + ":" + String.format("%02d", minute);
     }
 
     public int getJour() {

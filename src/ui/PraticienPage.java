@@ -6,39 +6,26 @@
 package ui;
 
 import bdd.ConnectBD;
+import fc.Look;
 import fc.Patient;
-import fc.Personnel;
 import java.awt.Color;
-import java.awt.MouseInfo;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JTable;
-import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableModel;
 
 /**
  *
  * @author Go
  */
 public class PraticienPage extends javax.swing.JFrame {
-        
+    private String idPH = "31";
     /**
      * Creates new form SecretaireAdminPage
      */
@@ -46,6 +33,9 @@ public class PraticienPage extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         table.setBorder(null);
+        
+        Look.setTableLook(table);
+        Look.setTableLook(this.tableConsultation);
         DefaultTableCellRenderer head_render = new DefaultTableCellRenderer(); 
         
         head_render.setBackground(new Color(255,255,255));
@@ -78,6 +68,9 @@ public class PraticienPage extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
+        jLabel3 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tableConsultation = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -225,18 +218,65 @@ public class PraticienPage extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(table);
 
+        jLabel3.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel3.setFont(new java.awt.Font("Ebrima", 1, 26)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(31, 58, 105));
+        jLabel3.setText("Consultations en attente");
+
+        jScrollPane3.setBackground(new java.awt.Color(255, 255, 255));
+        jScrollPane3.setBorder(null);
+        jScrollPane3.setOpaque(false);
+
+        tableConsultation.setBackground(new java.awt.Color(255, 255, 255));
+        tableConsultation.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        tableConsultation.setForeground(new java.awt.Color(116, 116, 116));
+        tableConsultation.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nom", "Prénom", "Date de Naissance", "Localisation", "IPP"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tableConsultation.setGridColor(new java.awt.Color(255, 255, 255));
+        tableConsultation.setRowHeight(40);
+        tableConsultation.setRowMargin(5);
+        tableConsultation.setSelectionBackground(new java.awt.Color(31, 58, 105));
+        tableConsultation.setShowHorizontalLines(false);
+        tableConsultation.setShowVerticalLines(false);
+        tableConsultation.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableConsultationMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tableConsultation);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(76, 76, 76)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1064, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addGap(40, 40, 40)
+                            .addComponent(jLabel3))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1064, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addGap(76, 76, 76)
+                            .addComponent(jLabel1))
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addGap(36, 36, 36)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1064, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(45, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -245,8 +285,12 @@ public class PraticienPage extends javax.swing.JFrame {
                 .addContainerGap(18, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40))
         );
 
         javax.swing.GroupLayout HomePanelLayout = new javax.swing.GroupLayout(HomePanel);
@@ -295,13 +339,19 @@ public class PraticienPage extends javax.swing.JFrame {
             protected String doInBackground() throws Exception 
             {
                 String headers[] = {"Nom", "Prénom", "Date de naissance", "Localisation", "IPP"};
+                String headers2[] = {"Nom", "Prénom", "Date", "Heure", "IPP"};
                 DefaultTableModel model = new DefaultTableModel(null, headers);
+                DefaultTableModel model2 = new DefaultTableModel(null, headers2);
                 popup.setVisible(true);
                 try{
                     for(Patient p : ConnectBD.getListePatientFromService("Cardiologie")){
                         model.addRow(p.getPatientForPatientList());
                     }
+                    for(Patient p : ConnectBD.getListeConsultationsByidPH(idPH)){
+                        model2.addRow( p.getPatientForConsultationList() );
+                    }
                     table.setModel(model);
+                    tableConsultation.setModel(model2);
                 } catch (Exception e){
                     System.err.println( e.getMessage() );
                     Popup.createPopupErreurConnexion();
@@ -357,6 +407,10 @@ public class PraticienPage extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, table.getValueAt(row, 4));
         }
     }//GEN-LAST:event_tableMouseClicked
+
+    private void tableConsultationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableConsultationMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tableConsultationMouseClicked
 
     /**
      * @param args the command line arguments
@@ -428,14 +482,17 @@ public class PraticienPage extends javax.swing.JFrame {
     private javax.swing.JPanel HomePanel;
     private javax.swing.JButton disconnectBtn;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel nameLb;
     private javax.swing.JLabel portalLb;
     private javax.swing.JButton profilePictLb;
     private javax.swing.JLabel serviceLb;
     private javax.swing.JTable table;
+    private javax.swing.JTable tableConsultation;
     // End of variables declaration//GEN-END:variables
 }

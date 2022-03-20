@@ -38,13 +38,10 @@ import javax.swing.SwingWorker;
 public class ConnectBD {
     
     private static Connection getConnectionToDB() throws Exception{
-        java.sql.Connection con = null;
-
         Class.forName("com.mysql.jdbc.Driver");
         String lien = "jdbc:mysql://mysql-lygalma.alwaysdata.net:3306/lygalma_test";
-        con = DriverManager.getConnection(lien, "lygalma", "LygalmaSIS1");
         
-        return con;
+        return DriverManager.getConnection(lien, "lygalma", "LygalmaSIS1");
     }
     
     public static void insertPatient(int ipp, String nom, String prenom, fc.Date date, fc.Sexe sexe) throws Exception{
@@ -120,6 +117,33 @@ public class ConnectBD {
         return listePatients;
     }
     
+    public static ArrayList<Patient> getListeConsultationsByidPH(String idPH) throws Exception{
+        ArrayList<Patient> listePatients = new ArrayList<>();
+        Connection con = getConnectionToDB();
+        Statement st;
+        ResultSet rs;
+        String query = 
+        "SELECT nom, prenom, dateEntree, patient.ipp " + 
+        "FROM `DM` INNER JOIN patient on patient.IPP = DM.IPP " +
+        "WHERE type = \"Consultation\" AND lettreSortie IS NULL AND idPH = \"" + idPH + "\" " +
+        "ORDER BY dateEntree ASC;";
+        
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+        while (rs.next()) {
+            String ipp = rs.getString("patient.IPP");
+            String nom = rs.getString("nom");
+            String prenom = rs.getString("prenom");
+            Date dateEntree = new Date( rs.getTimestamp("dateEntree") ); // utilisation de la date de naissance pour stocker la date d'entree
+//            java.sql.Date dateEntree = rs.getDate("dateEntree"); // utilisation de la date de naissance pour stocker la date d'entree
+            listePatients.add( new Patient(ipp, nom, prenom, dateEntree));
+        }
+        
+        terminateConnexion(con, st, rs);
+        
+        return listePatients;
+    }
+    
     public static ArrayList<Visite> getListeConsultationFromIpp(String ipp) throws Exception{
         ArrayList<Visite> listeConsultation = new ArrayList<>();
         Connection con = getConnectionToDB();
@@ -127,8 +151,8 @@ public class ConnectBD {
         ResultSet rs;
         
         String query = 
-        "SELECT numSejour, dateEntree, service, type, idDM " + 
-        "FROM DM " +
+        "SELECT DM.*, nom, prenom " + 
+        "FROM DM INNER JOIN praticien ON idPH = praticien.id" +
         "WHERE ipp = \"" + ipp + "\";";
         
         st = con.createStatement();
@@ -136,10 +160,15 @@ public class ConnectBD {
         while (rs.next()) {
             int numSejour = rs.getInt("numSejour");
             String type = rs.getString("type");
+            
             Date date = new Date( rs.getDate("dateEntree") );
             String service = rs.getString("service");
             String id = Integer.toString( rs.getInt("idDM") );
-            listeConsultation.add(new Visite(Integer.toString(numSejour), ipp, date, service, type, id));
+            String nom = rs.getString("nom");
+            String prenom = rs.getString("prenom");
+            String motif = rs.getString("motif");
+            System.out.println(motif);
+            listeConsultation.add(new Visite(Integer.toString(numSejour), ipp, date, service, type, id, nom + " " + prenom, motif));
         }
         
         terminateConnexion(con, st, rs);
@@ -147,29 +176,42 @@ public class ConnectBD {
         return listeConsultation;
     }
     
-    public static Visite getConsultationFromIdDm(String idDM) throws Exception{
+    public static Visite getVisiteByIdDm(String idDM) throws Exception{
         Visite visite = null;
         Connection con = getConnectionToDB();
         Statement st;
         ResultSet rs;
         
         String query = 
-        "SELECT DM.*, nom, prenom" +
+        "SELECT DM.*, nom, prenom " +
         "FROM DM INNER JOIN praticien ON idPH = praticien.id " +
         "WHERE idDM = " + idDM;
+        
         
         st = con.createStatement();
         rs = st.executeQuery(query);
         
-        while (rs.next()) {
+        if (rs.next()) {
             int numSejour = rs.getInt("numSejour");
             String type = rs.getString("type");
-            Date date = new Date( rs.getDate("dateEntree") );
+            
+            Date date = new Date( rs.getTimestamp("dateEntree") );
             String service = rs.getString("service");
             String id = Integer.toString( rs.getInt("idDM") );
             String ipp = Integer.toString( rs.getInt("IPP") );
+            String nom = rs.getString("nom");
+            String prenom = rs.getString("prenom");
+            String motif = rs.getString("motif");
+            String observations = rs.getString("observation");
             
-            visite = new Visite(Integer.toString(numSejour), ipp, date, service, type, id);
+            visite = new Visite(Integer.toString(numSejour), ipp, date, service, type, id, nom + " " + prenom, motif, observations);
+            
+            for( Prescription p : getListePrescriptionByIdDM(idDM, con)){
+            visite.addPrescription(p);
+            }
+            for( Prestation p : getListePrestationByIdDM(idDM, con)){
+                visite.addPrestation(p);
+            }
         }
         
         terminateConnexion(con, st, rs);
@@ -177,10 +219,9 @@ public class ConnectBD {
         return visite;
     }
     
-    public static ArrayList<Prescription> getListePrescriptionByIdDM(String idDM) throws Exception{
+    private static ArrayList<Prescription> getListePrescriptionByIdDM(String idDM, Connection con) throws Exception{
         ArrayList<Prescription> liste = new ArrayList<>();
         
-        Connection con = getConnectionToDB();
         Statement st;
         ResultSet rs;
         
@@ -203,15 +244,15 @@ public class ConnectBD {
             liste.add(p);
         }
         
-        terminateConnexion(con, st, rs);
+        terminateConnexion(st, rs);
         
         return liste;
     }
     
-    public static ArrayList<Prestation> getListePrestationByIdDM(String idDM) throws Exception{
+    
+    public static ArrayList<Prestation> getListePrestationByIdDM(String idDM, Connection con) throws Exception{
         ArrayList<Prestation> liste = new ArrayList<>();
         
-        Connection con = getConnectionToDB();
         Statement st;
         ResultSet rs;
         
@@ -231,7 +272,7 @@ public class ConnectBD {
             liste.add(p);
         }
         
-        terminateConnexion(con, st, rs);
+        terminateConnexion(st, rs);
         
         return liste;
     }
@@ -266,6 +307,15 @@ public class ConnectBD {
     private static void terminateConnexion(Connection con, Statement st, ResultSet rs){
         try {
             con.close();
+            st.close();
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(ConnectBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private static void terminateConnexion(Statement st, ResultSet rs){
+        try {
             st.close();
             rs.close();
         } catch (SQLException ex) {

@@ -13,6 +13,7 @@ import fc.Prescription;
 import fc.Prestation;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.MouseInfo;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -22,16 +23,19 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -42,30 +46,46 @@ import javax.swing.table.TableModel;
  *
  * @author Go
  */
-public class PatientConsultationUniquePage extends javax.swing.JFrame {
-    private String idDM = "1";
+public class PageVisite extends javax.swing.JFrame {
+    private final String idDM = "1";
+    private final String ipp = "123456";
+    private Visite visite;
+    private Patient patient;
     /**
      * Creates new form SecretaireAdminPage
      */
-    public PatientConsultationUniquePage() {
+    public PageVisite() {
         initComponents();
         setLocationRelativeTo(null);
         
-        setTableLook(prescriptionTable);
-        setTableLook(prestationTable);
-        initTables();
+        initLabelsAndTables();
     }
     
-    public final void initTables(){
+    public final void initLabelsAndTables(){
         JFrame popup = new PopupLoading();
         popup.setVisible(true);
+        
+        fc.Look.setTableLook(prescriptionTable);
+        fc.Look.setTableLook(prestationTable);
+        fc.Look.setScrollBar(scrollPane);
+        fc.Look.setScrollBar(scrollPaneObs);
+        fc.Look.setScrollBar(scrollPanePrescription);
+        fc.Look.setScrollBar(scrollPanePrestation);
         
         SwingWorker sw = new SwingWorker(){
             @Override
             protected String doInBackground() throws Exception 
             {
+                try{
+                    visite = ConnectBD.getVisiteByIdDm(idDM);
+                    patient = ConnectBD.getPatientByIPP(ipp);
+                } catch (Exception e){
+                    System.err.println(e.getMessage());
+                    Popup.createPopupErreurConnexion();
+                }
                 fillPrescriptionTable();
                 fillPrestationTable();
+                fillLabels();
                 return "";
             }
   
@@ -83,61 +103,40 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
     private void fillPrescriptionTable(){
         String headers[] = {"Medicament", "Dosage", "Posologie", "Debut", "Fin"};
         DefaultTableModel model = new DefaultTableModel(null, headers);
-        try{
-            for(Prescription c : ConnectBD.getListePrescriptionByIdDM(idDM)){
-                model.addRow(c.getPrescriptionForTable());
-            }
-            this.prescriptionTable.setModel(model);
-        } catch (Exception e){
-            System.err.println(e.getMessage());
-            Popup.createPopupErreurConnexion();
+        for(Prescription c : visite.getPrescriptions()){
+            model.addRow(c.getPrescriptionForTable());
         }
+        this.prescriptionTable.setModel(model);
     }
     
     private void fillPrestationTable(){
         String headers[] = {"Prestation", "Service"};
         DefaultTableModel model = new DefaultTableModel(null, headers);
-        try{
-            for(Prestation c : ConnectBD.getListePrestationByIdDM(idDM)){
-                model.addRow(c.getPrestationForTable());
-            }
-            this.prestationTable.setModel(model);
-        } catch (Exception e){
-            System.err.println(e.getMessage());
-            Popup.createPopupErreurConnexion();
+        
+        for(Prestation c : visite.getPrestations()){
+            model.addRow(c.getPrestationForTable());
         }
+        this.prestationTable.setModel(model);
     }
     
-    public final void setTableLook(JTable table){
+    public void fillLabels(){
+       
+        this.dateNaissanceLbl.setText( patient.getDateDeNaissance().toString());
+        this.nomPatientLbl.setText( patient.getNom() );
+        this.prenomPatientLbl.setText( patient.getPrenom() );
+        this.sexeLbl.setText( patient.getSexe().getVal() );
         
-        table.setBorder(null);
-        DefaultTableCellRenderer head_render = new DefaultTableCellRenderer(); 
+        this.lblDateConsultation.setText( visite.getDateEntree().toString() );
+        this.lblHeureConsultation.setText( visite.getDateEntree().getHeureMinute());
+        this.lblNomPraticien.setText( visite.getNomPh() );
+        this.lblMotif.setText( visite.getMotif() );
+        this.txtObservations.setText( visite.getObservation() );
         
-        head_render.setBackground(new Color(255,255,255));
-        head_render.setForeground(new Color(31,58,105));
-        table.getTableHeader().setDefaultRenderer(head_render);
-        table.setFillsViewportHeight(true);
-        table.setDefaultEditor(Object.class, null);
-        
-        table.setDefaultRenderer(Object.class, new TableCellRenderer(){
-            private DefaultTableCellRenderer DEFAULT_RENDERER =  new DefaultTableCellRenderer();
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component c = DEFAULT_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if(isSelected){
-                    c.setBackground(new Color(31, 58, 105));
-                }else{
-                    if (row%2 == 0){
-                        c.setBackground(Color.WHITE);
-                    }
-                    else {
-                        c.setBackground(new Color(230, 230, 240));
-                    }     
-                }
-                return c;
-            }
-        });
+        this.lblTypeVisite.setText( visite.getType() );
     }
+    
+
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -147,7 +146,7 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        HomePanel = new javax.swing.JPanel();
+        homePanel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         profilePictLb = new javax.swing.JButton();
@@ -158,43 +157,45 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
         profilePictLb1 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        nomPatientLbl = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
+        prenomPatientLbl = new javax.swing.JLabel();
+        sexeLbl = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        dateNaissanceLbl = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         scrollPane = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
-        jLabel11 = new javax.swing.JLabel();
+        lblTypeVisite = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         profilePictLb3 = new javax.swing.JButton();
-        jLabel26 = new javax.swing.JLabel();
+        lblDateConsultation = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
-        jLabel28 = new javax.swing.JLabel();
+        lblNomPraticien = new javax.swing.JLabel();
         jLabel31 = new javax.swing.JLabel();
-        jLabel32 = new javax.swing.JLabel();
+        lblMotif = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         profilePictLb4 = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        scrollPaneObs = new javax.swing.JScrollPane();
+        txtObservations = new javax.swing.JTextArea();
         profilePictLb5 = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
         profilePictLb6 = new javax.swing.JButton();
         jLabel15 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        scrollPanePrescription = new javax.swing.JScrollPane();
         prescriptionTable = new javax.swing.JTable();
-        jScrollPane3 = new javax.swing.JScrollPane();
+        scrollPanePrestation = new javax.swing.JScrollPane();
         prestationTable = new javax.swing.JTable();
+        jLabel17 = new javax.swing.JLabel();
+        lblHeureConsultation = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setResizable(false);
 
-        HomePanel.setBackground(new java.awt.Color(255, 255, 255));
-        HomePanel.setPreferredSize(new java.awt.Dimension(1280, 720));
+        homePanel.setBackground(new java.awt.Color(255, 255, 255));
+        homePanel.setPreferredSize(new java.awt.Dimension(1280, 720));
 
         jPanel1.setBackground(new java.awt.Color(31, 58, 105));
 
@@ -270,7 +271,7 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
 
         portalLb.setFont(new java.awt.Font("Ebrima", 1, 24)); // NOI18N
         portalLb.setForeground(new java.awt.Color(255, 255, 255));
-        portalLb.setText("CONSULTATION");
+        portalLb.setText("VISITE");
 
         profilePictLb1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ui/images/left_arrow.png"))); // NOI18N
         profilePictLb1.setBorder(null);
@@ -294,7 +295,7 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
                 .addComponent(profilePictLb1)
                 .addGap(30, 30, 30)
                 .addComponent(portalLb)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 678, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -315,29 +316,25 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(31, 58, 105));
         jLabel3.setText("Nom :");
 
-        jLabel4.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(116, 116, 116));
-        jLabel4.setText("Alexis");
+        nomPatientLbl.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        nomPatientLbl.setForeground(new java.awt.Color(116, 116, 116));
 
         jLabel5.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(31, 58, 105));
         jLabel5.setText("Prénom :");
 
-        jLabel6.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(116, 116, 116));
-        jLabel6.setText("MARTIN");
+        prenomPatientLbl.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        prenomPatientLbl.setForeground(new java.awt.Color(116, 116, 116));
 
-        jLabel7.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(116, 116, 116));
-        jLabel7.setText("M");
+        sexeLbl.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        sexeLbl.setForeground(new java.awt.Color(116, 116, 116));
 
         jLabel8.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(31, 58, 105));
         jLabel8.setText("Sexe :");
 
-        jLabel9.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(116, 116, 116));
-        jLabel9.setText("01/01/1987");
+        dateNaissanceLbl.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        dateNaissanceLbl.setForeground(new java.awt.Color(116, 116, 116));
 
         jLabel10.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(31, 58, 105));
@@ -353,22 +350,22 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel6))
+                        .addComponent(prenomPatientLbl))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel4)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 602, Short.MAX_VALUE)
+                        .addComponent(nomPatientLbl)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel10)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel9))
+                        .addComponent(dateNaissanceLbl))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel7)))
-                .addGap(1058, 1058, 1058))
+                        .addComponent(sexeLbl)))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -378,20 +375,20 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel4))
+                            .addComponent(nomPatientLbl))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(jLabel6)))
+                            .addComponent(prenomPatientLbl)))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel10)
-                            .addComponent(jLabel9))
+                            .addComponent(dateNaissanceLbl))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
-                            .addComponent(jLabel7))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(sexeLbl))))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         scrollPane.setBackground(new java.awt.Color(255, 255, 255));
@@ -401,10 +398,10 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
 
-        jLabel11.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel11.setFont(new java.awt.Font("Ebrima", 1, 26)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel11.setText("Consultation");
+        lblTypeVisite.setBackground(new java.awt.Color(255, 255, 255));
+        lblTypeVisite.setFont(new java.awt.Font("Ebrima", 1, 26)); // NOI18N
+        lblTypeVisite.setForeground(new java.awt.Color(31, 58, 105));
+        lblTypeVisite.setText("Consultation");
 
         jLabel12.setBackground(new java.awt.Color(255, 255, 255));
         jLabel12.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
@@ -424,27 +421,24 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
             }
         });
 
-        jLabel26.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
-        jLabel26.setForeground(new java.awt.Color(116, 116, 116));
-        jLabel26.setText("01 / 02 / 1234");
+        lblDateConsultation.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        lblDateConsultation.setForeground(new java.awt.Color(116, 116, 116));
 
         jLabel27.setBackground(new java.awt.Color(255, 255, 255));
         jLabel27.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel27.setForeground(new java.awt.Color(31, 58, 105));
         jLabel27.setText("Praticien : ");
 
-        jLabel28.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
-        jLabel28.setForeground(new java.awt.Color(116, 116, 116));
-        jLabel28.setText("DURANTD Alexis");
+        lblNomPraticien.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        lblNomPraticien.setForeground(new java.awt.Color(116, 116, 116));
 
         jLabel31.setBackground(new java.awt.Color(255, 255, 255));
         jLabel31.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel31.setForeground(new java.awt.Color(31, 58, 105));
         jLabel31.setText("Motif :");
 
-        jLabel32.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
-        jLabel32.setForeground(new java.awt.Color(116, 116, 116));
-        jLabel32.setText("Crises de gastrite");
+        lblMotif.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        lblMotif.setForeground(new java.awt.Color(116, 116, 116));
 
         jLabel13.setBackground(new java.awt.Color(255, 255, 255));
         jLabel13.setFont(new java.awt.Font("Ebrima", 1, 26)); // NOI18N
@@ -464,19 +458,18 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
             }
         });
 
-        jScrollPane2.setBackground(new java.awt.Color(255, 255, 255));
-        jScrollPane2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
+        scrollPaneObs.setBackground(new java.awt.Color(255, 255, 255));
+        scrollPaneObs.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
 
-        jTextArea1.setEditable(false);
-        jTextArea1.setBackground(new java.awt.Color(255, 255, 255));
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
-        jTextArea1.setForeground(new java.awt.Color(116, 116, 116));
-        jTextArea1.setLineWrap(true);
-        jTextArea1.setRows(5);
-        jTextArea1.setText("Donec id sagittis risus. Sed bibendum ante ut nulla rhoncus ullamcorper et eget lectus. Sed mattis aliquet dolor, eu dictum neque congue auctor. Cras lobortis, justo sed facilisis hendrerit, massa urna efficitur sem, efficitur placerat lacus tellus ac neque. Cras euismod ultrices libero, eget bibendum elit tempor eget. Sed vitae eleifend arcu, tempus placerat lectus. Curabitur aliquam magna eleifend, venenatis eros sed, vulputate libero. Cras efficitur accumsan quam, in posuere nisl. Phasellus sit amet quam augue. \n");
-        jTextArea1.setMargin(new java.awt.Insets(5, 5, 5, 5));
-        jScrollPane2.setViewportView(jTextArea1);
+        txtObservations.setEditable(false);
+        txtObservations.setBackground(new java.awt.Color(255, 255, 255));
+        txtObservations.setColumns(20);
+        txtObservations.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
+        txtObservations.setForeground(new java.awt.Color(116, 116, 116));
+        txtObservations.setLineWrap(true);
+        txtObservations.setRows(5);
+        txtObservations.setMargin(new java.awt.Insets(5, 5, 5, 5));
+        scrollPaneObs.setViewportView(txtObservations);
 
         profilePictLb5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ui/images/icone_perso.png"))); // NOI18N
         profilePictLb5.setBorder(null);
@@ -514,16 +507,17 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
         jLabel15.setForeground(new java.awt.Color(31, 58, 105));
         jLabel15.setText("Prestations");
 
-        jScrollPane1.setBorder(null);
+        scrollPanePrescription.setBorder(null);
 
         prescriptionTable.setBackground(new java.awt.Color(255, 255, 255));
         prescriptionTable.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
         prescriptionTable.setForeground(new java.awt.Color(116, 116, 116));
         prescriptionTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"Albendazol", "100 mg", "3 fois par jour", "01/02/2000", "01/03/2000"},
-                {"Ibuprofene", "1000 mg", "1 fois par jour", "01/02/2000", "04/03/2000"},
-                {"Generic", "10 mg", "1 fois par mois", "01/02/2000", "01/06/2000"}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
                 "Médicament", "Dose", "Posologie", "Début", "Fin"
@@ -545,18 +539,19 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
         prescriptionTable.setRowSelectionAllowed(false);
         prescriptionTable.setShowHorizontalLines(false);
         prescriptionTable.setShowVerticalLines(false);
-        jScrollPane1.setViewportView(prescriptionTable);
+        scrollPanePrescription.setViewportView(prescriptionTable);
 
-        jScrollPane3.setBorder(null);
+        scrollPanePrestation.setBorder(null);
 
         prestationTable.setBackground(new java.awt.Color(255, 255, 255));
         prestationTable.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
         prestationTable.setForeground(new java.awt.Color(116, 116, 116));
         prestationTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"Albendazol", "100 mg", "3 fois par jour", "01/02/2000", "01/03/2000"},
-                {"Ibuprofene", "1000 mg", "1 fois par jour", "01/02/2000", "04/03/2000"},
-                {"Generic", "10 mg", "1 fois par mois", "01/02/2000", "01/06/2000"}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
                 "Médicament", "Dose", "Posologie", "Début", "Fin"
@@ -578,7 +573,15 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
         prestationTable.setRowSelectionAllowed(false);
         prestationTable.setShowHorizontalLines(false);
         prestationTable.setShowVerticalLines(false);
-        jScrollPane3.setViewportView(prestationTable);
+        scrollPanePrestation.setViewportView(prestationTable);
+
+        jLabel17.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel17.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(31, 58, 105));
+        jLabel17.setText("Heure :");
+
+        lblHeureConsultation.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        lblHeureConsultation.setForeground(new java.awt.Color(116, 116, 116));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -593,22 +596,26 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblTypeVisite, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel12)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel26)))
-                                .addContainerGap(1804, Short.MAX_VALUE))
+                                        .addComponent(lblDateConsultation)
+                                        .addGap(125, 125, 125)
+                                        .addComponent(jLabel17)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblHeureConsultation)))
+                                .addContainerGap(1768, Short.MAX_VALUE))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel27)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel28))
+                                        .addComponent(lblNomPraticien))
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel31)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel32)))
+                                        .addComponent(lblMotif)))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -617,8 +624,8 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane1)
-                                    .addComponent(jScrollPane3)))
+                                    .addComponent(scrollPanePrescription)
+                                    .addComponent(scrollPanePrestation)))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(profilePictLb5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -628,8 +635,8 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 1122, Short.MAX_VALUE))))
+                                    .addComponent(scrollPaneObs, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 1135, Short.MAX_VALUE))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -637,22 +644,25 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel11))
+                        .addComponent(lblTypeVisite))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(profilePictLb3)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
-                    .addComponent(jLabel26))
+                    .addComponent(lblDateConsultation)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel17)
+                        .addComponent(lblHeureConsultation)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel27)
-                    .addComponent(jLabel28))
+                    .addComponent(lblNomPraticien))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel31)
-                    .addComponent(jLabel32))
+                    .addComponent(lblMotif))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -660,7 +670,7 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
                         .addComponent(jLabel13))
                     .addComponent(profilePictLb4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scrollPaneObs, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -668,7 +678,7 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
                         .addComponent(jLabel14))
                     .addComponent(profilePictLb5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scrollPanePrescription, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(profilePictLb6)
@@ -676,33 +686,33 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
                         .addGap(12, 12, 12)
                         .addComponent(jLabel15)))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scrollPanePrestation, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
         scrollPane.setViewportView(jPanel3);
 
-        javax.swing.GroupLayout HomePanelLayout = new javax.swing.GroupLayout(HomePanel);
-        HomePanel.setLayout(HomePanelLayout);
-        HomePanelLayout.setHorizontalGroup(
-            HomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(HomePanelLayout.createSequentialGroup()
-                .addGap(88, 88, 88)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, HomePanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1052, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1064, 1064, 1064))
+        javax.swing.GroupLayout homePanelLayout = new javax.swing.GroupLayout(homePanel);
+        homePanel.setLayout(homePanelLayout);
+        homePanelLayout.setHorizontalGroup(
+            homePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(homePanelLayout.createSequentialGroup()
+                .addGap(123, 123, 123)
+                .addGroup(homePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1052, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(147, Short.MAX_VALUE))
+            .addGroup(homePanelLayout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
-        HomePanelLayout.setVerticalGroup(
-            HomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(HomePanelLayout.createSequentialGroup()
+        homePanelLayout.setVerticalGroup(
+            homePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(homePanelLayout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(63, Short.MAX_VALUE))
         );
@@ -711,11 +721,11 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(HomePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1322, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(homePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1322, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(HomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(homePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -800,566 +810,54 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PatientConsultationUniquePage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PageVisite.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PatientConsultationUniquePage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PageVisite.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PatientConsultationUniquePage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PageVisite.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PatientConsultationUniquePage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PageVisite.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
+        
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PatientConsultationUniquePage().setVisible(true);
+                new PageVisite().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel HomePanel;
+    private javax.swing.JLabel dateNaissanceLbl;
     private javax.swing.JButton disconnectBtn;
+    private javax.swing.JPanel homePanel;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel31;
-    private javax.swing.JLabel jLabel32;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JLabel lblDateConsultation;
+    private javax.swing.JLabel lblHeureConsultation;
+    private javax.swing.JLabel lblMotif;
+    private javax.swing.JLabel lblNomPraticien;
+    private javax.swing.JLabel lblTypeVisite;
     private javax.swing.JLabel nameLb;
+    private javax.swing.JLabel nomPatientLbl;
     private javax.swing.JLabel portalLb;
+    private javax.swing.JLabel prenomPatientLbl;
     private javax.swing.JTable prescriptionTable;
     private javax.swing.JTable prestationTable;
     private javax.swing.JButton profilePictLb;
@@ -1369,6 +867,11 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
     private javax.swing.JButton profilePictLb5;
     private javax.swing.JButton profilePictLb6;
     private javax.swing.JScrollPane scrollPane;
+    private javax.swing.JScrollPane scrollPaneObs;
+    private javax.swing.JScrollPane scrollPanePrescription;
+    private javax.swing.JScrollPane scrollPanePrestation;
     private javax.swing.JLabel serviceLb;
+    private javax.swing.JLabel sexeLbl;
+    private javax.swing.JTextArea txtObservations;
     // End of variables declaration//GEN-END:variables
 }

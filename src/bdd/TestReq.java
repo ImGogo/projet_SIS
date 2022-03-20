@@ -22,9 +22,7 @@ public class TestReq {
      */
     public static void main(String[] args) {
         try {
-            for(Prescription c : ConnectBD.getListePrescriptionByIdDM("1")){
-                System.out.println( c.getDose() );
-            }
+            ConnectBD.getVisiteByIdDm("1");
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
             Logger.getLogger(TestReq.class.getName()).log(Level.FINE, null, ex);
