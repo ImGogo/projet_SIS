@@ -1,8 +1,8 @@
 package fc;
 
 public enum CoteLit {
-    Fenetre("F"),
-    Porte("P");
+    F("Fenetre"),
+    P("Porte");
     
     private final String val;
     

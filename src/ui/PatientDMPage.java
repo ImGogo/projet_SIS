@@ -6,7 +6,7 @@
 package ui;
 
 import bdd.ConnectBD;
-import fc.Consultation;
+import fc.Visite;
 import fc.Patient;
 import fc.Personnel;
 import java.awt.Color;
@@ -40,12 +40,13 @@ import javax.swing.table.TableModel;
  *
  * @author Go
  */
-public class PatientConsultationPage extends javax.swing.JFrame {
-        
+public class PatientDMPage extends javax.swing.JFrame {
+    
+    private String ipp = "123456";
     /**
      * Creates new form SecretaireAdminPage
      */
-    public PatientConsultationPage() {
+    public PatientDMPage() {
         initComponents();
         setLocationRelativeTo(null);
         
@@ -226,11 +227,11 @@ public class PatientConsultationPage extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Date", "Heure", "Service", "N° séjour"
+                "Date", "Type", "Service", "N° séjour", "ID"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -249,6 +250,13 @@ public class PatientConsultationPage extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(table);
+        if (table.getColumnModel().getColumnCount() > 0) {
+            table.getColumnModel().getColumn(0).setResizable(false);
+            table.getColumnModel().getColumn(1).setResizable(false);
+            table.getColumnModel().getColumn(2).setResizable(false);
+            table.getColumnModel().getColumn(3).setResizable(false);
+            table.getColumnModel().getColumn(4).setResizable(false);
+        }
 
         jButton1.setBackground(new java.awt.Color(31, 58, 105));
         jButton1.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
@@ -415,15 +423,16 @@ public class PatientConsultationPage extends javax.swing.JFrame {
             @Override
             protected String doInBackground() throws Exception 
             {
-                String headers[] = {"Date", "Heure", "Service", "N° de séjour"};
+                String headers[] = {"Date", "Type", "Service", "N° de séjour", "ID"};
                 DefaultTableModel model = new DefaultTableModel(null, headers);
                 popup.setVisible(true);
                 try{
-                    for(Consultation c : ConnectBD.getListeConsultationFromIpp("123456")){
+                    for(Visite c : ConnectBD.getListeConsultationFromIpp(ipp)){
                         model.addRow(c.getConsultationForConsultationListe());
                     }
                     table.setModel(model);
                 } catch (Exception e){
+                    System.err.println(e.getMessage());
                     Popup.createPopupErreurConnexion();
                 }
                 return "";
@@ -506,7 +515,7 @@ public class PatientConsultationPage extends javax.swing.JFrame {
             JTable target = (JTable) evt.getSource();
             int row = target.getSelectedRow();
             int col = target.getSelectedColumn();
-            JOptionPane.showMessageDialog(null, table.getValueAt(row, 3));
+            JOptionPane.showMessageDialog(null, table.getValueAt(row, 4));
         }
     }//GEN-LAST:event_tableMouseClicked
 
@@ -535,14 +544,142 @@ public class PatientConsultationPage extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PatientConsultationPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PatientDMPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PatientConsultationPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PatientDMPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PatientConsultationPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PatientDMPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PatientConsultationPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PatientDMPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -675,7 +812,7 @@ public class PatientConsultationPage extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PatientConsultationPage().setVisible(true);
+                new PatientDMPage().setVisible(true);
             }
         });
     }

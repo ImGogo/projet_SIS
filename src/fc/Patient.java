@@ -12,12 +12,21 @@ public class Patient {
     private Date dateDeNaissance;
     private Sexe sexe;
     private String medecinGeneraliste;
+    private Localisation localisation;
 
     public Patient(String ipp, String nom, String prenom, Date dateDeNaissance) {
         this.ipp = ipp;
         this.nom = nom;
         this.prenom = prenom;
         this.dateDeNaissance = dateDeNaissance;
+    }
+    
+    public Patient(String ipp, String nom, String prenom, Date dateDeNaissance, Localisation localisation) {
+        this.ipp = ipp;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.dateDeNaissance = dateDeNaissance;
+        this.localisation = localisation;
     }
 
     public String getIpp() {
@@ -45,7 +54,7 @@ public class Patient {
     }
     
     public String[] getPatientForPatientList(){
-        String [] s = {nom, prenom, dateDeNaissance.toString(), "", ipp};
+        String [] s = {nom, prenom, dateDeNaissance.toString(), localisation.toString(), ipp};
         return s;
     }
 

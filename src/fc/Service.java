@@ -9,6 +9,34 @@ package fc;
  *
  * @author Go
  */
-public class Service {
+public enum Service {
+    Cardiologie("CARD"),
+    Anesthesie("ANES"),
+    Diabétologie("DIAB"),
+    Soins_paliatifs("SPAL"),
+    Gynecologie_Obstetrique("GYNO"),
+    Hepato_gastroentérologie("GAST"),
+    Maladies_infectieuses_tropicales("MINF"),
+    Medecine_du_sport("SPRT"),
+    Neurologie("NEUR"),
+    Oncologie("ONCO"),
+    Ophtalmologie("OPHT"),
+    ORL("ORL"),
+    Pediatrie("PEDT"),
+    Pneumologie("PNEM"),
+    Rhumatologie("RHUM"),
+    Imagerie("IMAG"),
+    Laboratoire_Biologie_Medicale("BIOM"),
+    Laboratoire_Anatomie_Cytologie("ANAC");
+
     
+    private final String val;
+    
+    Service(String val){
+        this.val = val;
+    }
+    
+    public String getVal(){
+        return this.val;
+    }
 }

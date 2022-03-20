@@ -21,8 +21,9 @@ public class TestReq {
      */
     public static void main(String[] args) {
         try {
-            System.out.println(ConnectBD.getListePatientFromService("Cardiologie"));
+            System.out.println(ConnectBD.getListePrescriptionByIdDM("1"));
         } catch (Exception ex) {
+            System.err.println(ex.getMessage());
             Logger.getLogger(TestReq.class.getName()).log(Level.FINE, null, ex);
         }
     }

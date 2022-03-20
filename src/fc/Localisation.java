@@ -5,15 +5,27 @@
  */
 package fc;
 
-import fc.Patient_2;
 
 /**
  *
  * @author Go
  */
 public class Localisation {
-    Patient_2 patient;
-    int etage;
     int numChambre;
     CoteLit coteLit;
+    Service serviceOrigine, serviceGeographique;
+
+    public Localisation(int numChambre, CoteLit coteLit, Service serviceOrigine, Service serviceGeographique) {
+        this.numChambre = numChambre;
+        this.coteLit = coteLit;
+        this.serviceOrigine = serviceOrigine;
+        this.serviceGeographique = serviceGeographique;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%03d", numChambre) + coteLit.toString() + "-" + serviceGeographique.getVal();
+    }
+    
+    
 }

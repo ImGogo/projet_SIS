@@ -6,11 +6,17 @@
 package bdd;
 
 import com.mysql.jdbc.CommunicationsException;
-import fc.Consultation;
+import fc.Visite;
+import fc.CoteLit;
 import fc.Date;
+import fc.Localisation;
 import fc.Patient;
 import fc.Patient_2;
 import fc.Personnel;
+import fc.Prescription;
+import fc.Prestation;
+import fc.Service;
+import fc.Sexe;
 import fc.TypePersonnel;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -91,11 +97,10 @@ public class ConnectBD {
         Connection con = getConnectionToDB();
         Statement st;
         ResultSet rs;
-        
         String query = 
-        "SELECT patient.IPP, nom, prenom, dateNaissance " + 
+        "SELECT patient.IPP, nom, prenom, dateNaissance, numChambre, serviceGeographique, coteLit " + 
         "FROM localisation INNER JOIN patient ON patient.IPP = localisation.IPP " +
-        "WHERE service = \"" + service + "\";";
+        "WHERE serviceOrigine = \"" + service + "\";";
         
         st = con.createStatement();
         rs = st.executeQuery(query);
@@ -104,7 +109,11 @@ public class ConnectBD {
             String nom = rs.getString("nom");
             String prenom = rs.getString("prenom");
             java.sql.Date dateNaissance = rs.getDate("dateNaissance");
-            listePatients.add( new Patient(ipp, nom, prenom, new fc.Date(dateNaissance)));
+            int numChambre = rs.getInt("numChambre");
+            Service sg = Service.valueOf( rs.getString("serviceGeographique"));
+            CoteLit cl = CoteLit.valueOf( rs.getString("coteLit"));
+            Localisation localisation = new Localisation(numChambre, cl, sg, Service.valueOf(service));
+            listePatients.add( new Patient(ipp, nom, prenom, new fc.Date(dateNaissance), localisation));
         }
         
         terminateConnexion(con, st, rs);
@@ -112,24 +121,26 @@ public class ConnectBD {
         return listePatients;
     }
     
-    public static ArrayList<Consultation> getListeConsultationFromIpp(String ipp) throws Exception{
-        ArrayList<Consultation> listeConsultation = new ArrayList<>();
+    public static ArrayList<Visite> getListeConsultationFromIpp(String ipp) throws Exception{
+        ArrayList<Visite> listeConsultation = new ArrayList<>();
         Connection con = getConnectionToDB();
         Statement st;
         ResultSet rs;
         
         String query = 
-        "SELECT numeroSejour, date, service " + 
-        "FROM consultation " +
+        "SELECT numSejour, dateEntree, service, type, idDM " + 
+        "FROM DM " +
         "WHERE ipp = \"" + ipp + "\";";
         
         st = con.createStatement();
         rs = st.executeQuery(query);
         while (rs.next()) {
-            int numSejour = rs.getInt("numeroSejour");
-            Date date = new Date( rs.getDate("date") );
+            int numSejour = rs.getInt("numSejour");
+            String type = rs.getString("type");
+            Date date = new Date( rs.getDate("dateEntree") );
             String service = rs.getString("service");
-            listeConsultation.add( new Consultation(Integer.toString(numSejour), ipp, date, service));
+            String id = Integer.toString( rs.getInt("idDM") );
+            listeConsultation.add(new Visite(Integer.toString(numSejour), ipp, date, service, type, id));
         }
         
         terminateConnexion(con, st, rs);
@@ -137,14 +148,127 @@ public class ConnectBD {
         return listeConsultation;
     }
     
-    public static Consultation getConsultationFromNum(String numSejour) throws Exception{
+    public static Visite getConsultationFromIdDm(String idDM) throws Exception{
+        Visite visite = null;
         Connection con = getConnectionToDB();
         Statement st;
         ResultSet rs;
         
         String query = 
-        "SELECT ";
-        return null;
+        "SELECT DM.*, nom, prenom" +
+        "FROM DM INNER JOIN praticien ON idPH = praticien.id " +
+        "WHERE idDM = " + idDM;
+        
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+        
+        while (rs.next()) {
+            int numSejour = rs.getInt("numSejour");
+            String type = rs.getString("type");
+            Date date = new Date( rs.getDate("dateEntree") );
+            String service = rs.getString("service");
+            String id = Integer.toString( rs.getInt("idDM") );
+            String ipp = Integer.toString( rs.getInt("IPP") );
+            
+            visite = new Visite(Integer.toString(numSejour), ipp, date, service, type, id);
+        }
+        
+        terminateConnexion(con, st, rs);
+        
+        return visite;
+    }
+    
+    public static ArrayList<Prescription> getListePrescriptionByIdDM(String idDM) throws Exception{
+        ArrayList<Prescription> liste = new ArrayList<>();
+        
+        Connection con = getConnectionToDB();
+        Statement st;
+        ResultSet rs;
+        
+        String query = 
+        "SELECT * " +
+        "FROM prescription " +
+        "WHERE idDM = " + idDM;
+        
+        System.out.println(query);
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+        
+        while (rs.next()) {
+            String medicament = rs.getString("medicament");
+            Date dateDebut = new Date( rs.getDate("dateDebut") );
+            Date dateFin = new Date( rs.getDate("dateFin") );
+            String posologie = rs.getString("posologie");
+            String dose = Integer.toString( rs.getInt("dosage") );
+            Prescription p = new Prescription(medicament, dose, posologie, dateDebut, dateFin);
+            System.out.println(p);
+            liste.add(p);
+        }
+        
+        terminateConnexion(con, st, rs);
+        
+        return liste;
+    }
+    
+    public ArrayList<Prestation> getListePrestationByIdDM(String idDM) throws Exception{
+        ArrayList<Prestation> liste = new ArrayList<>();
+        
+        Connection con = getConnectionToDB();
+        Statement st;
+        ResultSet rs;
+        
+        String query = 
+        "SELECT * " +
+        "FROM prestation " +
+        "WHERE idDM = " + idDM;
+        
+        System.out.println(query);
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+        
+        while (rs.next()) {
+            String prestation = rs.getString("prestation");
+            String observations = rs.getString("observations");
+            Service service = Service.valueOf( rs.getString("service") );
+            Prestation p = new Prestation(prestation, service, observations);
+            System.out.println(p);
+            liste.add(p);
+        }
+        
+        terminateConnexion(con, st, rs);
+        
+        return liste;
+    }
+    
+    public Patient getPatientByIPP(String ipp) throws Exception{
+        Patient p = null;
+        Connection con = getConnectionToDB();
+        Statement st;
+        ResultSet rs;
+        
+        String query = 
+        "SELECT * " +
+        "FROM patient " +
+        "WHERE IPP = " + ipp;
+        
+        System.out.println(query);
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+        
+//        while (rs.next()) {
+//            String nom = rs.getString("nom");
+//            String prenom = rs.getString("prenom");
+//            Date dateNaiss = new Date( rs.getDate("dateNaissance") );
+//            Sexe sexe = rs.getString("posologie");
+//            String dose = Integer.toString( rs.getInt("dosage") );
+//            Prescription p = new Prescription(medicament, dose, posologie, dateDebut, dateFin);
+//            System.out.println(p);
+//            liste.add(p);
+//        }
+        
+        terminateConnexion(con, st, rs);
+        
+        return p;
     }
     
     private static void terminateConnexion(Connection con, Statement st, ResultSet rs){
