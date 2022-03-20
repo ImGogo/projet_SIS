@@ -43,8 +43,7 @@ public class ConnectBD {
         Class.forName("com.mysql.jdbc.Driver");
         String lien = "jdbc:mysql://mysql-lygalma.alwaysdata.net:3306/lygalma_test";
         con = DriverManager.getConnection(lien, "lygalma", "LygalmaSIS1");
-        System.out.println("Connecté");
-
+        
         return con;
     }
     
@@ -190,7 +189,6 @@ public class ConnectBD {
         "FROM prescription " +
         "WHERE idDM = " + idDM;
         
-        System.out.println(query);
         st = con.createStatement();
         rs = st.executeQuery(query);
         
@@ -199,9 +197,9 @@ public class ConnectBD {
             Date dateDebut = new Date( rs.getDate("dateDebut") );
             Date dateFin = new Date( rs.getDate("dateFin") );
             String posologie = rs.getString("posologie");
-            String dose = Integer.toString( rs.getInt("dosage") );
+            String dose = rs.getString("dosage");
+            
             Prescription p = new Prescription(medicament, dose, posologie, dateDebut, dateFin);
-            System.out.println(p);
             liste.add(p);
         }
         
@@ -210,7 +208,7 @@ public class ConnectBD {
         return liste;
     }
     
-    public ArrayList<Prestation> getListePrestationByIdDM(String idDM) throws Exception{
+    public static ArrayList<Prestation> getListePrestationByIdDM(String idDM) throws Exception{
         ArrayList<Prestation> liste = new ArrayList<>();
         
         Connection con = getConnectionToDB();
@@ -222,16 +220,14 @@ public class ConnectBD {
         "FROM prestation " +
         "WHERE idDM = " + idDM;
         
-        System.out.println(query);
         st = con.createStatement();
         rs = st.executeQuery(query);
         
         while (rs.next()) {
-            String prestation = rs.getString("prestation");
+            String prestation = rs.getString("typePrestation");
             String observations = rs.getString("observations");
             Service service = Service.valueOf( rs.getString("service") );
             Prestation p = new Prestation(prestation, service, observations);
-            System.out.println(p);
             liste.add(p);
         }
         
@@ -240,7 +236,7 @@ public class ConnectBD {
         return liste;
     }
     
-    public Patient getPatientByIPP(String ipp) throws Exception{
+    public static Patient getPatientByIPP(String ipp) throws Exception{
         Patient p = null;
         Connection con = getConnectionToDB();
         Statement st;
@@ -251,20 +247,16 @@ public class ConnectBD {
         "FROM patient " +
         "WHERE IPP = " + ipp;
         
-        System.out.println(query);
         st = con.createStatement();
         rs = st.executeQuery(query);
         
-//        while (rs.next()) {
-//            String nom = rs.getString("nom");
-//            String prenom = rs.getString("prenom");
-//            Date dateNaiss = new Date( rs.getDate("dateNaissance") );
-//            Sexe sexe = rs.getString("posologie");
-//            String dose = Integer.toString( rs.getInt("dosage") );
-//            Prescription p = new Prescription(medicament, dose, posologie, dateDebut, dateFin);
-//            System.out.println(p);
-//            liste.add(p);
-//        }
+        if (rs.next()) {
+            String nom = rs.getString("nom");
+            String prenom = rs.getString("prenom");
+            Date dateNaiss = new Date( rs.getDate("dateNaissance") );
+            Sexe sexe = Sexe.valueOf( rs.getString("sexe"));
+            p = new Patient(ipp, nom, prenom, dateNaiss, sexe);
+        }
         
         terminateConnexion(con, st, rs);
         

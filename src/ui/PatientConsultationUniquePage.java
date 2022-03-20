@@ -9,6 +9,8 @@ import bdd.ConnectBD;
 import fc.Visite;
 import fc.Patient;
 import fc.Personnel;
+import fc.Prescription;
+import fc.Prestation;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.MouseInfo;
@@ -41,7 +43,7 @@ import javax.swing.table.TableModel;
  * @author Go
  */
 public class PatientConsultationUniquePage extends javax.swing.JFrame {
-        
+    private String idDM = "1";
     /**
      * Creates new form SecretaireAdminPage
      */
@@ -49,8 +51,93 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         
+        setTableLook(prescriptionTable);
+        setTableLook(prestationTable);
+        initTables();
     }
-
+    
+    public final void initTables(){
+        JFrame popup = new PopupLoading();
+        popup.setVisible(true);
+        
+        SwingWorker sw = new SwingWorker(){
+            @Override
+            protected String doInBackground() throws Exception 
+            {
+                fillPrescriptionTable();
+                fillPrestationTable();
+                return "";
+            }
+  
+            @Override
+            protected void done() 
+            {
+                popup.setVisible(false);
+            }
+        };
+          
+        // executes the swingworker on worker thread
+        sw.execute(); 
+    }
+    
+    private void fillPrescriptionTable(){
+        String headers[] = {"Medicament", "Dosage", "Posologie", "Debut", "Fin"};
+        DefaultTableModel model = new DefaultTableModel(null, headers);
+        try{
+            for(Prescription c : ConnectBD.getListePrescriptionByIdDM(idDM)){
+                model.addRow(c.getPrescriptionForTable());
+            }
+            this.prescriptionTable.setModel(model);
+        } catch (Exception e){
+            System.err.println(e.getMessage());
+            Popup.createPopupErreurConnexion();
+        }
+    }
+    
+    private void fillPrestationTable(){
+        String headers[] = {"Prestation", "Service"};
+        DefaultTableModel model = new DefaultTableModel(null, headers);
+        try{
+            for(Prestation c : ConnectBD.getListePrestationByIdDM(idDM)){
+                model.addRow(c.getPrestationForTable());
+            }
+            this.prestationTable.setModel(model);
+        } catch (Exception e){
+            System.err.println(e.getMessage());
+            Popup.createPopupErreurConnexion();
+        }
+    }
+    
+    public final void setTableLook(JTable table){
+        
+        table.setBorder(null);
+        DefaultTableCellRenderer head_render = new DefaultTableCellRenderer(); 
+        
+        head_render.setBackground(new Color(255,255,255));
+        head_render.setForeground(new Color(31,58,105));
+        table.getTableHeader().setDefaultRenderer(head_render);
+        table.setFillsViewportHeight(true);
+        table.setDefaultEditor(Object.class, null);
+        
+        table.setDefaultRenderer(Object.class, new TableCellRenderer(){
+            private DefaultTableCellRenderer DEFAULT_RENDERER =  new DefaultTableCellRenderer();
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = DEFAULT_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if(isSelected){
+                    c.setBackground(new Color(31, 58, 105));
+                }else{
+                    if (row%2 == 0){
+                        c.setBackground(Color.WHITE);
+                    }
+                    else {
+                        c.setBackground(new Color(230, 230, 240));
+                    }     
+                }
+                return c;
+            }
+        });
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -97,9 +184,9 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
         profilePictLb6 = new javax.swing.JButton();
         jLabel15 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        table = new javax.swing.JTable();
+        prescriptionTable = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
-        table1 = new javax.swing.JTable();
+        prestationTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -427,10 +514,12 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
         jLabel15.setForeground(new java.awt.Color(31, 58, 105));
         jLabel15.setText("Prestations");
 
-        table.setBackground(new java.awt.Color(255, 255, 255));
-        table.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        table.setForeground(new java.awt.Color(116, 116, 116));
-        table.setModel(new javax.swing.table.DefaultTableModel(
+        jScrollPane1.setBorder(null);
+
+        prescriptionTable.setBackground(new java.awt.Color(255, 255, 255));
+        prescriptionTable.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        prescriptionTable.setForeground(new java.awt.Color(116, 116, 116));
+        prescriptionTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"Albendazol", "100 mg", "3 fois par jour", "01/02/2000", "01/03/2000"},
                 {"Ibuprofene", "1000 mg", "1 fois par jour", "01/02/2000", "04/03/2000"},
@@ -448,20 +537,22 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        table.setEnabled(false);
-        table.setFocusable(false);
-        table.setGridColor(new java.awt.Color(255, 255, 255));
-        table.setRowHeight(40);
-        table.setRowMargin(5);
-        table.setRowSelectionAllowed(false);
-        table.setShowHorizontalLines(false);
-        table.setShowVerticalLines(false);
-        jScrollPane1.setViewportView(table);
+        prescriptionTable.setEnabled(false);
+        prescriptionTable.setFocusable(false);
+        prescriptionTable.setGridColor(new java.awt.Color(255, 255, 255));
+        prescriptionTable.setRowHeight(40);
+        prescriptionTable.setRowMargin(5);
+        prescriptionTable.setRowSelectionAllowed(false);
+        prescriptionTable.setShowHorizontalLines(false);
+        prescriptionTable.setShowVerticalLines(false);
+        jScrollPane1.setViewportView(prescriptionTable);
 
-        table1.setBackground(new java.awt.Color(255, 255, 255));
-        table1.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        table1.setForeground(new java.awt.Color(116, 116, 116));
-        table1.setModel(new javax.swing.table.DefaultTableModel(
+        jScrollPane3.setBorder(null);
+
+        prestationTable.setBackground(new java.awt.Color(255, 255, 255));
+        prestationTable.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        prestationTable.setForeground(new java.awt.Color(116, 116, 116));
+        prestationTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"Albendazol", "100 mg", "3 fois par jour", "01/02/2000", "01/03/2000"},
                 {"Ibuprofene", "1000 mg", "1 fois par jour", "01/02/2000", "04/03/2000"},
@@ -479,15 +570,15 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        table1.setEnabled(false);
-        table1.setFocusable(false);
-        table1.setGridColor(new java.awt.Color(255, 255, 255));
-        table1.setRowHeight(40);
-        table1.setRowMargin(5);
-        table1.setRowSelectionAllowed(false);
-        table1.setShowHorizontalLines(false);
-        table1.setShowVerticalLines(false);
-        jScrollPane3.setViewportView(table1);
+        prestationTable.setEnabled(false);
+        prestationTable.setFocusable(false);
+        prestationTable.setGridColor(new java.awt.Color(255, 255, 255));
+        prestationTable.setRowHeight(40);
+        prestationTable.setRowMargin(5);
+        prestationTable.setRowSelectionAllowed(false);
+        prestationTable.setShowHorizontalLines(false);
+        prestationTable.setShowVerticalLines(false);
+        jScrollPane3.setViewportView(prestationTable);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -577,7 +668,7 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
                         .addComponent(jLabel14))
                     .addComponent(profilePictLb5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(profilePictLb6)
@@ -585,7 +676,8 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
                         .addGap(12, 12, 12)
                         .addComponent(jLabel15)))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         scrollPane.setViewportView(jPanel3);
@@ -1268,6 +1360,8 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel nameLb;
     private javax.swing.JLabel portalLb;
+    private javax.swing.JTable prescriptionTable;
+    private javax.swing.JTable prestationTable;
     private javax.swing.JButton profilePictLb;
     private javax.swing.JButton profilePictLb1;
     private javax.swing.JButton profilePictLb3;
@@ -1276,7 +1370,5 @@ public class PatientConsultationUniquePage extends javax.swing.JFrame {
     private javax.swing.JButton profilePictLb6;
     private javax.swing.JScrollPane scrollPane;
     private javax.swing.JLabel serviceLb;
-    private javax.swing.JTable table;
-    private javax.swing.JTable table1;
     // End of variables declaration//GEN-END:variables
 }

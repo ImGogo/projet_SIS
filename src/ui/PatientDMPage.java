@@ -416,7 +416,7 @@ public class PatientDMPage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    public void initTable(){
+    public final void initTable(){
         JFrame popup = new PopupLoading();
         
         SwingWorker sw = new SwingWorker(){
@@ -457,7 +457,7 @@ public class PatientDMPage extends javax.swing.JFrame {
         sw.execute(); 
     }
     
-    public void setTableLook(){
+    public final void setTableLook(){
         
         table.setBorder(null);
         DefaultTableCellRenderer head_render = new DefaultTableCellRenderer(); 

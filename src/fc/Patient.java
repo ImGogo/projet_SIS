@@ -29,6 +29,14 @@ public class Patient {
         this.localisation = localisation;
     }
 
+    public Patient(String ipp, String nom, String prenom, Date dateDeNaissance, Sexe sexe) {
+        this.ipp = ipp;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.dateDeNaissance = dateDeNaissance;
+        this.sexe = sexe;
+    }
+
     public String getIpp() {
         return ipp;
     }

@@ -18,7 +18,7 @@ public class testDate {
      */
     public static void main(String[] args) {
         
-        System.out.println( String.format("%03d", 1));
+        System.out.println( Sexe.valueOf("H"));
     }
     
 }

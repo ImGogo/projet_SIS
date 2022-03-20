@@ -5,6 +5,7 @@
  */
 package bdd;
 
+import fc.Prescription;
 import fc.TypePersonnel;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -21,7 +22,9 @@ public class TestReq {
      */
     public static void main(String[] args) {
         try {
-            System.out.println(ConnectBD.getListePrescriptionByIdDM("1"));
+            for(Prescription c : ConnectBD.getListePrescriptionByIdDM("1")){
+                System.out.println( c.getDose() );
+            }
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
             Logger.getLogger(TestReq.class.getName()).log(Level.FINE, null, ex);

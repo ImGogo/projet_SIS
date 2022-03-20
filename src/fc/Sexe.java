@@ -1,9 +1,9 @@
 package fc;
 
 public enum Sexe {
-    Femme("F"),
-    Homme("H"),
-    Inconnu("I");
+    F("F"), // femme
+    H("H"), // homme
+    I("I"); // inconnu
     
     private final String val;
     
