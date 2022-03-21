@@ -18,6 +18,10 @@ public class Visite {
     List<Prescription> prescriptions;
     List<Prestation> prestations;
 
+    public Visite(){
+        this.prestations = new ArrayList<>();
+        this.prescriptions = new ArrayList<>();
+    }
     public Visite(String numeroSejour, String IPP, String idPh, String motif, String observation, String nomService, String type, String id, String nomPh, Date dateEntree, Date dateSortie) {
         this.numeroSejour = numeroSejour;
         this.IPP = IPP;

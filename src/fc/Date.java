@@ -17,6 +17,17 @@ import java.util.Calendar;
 public class Date {
     int jour, mois , annee;
     int heure, minute;
+    
+    public Date(){
+        LocalDateTime ldt = LocalDateTime.now();
+        
+        jour = ldt.getDayOfMonth();
+        mois = ldt.getMonthValue();
+        annee = ldt.getYear();
+        heure = ldt.getHour();
+        minute = ldt.getMinute();
+    }
+    
     public Date(java.sql.Date date){
         
         LocalDate localDate = date.toLocalDate();
@@ -36,6 +47,9 @@ public class Date {
         minute = ldt.getMinute();
         
     }
+    
+    
+    
     public Date(int jour, int mois, int annee) {
         this.jour = jour;
         this.mois = mois;

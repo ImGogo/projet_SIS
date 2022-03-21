@@ -332,7 +332,7 @@ public class PraticienPage extends javax.swing.JFrame {
     
     public void initTable(){
         JFrame popup = new PopupLoading();
-        ArrayList<Patient> listePatients = new ArrayList<>();
+        popup.setVisible(true);
         
         SwingWorker sw = new SwingWorker(){
             @Override
@@ -342,7 +342,6 @@ public class PraticienPage extends javax.swing.JFrame {
                 String headers2[] = {"Nom", "Prénom", "Date", "Heure", "IPP"};
                 DefaultTableModel model = new DefaultTableModel(null, headers);
                 DefaultTableModel model2 = new DefaultTableModel(null, headers2);
-                popup.setVisible(true);
                 try{
                     for(Patient p : ConnectBD.getListePatientFromService("Cardiologie")){
                         model.addRow(p.getPatientForPatientList());
