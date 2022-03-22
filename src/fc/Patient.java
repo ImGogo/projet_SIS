@@ -13,6 +13,8 @@ public class Patient {
     private Sexe sexe;
     private String medecinGeneraliste;
     private Localisation localisation;
+    private String email;
+    private String nss;
     private Adresse adresse;
 
     public Patient(String ipp, String nom, String prenom, Date dateDeNaissance) {
@@ -22,13 +24,16 @@ public class Patient {
         this.dateDeNaissance = dateDeNaissance;
     }
     
-    public Patient(String nom, String prenom, Date dateDeNaissance, Localisation localisation, Sexe sexe, Adresse adresse) {
+    public Patient(String nom, String prenom, Date dateDeNaissance, Localisation localisation, Sexe sexe, Adresse adresse, String nss, String email, String medecin) {
         this.nom = nom;
         this.prenom = prenom;
         this.dateDeNaissance = dateDeNaissance;
         this.localisation = localisation;
         this.sexe = sexe;
         this.adresse = adresse;
+        this.nss = nss;
+        this.medecinGeneraliste = medecin;
+        this.email = email;
         this.ipp = generateIPP();
     }
     
@@ -57,6 +62,7 @@ public class Patient {
     public void setIpp(String ipp){
         this.ipp = ipp;
     }
+    
     public String getIpp() {
         return ipp;
     }
@@ -97,6 +103,32 @@ public class Patient {
     public String[] getPatientForConsultationList(){
         return new String[] {nom, prenom, dateDeNaissance.toString(), dateDeNaissance.getHeureMinute(), ipp};
     }
+    
+    public Adresse getAdresse(){
+        return this.adresse;
+    }
+    
+    public static boolean verifyINSEE(String numINSEE) {
+        if (numINSEE.length() != 15) {
+            return false;
+        } else {
+            String firstPart = numINSEE.substring(0, 13);
+            String cle = numINSEE.substring(13);
+            double fp = Double.parseDouble(firstPart);
+            double verifCle = Double.parseDouble(cle);
+            double calculCle=97-(fp%97);
+            return verifCle==calculCle;
+        }
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getNss() {
+        return nss;
+    }
+    
     @Override
     public String toString() {
         return getNomPrenomFormat() + " (" + sexe.toString() + "-" + dateDeNaissance.getAgeString() + ")";

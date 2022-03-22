@@ -30,7 +30,7 @@ public class creerDmaPage extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         Look.setScrollBar(scrollPane);
-        
+        lblNssInvalide.setForeground( new Color(255,255,255));
         
         
     }
@@ -86,6 +86,7 @@ public class creerDmaPage extends javax.swing.JFrame {
         jLabel20 = new javax.swing.JLabel();
         profilePictLb3 = new javax.swing.JButton();
         profilePictLb2 = new javax.swing.JButton();
+        lblNssInvalide = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -345,9 +346,9 @@ public class creerDmaPage extends javax.swing.JFrame {
         numssTxt.setForeground(new java.awt.Color(116, 116, 116));
         numssTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 28, 105), 2, true));
         numssTxt.setMargin(new java.awt.Insets(5, 5, 5, 5));
-        numssTxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                numssTxtActionPerformed(evt);
+        numssTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                numssTxtKeyTyped(evt);
             }
         });
 
@@ -473,6 +474,10 @@ public class creerDmaPage extends javax.swing.JFrame {
             }
         });
 
+        lblNssInvalide.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        lblNssInvalide.setForeground(new java.awt.Color(255, 51, 51));
+        lblNssInvalide.setText("INVALIDE");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -492,17 +497,20 @@ public class creerDmaPage extends javax.swing.JFrame {
                         .addGap(59, 59, 59))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(numssTxt)
-                                .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(prenomTxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(sexeCbo, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.LEADING))
-                            .addComponent(jLabel9))
-                        .addGap(166, 166, 166)
+                            .addComponent(jLabel9)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(numssTxt)
+                                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(prenomTxt, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(sexeCbo, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblNssInvalide)))
+                        .addGap(68, 68, 68)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -584,7 +592,9 @@ public class creerDmaPage extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(numssTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(numssTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblNssInvalide)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel15)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -703,10 +713,6 @@ public class creerDmaPage extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_anneeTxtActionPerformed
 
-    private void numssTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numssTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_numssTxtActionPerformed
-
     private void mailTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mailTxtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_mailTxtActionPerformed
@@ -756,10 +762,9 @@ public class creerDmaPage extends javax.swing.JFrame {
         String ville = this.villeTxt.getText();
         String cp = this.codePostalTxt.getText();
         
-        fc.Adresse adresse = new fc.Adresse(nomRue, numRue, cp, ville);
-        fc.Patient patient = new fc.Patient(nom, prenom, dateNaissance, null, sexe, adresse);
-        this.adresse = adresse;
-        this.patient = patient;
+        this.adresse = new fc.Adresse(nomRue, numRue, cp, ville);
+        this.patient = new fc.Patient(nom, prenom, dateNaissance, null, sexe, adresse, nss, email, medecin);
+        
         PopupFactory.createPopupValider(this);
     }//GEN-LAST:event_jButton1ActionPerformed
     
@@ -789,6 +794,21 @@ public class creerDmaPage extends javax.swing.JFrame {
     private void moisTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_moisTxtKeyTyped
         TextValidator.consumeNonIntegers(evt, 2, 12);
     }//GEN-LAST:event_moisTxtKeyTyped
+
+    private void numssTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_numssTxtKeyTyped
+        
+        if(numssTxt.getText().length() >= 14) {
+            if (Patient.verifyINSEE(numssTxt.getText())) {
+                lblNssInvalide.setForeground( new Color(255,255,255));
+            } else {
+                lblNssInvalide.setForeground( new Color(255,0,0));
+            }
+        } else {
+            lblNssInvalide.setForeground( new Color(255,255,255));
+        }
+        
+        TextValidator.consumeNonIntegers(evt, 15, 0);
+    }//GEN-LAST:event_numssTxtKeyTyped
 
     /**
      * @param args the command line arguments
@@ -853,6 +873,7 @@ public class creerDmaPage extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JTextField jourTxt;
+    private javax.swing.JLabel lblNssInvalide;
     private javax.swing.JTextField mailTxt;
     private javax.swing.JTextField medecinTxt;
     private javax.swing.JTextField moisTxt;

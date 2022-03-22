@@ -46,19 +46,33 @@ public class ConnectBD {
         
         Connection con = getConnectionToDB();
         PreparedStatement pstmt = con.prepareStatement(
-            "INSERT INTO patient (IPP, nom, prenom, dateNaissance, sexe) VALUE (?,?,?,?,?)");
+            "INSERT INTO patient (IPP, nom, prenom, dateNaissance, sexe, nomPH, numSecu, adresseMail) VALUE (?,?,?,?,?,?,?,?)");
+        PreparedStatement pstmt2 = con.prepareStatement(
+            "INSERT INTO adresse (IPP, nomRue, numRue, codePostal, ville) VALUE (?,?,?,?,?)");
         try{
             pstmt.setInt(1, Integer.parseInt( p.getIpp() ));
             pstmt.setString(2, p.getNom());
             pstmt.setString(3, p.getPrenom() );
             pstmt.setDate(4, new java.sql.Date(new SimpleDateFormat("dd / MM / yyyy").parse(p.getDateDeNaissance().toString()).getTime()));
             pstmt.setString(5, p.getSexe().toString());
+            pstmt.setString(6, p.getMedecinGeneraliste());
+            pstmt.setString(7, p.getNss());
+            pstmt.setString(8, p.getEmail());
             pstmt.executeUpdate();
             
-            con.close();
             pstmt.close();
+            
+            pstmt2.setInt(1, Integer.parseInt( p.getIpp() ));
+            pstmt2.setString(2, a.getNomRue() );
+            pstmt2.setInt(3, Integer.parseInt( a.getNumRue()));
+            pstmt2.setInt(4, Integer.parseInt( a.getCodePostal()));
+            pstmt2.setString(5, a.getVille());
+            pstmt2.executeUpdate();
+            
+            pstmt2.close();
+            con.close();
         } catch(Exception e) {
-            System.out.println(e);
+            System.err.println(e.getMessage());
         }
     }
     
@@ -76,7 +90,6 @@ public class ConnectBD {
         rs = st.executeQuery(query);
         while (rs.next()) {
             String dbPass = rs.getString("mdp");
-//            boolean isEqual = fc.PasswordHandler.isEqual(inPass, dbPass);
             if(fc.PasswordHandler.isEqual(inPass, dbPass))
                 personnel = new Personnel(rs.getString("nom"), rs.getString("prenom"));
         }
