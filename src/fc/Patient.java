@@ -60,6 +60,15 @@ public class Patient {
     public String getMedecinGeneraliste() {
         return medecinGeneraliste;
     }
+
+    public Localisation getLocalisation() {
+        return localisation;
+    }
+    
+    public String getNomPrenomFormat(){
+        return nom.toUpperCase() + " " + prenom.substring(0, 1).toUpperCase() + prenom.substring(1);
+    }
+    
     
     public String[] getPatientForPatientList(){
         return new String[] {nom, prenom, dateDeNaissance.toString(), localisation.toString(), ipp};
@@ -70,6 +79,6 @@ public class Patient {
     }
     @Override
     public String toString() {
-        return "Patient{" + "ipp=" + ipp + ", nom=" + nom + ", prenom=" + prenom + ", dateDeNaissance=" + dateDeNaissance + '}';
+        return getNomPrenomFormat() + " (" + dateDeNaissance.getAgeString() + ")";
     }
 }

@@ -7,6 +7,7 @@ package fc;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Calendar;
 
 /**
@@ -19,9 +20,9 @@ public class testDate {
      * @param args the command line arguments
      */
     public static void main(String[] args) { 
-        for(Service s : Service.values() ) {
-            System.out.println( s.name().replace("_", " ") );
-        }
+        
+        Date d = new Date(8, 9, 1999);
+        System.out.println( d.getAgeString() );
     }
     
 }

@@ -5,19 +5,17 @@
  */
 package bdd;
 
-import com.mysql.jdbc.CommunicationsException;
 import fc.Visite;
 import fc.CoteLit;
 import fc.Date;
 import fc.Localisation;
+import fc.Medecin;
 import fc.Patient;
-import fc.Patient_2;
 import fc.Personnel;
 import fc.Prescription;
 import fc.Prestation;
 import fc.Service;
 import fc.Sexe;
-import fc.TypePersonnel;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -26,10 +24,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.SwingWorker;
 
 /**
  *
@@ -134,8 +130,8 @@ public class ConnectBD {
             String ipp = rs.getString("patient.IPP");
             String nom = rs.getString("nom");
             String prenom = rs.getString("prenom");
-            Date dateEntree = new Date( rs.getTimestamp("dateEntree") ); // utilisation de la date de naissance pour stocker la date d'entree
-//            java.sql.Date dateEntree = rs.getDate("dateEntree"); // utilisation de la date de naissance pour stocker la date d'entree
+            // utilisation de la date de naissance pour stocker la date de la consultation
+            Date dateEntree = new Date( rs.getTimestamp("dateEntree") ); 
             listePatients.add( new Patient(ipp, nom, prenom, dateEntree));
         }
         
@@ -152,7 +148,7 @@ public class ConnectBD {
         
         String query = 
         "SELECT DM.*, nom, prenom " + 
-        "FROM DM INNER JOIN praticien ON idPH = praticien.id" +
+        "FROM DM INNER JOIN praticien ON idPH = praticien.id " +
         "WHERE ipp = \"" + ipp + "\";";
         
         st = con.createStatement();
@@ -187,7 +183,6 @@ public class ConnectBD {
         "FROM DM INNER JOIN praticien ON idPH = praticien.id " +
         "WHERE idDM = " + idDM;
         
-        
         st = con.createStatement();
         rs = st.executeQuery(query);
         
@@ -207,7 +202,7 @@ public class ConnectBD {
             visite = new Visite(Integer.toString(numSejour), ipp, date, service, type, id, nom + " " + prenom, motif, observations);
             
             for( Prescription p : getListePrescriptionByIdDM(idDM, con)){
-            visite.addPrescription(p);
+                visite.addPrescription(p);
             }
             for( Prestation p : getListePrestationByIdDM(idDM, con)){
                 visite.addPrestation(p);
@@ -304,6 +299,72 @@ public class ConnectBD {
         return p;
     }
     
+    public static Service[] getListServiceAvecMedecin() throws Exception{
+        Connection con = getConnectionToDB();
+        Statement st;
+        ResultSet rs;
+        
+        int rowCount = 0;
+        int i = 0;
+        
+        String query = 
+        "SELECT DISTINCT service " +
+        "FROM praticien";
+        
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+        
+        if (rs.last()) {
+            rowCount = rs.getRow();
+            rs.beforeFirst();
+        }
+        Service[] liste = new Service[rowCount];
+        
+        while (rs.next()) {
+            String service = rs.getString("service");
+            liste[i++] = Service.valueOf(service);
+        }
+        
+        terminateConnexion(con, st, rs);
+        
+        return liste;
+    }
+    
+    public static Medecin[] getListMedecinFrom(String service) throws Exception{
+        Connection con = getConnectionToDB();
+        Statement st;
+        ResultSet rs;
+        
+        int rowCount = 0;
+        int i = 0;
+        
+        String query = 
+        "SELECT id, nom, prenom " +
+        "FROM praticien " +
+        "WHERE service = \"" + service + "\";";
+        
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+        
+        if (rs.last()) {
+            rowCount = rs.getRow();
+            rs.beforeFirst();
+        }
+        Medecin[] liste = new Medecin[rowCount];
+        
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            String nom = rs.getString("nom");
+            String prenom = rs.getString("prenom");
+            liste[i++] = new Medecin(id, nom, prenom);
+        }
+        
+        terminateConnexion(con, st, rs);
+        
+        return liste;
+    }
+    
+    
     private static void terminateConnexion(Connection con, Statement st, ResultSet rs){
         try {
             con.close();
@@ -322,6 +383,7 @@ public class ConnectBD {
             Logger.getLogger(ConnectBD.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
     
     private static String getTableName(String id){
         switch(id.substring(0, 2)){

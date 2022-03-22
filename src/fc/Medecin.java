@@ -12,11 +12,18 @@ package fc;
 public class Medecin {
     String nom, prenom;
     Specialite specialite;
+    int id;
 
     public Medecin(String nom, String prenom, Specialite specialite) {
         this.nom = nom;
         this.prenom = prenom;
         this.specialite = specialite;
+    }
+    
+    public Medecin(int id, String nom, String prenom) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.id = id;
     }
 
     public String getNom() {
@@ -30,6 +37,17 @@ public class Medecin {
     public Specialite getSpecialite() {
         return specialite;
     }
+    
+    public int getId(){
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return nom.toUpperCase() + " " + prenom.substring(0, 1).toUpperCase() + prenom.substring(1).toLowerCase();
+    }
+    
+    
     
     
 }

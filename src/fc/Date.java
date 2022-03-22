@@ -7,6 +7,8 @@ package fc;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
@@ -80,14 +82,39 @@ public class Date {
     public int getJour() {
         return jour;
     }
+    
+    public String getJourString(){
+        return String.format("%02d", jour);
+    }
 
     public int getMois() {
         return mois;
+    }
+    
+    public String getMoisString(){
+        return String.format("%02d", mois);
     }
 
     public int getAnnee() {
         return annee;
     }
     
+    public String getAnneeString(){
+        return String.format("%04d", annee);
+    }
     
+    public String getHeureString(){
+        return String.format("%02d", heure);
+    }
+    
+    public String getMinuteString(){
+        return String.format("%02d", minute);
+    }
+    
+    public String getAgeString(){
+        LocalDate now = LocalDate.now();
+        LocalDate dat = LocalDate.of(annee, Month.of(mois), jour);
+        
+        return Integer.toString( Period.between(dat, now).getYears() );
+    }
 }

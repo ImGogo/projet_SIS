@@ -5,19 +5,13 @@
  */
 package ui;
 
+import bdd.ConnectBD;
+import fc.Look;
+import fc.Medecin;
+import fc.Service;
 import java.awt.Color;
-import java.awt.MouseInfo;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.geom.RoundRectangle2D;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.KeyStroke;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
 
 /**
  *
@@ -31,8 +25,44 @@ public class creerDmPage extends javax.swing.JFrame {
     public creerDmPage() {
         initComponents();
         setLocationRelativeTo(null);
+        
+        initDateTextFields();
+        fillServiceComboBox();
+        Look.setComboBoxScrollBar(cboMedecin);
+        Look.setComboBoxScrollBar(cboType);
+        Look.setComboBoxScrollBar(cboService);
     }
-
+    
+    private void fillServiceComboBox() {
+        try {
+            Service[] liste = ConnectBD.getListServiceAvecMedecin();
+            this.cboService.setModel( new DefaultComboBoxModel<>(liste));
+            updateMedecinComboBox(this.cboService.getItemAt(0));
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+            Popup.createPopupErreurConnexion();
+        }
+    }
+    
+    private void updateMedecinComboBox(Service service){
+        try {
+            Medecin[] liste = ConnectBD.getListMedecinFrom(service.toString());
+            this.cboMedecin.setModel( new DefaultComboBoxModel<>(liste));
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+            Popup.createPopupErreurConnexion();
+        }
+    }
+    
+    private void initDateTextFields(){
+        fc.Date date = new fc.Date();
+        
+        this.dayTxt.setText( date.getJourString() );
+        this.monthTxt.setText( date.getMoisString() );
+        this.yearTxt.setText( date.getAnneeString() );
+        this.txtHeure.setText( date.getHeureString());
+        this.txtMinute.setText( date.getMinuteString());
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -62,15 +92,21 @@ public class creerDmPage extends javax.swing.JFrame {
         monthTxt = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         yearTxt = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cboMedecin = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        cboType = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
-        jComboBox3 = new javax.swing.JComboBox<>();
-        prenomTxt = new javax.swing.JTextField();
+        cboService = new javax.swing.JComboBox<>();
+        txtMotif = new javax.swing.JTextField();
+        lblErreur = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        txtHeure = new javax.swing.JTextField();
+        txtMinute = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
+        setPreferredSize(new java.awt.Dimension(1280, 720));
         setResizable(false);
 
         HomePanel.setBackground(new java.awt.Color(255, 255, 255));
@@ -199,7 +235,7 @@ public class creerDmPage extends javax.swing.JFrame {
         jLabel2.setBackground(new java.awt.Color(255, 255, 255));
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel2.setText("Date de la consultation :");
+        jLabel2.setText("Date :");
 
         dayTxt.setBackground(new java.awt.Color(255, 255, 255));
         dayTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
@@ -225,6 +261,11 @@ public class creerDmPage extends javax.swing.JFrame {
         jButton1.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("CREER LE DM");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(31, 58, 105));
@@ -255,47 +296,81 @@ public class creerDmPage extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setBackground(new java.awt.Color(255, 255, 255));
-        jComboBox1.setEditable(true);
-        jComboBox1.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
-        jComboBox1.setForeground(new java.awt.Color(31, 58, 105));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ESTADIEU Alexis", "BAKIR Lydia" }));
-        jComboBox1.setBorder(null);
+        cboMedecin.setBackground(new java.awt.Color(255, 255, 255));
+        cboMedecin.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
+        cboMedecin.setForeground(new java.awt.Color(31, 58, 105));
+        cboMedecin.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 58, 105), 2, true));
 
         jLabel4.setBackground(new java.awt.Color(255, 255, 255));
         jLabel4.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(31, 58, 105));
         jLabel4.setText("Nature du service*");
 
-        jComboBox2.setBackground(new java.awt.Color(255, 255, 255));
-        jComboBox2.setEditable(true);
-        jComboBox2.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
-        jComboBox2.setForeground(new java.awt.Color(31, 58, 105));
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Consultation", "Surveillance" }));
-        jComboBox2.setBorder(null);
+        cboType.setBackground(new java.awt.Color(255, 255, 255));
+        cboType.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
+        cboType.setForeground(new java.awt.Color(31, 58, 105));
+        cboType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Consultation", "Hospitalisation" }));
+        cboType.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 58, 105), 2, true));
 
         jLabel5.setBackground(new java.awt.Color(255, 255, 255));
         jLabel5.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(31, 58, 105));
         jLabel5.setText("Service Medical*");
 
-        jComboBox3.setBackground(new java.awt.Color(255, 255, 255));
-        jComboBox3.setEditable(true);
-        jComboBox3.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
-        jComboBox3.setForeground(new java.awt.Color(31, 58, 105));
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cardiologie", "Gastrologie" }));
-        jComboBox3.setBorder(null);
-
-        prenomTxt.setBackground(new java.awt.Color(255, 255, 255));
-        prenomTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        prenomTxt.setForeground(new java.awt.Color(116, 116, 116));
-        prenomTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 28, 105), 2, true));
-        prenomTxt.setMargin(new java.awt.Insets(5, 5, 5, 5));
-        prenomTxt.addActionListener(new java.awt.event.ActionListener() {
+        cboService.setBackground(new java.awt.Color(255, 255, 255));
+        cboService.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
+        cboService.setForeground(new java.awt.Color(31, 58, 105));
+        cboService.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 58, 105), 2, true));
+        cboService.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                prenomTxtActionPerformed(evt);
+                cboServiceActionPerformed(evt);
             }
         });
+
+        txtMotif.setBackground(new java.awt.Color(255, 255, 255));
+        txtMotif.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        txtMotif.setForeground(new java.awt.Color(116, 116, 116));
+        txtMotif.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 28, 105), 2, true));
+        txtMotif.setMargin(new java.awt.Insets(5, 5, 5, 5));
+        txtMotif.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMotifActionPerformed(evt);
+            }
+        });
+
+        lblErreur.setBackground(new java.awt.Color(255, 255, 255));
+        lblErreur.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        lblErreur.setForeground(new java.awt.Color(255, 255, 255));
+        lblErreur.setText("Veuillez renseigner un motif");
+
+        jLabel9.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel9.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(31, 58, 105));
+        jLabel9.setText("Heure :");
+
+        txtHeure.setBackground(new java.awt.Color(255, 255, 255));
+        txtHeure.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        txtHeure.setForeground(new java.awt.Color(116, 116, 116));
+        txtHeure.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(31, 58, 105)));
+        txtHeure.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtHeureKeyTyped(evt);
+            }
+        });
+
+        txtMinute.setBackground(new java.awt.Color(255, 255, 255));
+        txtMinute.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        txtMinute.setForeground(new java.awt.Color(116, 116, 116));
+        txtMinute.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(31, 58, 105)));
+        txtMinute.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMinuteActionPerformed(evt);
+            }
+        });
+
+        jLabel10.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(31, 58, 105));
+        jLabel10.setText(":");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -306,16 +381,14 @@ public class creerDmPage extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cboService, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel11)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(prenomTxt))
-                            .addComponent(jLabel1)
+                        .addComponent(jLabel1)
+                        .addContainerGap(593, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -327,21 +400,33 @@ public class creerDmPage extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel8)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(yearTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(yearTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtHeure, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtMinute, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(452, 452, 452)
+                                .addComponent(jLabel11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtMotif))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(cboType, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel3)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addContainerGap(166, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(200, 618, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cboMedecin, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(52, 52, 52))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblErreur)
+                .addGap(261, 261, 261))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -355,26 +440,32 @@ public class creerDmPage extends javax.swing.JFrame {
                     .addComponent(jLabel7)
                     .addComponent(monthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
-                    .addComponent(yearTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(yearTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9)
+                    .addComponent(txtHeure, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10)
+                    .addComponent(txtMinute, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cboService, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(cboType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(16, 16, 16)
+                        .addComponent(cboMedecin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(26, 26, 26)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
-                    .addComponent(prenomTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                    .addComponent(txtMotif, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblErreur)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(56, 56, 56))
         );
@@ -385,28 +476,28 @@ public class creerDmPage extends javax.swing.JFrame {
             HomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(HomePanelLayout.createSequentialGroup()
-                .addGap(120, 120, 120)
+                .addGap(119, 119, 119)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(333, Short.MAX_VALUE))
         );
         HomePanelLayout.setVerticalGroup(
             HomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(HomePanelLayout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(65, 65, 65)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(80, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(HomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1128, Short.MAX_VALUE)
+            .addComponent(HomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(HomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 608, Short.MAX_VALUE)
+            .addComponent(HomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -454,9 +545,32 @@ public class creerDmPage extends javax.swing.JFrame {
         
     }//GEN-LAST:event_dayTxtKeyTyped
 
-    private void prenomTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prenomTxtActionPerformed
+    private void txtMotifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMotifActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_prenomTxtActionPerformed
+    }//GEN-LAST:event_txtMotifActionPerformed
+
+    private void cboServiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboServiceActionPerformed
+        updateMedecinComboBox((Service) cboService.getSelectedItem());
+    }//GEN-LAST:event_cboServiceActionPerformed
+
+    private void txtHeureKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHeureKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtHeureKeyTyped
+
+    private void txtMinuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMinuteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMinuteActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if ( txtMotif.getText().isEmpty() ){
+            lblErreur.setForeground( new Color(200, 20, 20));
+        } else if( cboMedecin.getSelectedItem() == null){
+        } else {
+            System.out.println((Service)this.cboService.getSelectedItem());
+            System.out.println((Medecin)this.cboMedecin.getSelectedItem());
+            System.out.println(this.txtMotif.getText());
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -498,13 +612,14 @@ public class creerDmPage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel HomePanel;
+    private javax.swing.JComboBox<Medecin> cboMedecin;
+    private javax.swing.JComboBox<Service> cboService;
+    private javax.swing.JComboBox<String> cboType;
     private javax.swing.JTextField dayTxt;
     private javax.swing.JButton disconnectBtn;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -512,16 +627,20 @@ public class creerDmPage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JLabel lblErreur;
     private javax.swing.JTextField monthTxt;
     private javax.swing.JLabel nameLb;
     private javax.swing.JLabel portalLb;
-    private javax.swing.JTextField prenomTxt;
     private javax.swing.JButton profilePictLb;
     private javax.swing.JButton profilePictLb1;
     private javax.swing.JLabel serviceLb;
+    private javax.swing.JTextField txtHeure;
+    private javax.swing.JTextField txtMinute;
+    private javax.swing.JTextField txtMotif;
     private javax.swing.JTextField yearTxt;
     // End of variables declaration//GEN-END:variables
 }

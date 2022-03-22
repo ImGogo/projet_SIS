@@ -8,6 +8,7 @@ package fc;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import javax.swing.BorderFactory;
@@ -18,6 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
+import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.BasicComboPopup;
 import javax.swing.plaf.basic.BasicScrollBarUI;
@@ -72,17 +74,11 @@ public class Look {
                 c =
                     renderer.getListCellRendererComponent(
                         listBox, comboBox.getSelectedItem(), -1, false, false);
-                c.setFont(comboBox.getFont());
+//                c.setFont(comboBox.getFont());
+                c.setFont( new Font("Ebrima", Font.BOLD, 19));
                 
-                if (comboBox.isEnabled()) {
-                  c.setForeground(comboBox.getForeground());
-                  c.setBackground(comboBox.getBackground());
-                } else {
-                  c.setForeground(UIManager.getColor("ComboBox.disabledForeground"));
-                  c.setBackground(UIManager.getColor("ComboBox.disabledBackground"));
-                }
+                c.setForeground(new Color(116, 116, 116));
                 d = c.getPreferredSize();
-//                comboBox.setBorder( BorderFactory.createEmptyBorder(5,5,5,5));
                 currentValuePane.paintComponent(g, c, comboBox, bounds.x, bounds.y, bounds.width, d.height);
               }
             @Override
@@ -99,7 +95,7 @@ public class Look {
             }
             @Override
             protected ComboPopup createPopup() {
-                return new BasicComboPopup(comboBox) {
+                BasicComboPopup comboPopup = new BasicComboPopup(comboBox) {
                     @Override
                     protected JScrollPane createScroller() {
                         JScrollPane scroller = new JScrollPane(list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -148,6 +144,10 @@ public class Look {
                         return scroller;
                     }
                 };
+                comboPopup.setBorder( new LineBorder(new Color(31, 28, 105), 2) );
+                comboPopup.setFont( new Font("Ebrima", Font.BOLD, 19));
+                comboPopup.setForeground(new Color(116, 116, 116));
+                return comboPopup;
             }
         });
     }
