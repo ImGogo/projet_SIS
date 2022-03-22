@@ -5,12 +5,23 @@
  */
 package ui;
 
+import bdd.ConnectBD;
+import fc.Adresse;
+import fc.Patient;
+import fc.Personnel;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.SwingWorker;
+
 /**
  *
  * @author Go
  */
 public class PopupValider extends javax.swing.JFrame {
-
+    
+    ui.creerDmaPage main = null;;
     /**
      * Creates new form PopupCreationPatientReussite
      */
@@ -20,7 +31,15 @@ public class PopupValider extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
     }
-
+    
+    public PopupValider(ui.creerDmaPage main) {
+        
+//        this.setContentPane(new RoundedPanel());
+        initComponents();
+        setLocationRelativeTo(null);
+        this.main = main;
+    }
+     
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -121,12 +140,47 @@ public class PopupValider extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PopupCreationPatientReussite().setVisible(true);
+        JFrame popup = new PopupLoading();
+        popup.setAlwaysOnTop(true);
+        popup.setVisible(true);
+        SwingWorker sw = new SwingWorker(){
+            @Override
+            protected String doInBackground() throws Exception 
+            {
+                try{
+                    main.insertPatientIntoDB();
+                } catch (Exception e){
+                    PopupFactory.createPopupErreurConnexion();
+                    return "err";
+                }
+                return "";
             }
-        });
-        this.dispose();
+  
+            @Override
+            protected void done() 
+            {
+                try {
+                    if(get().toString().equals("")){
+                        java.awt.EventQueue.invokeLater(new Runnable() {
+                            public void run() {
+                                new PopupCreationPatientReussite().setVisible(true);
+                            }
+                        });
+                    }
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(PopupValider.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ExecutionException ex) {
+                    Logger.getLogger(PopupValider.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                popup.setVisible(false);
+                PopupValider.this.dispose();
+            }
+        };
+          
+        // executes the swingworker on worker thread
+        sw.execute(); 
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

@@ -81,7 +81,7 @@ public class VisitePage extends javax.swing.JFrame {
                     patient = ConnectBD.getPatientByIPP(ipp);
                 } catch (Exception e){
                     System.err.println(e.getMessage());
-                    Popup.createPopupErreurConnexion();
+                    PopupFactory.createPopupErreurConnexion();
                 }
                 fillPrescriptionTable();
                 fillPrestationTable();

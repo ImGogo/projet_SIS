@@ -5,6 +5,7 @@
  */
 package bdd;
 
+import fc.Adresse;
 import fc.Visite;
 import fc.CoteLit;
 import fc.Date;
@@ -41,17 +42,17 @@ public class ConnectBD {
         return DriverManager.getConnection(lien, "lygalma", "LygalmaSIS1");
     }
     
-    public static void insertPatient(int ipp, String nom, String prenom, fc.Date date, fc.Sexe sexe) throws Exception{
+    public static void insertPatient(Patient p, Adresse a) throws Exception{
         
         Connection con = getConnectionToDB();
         PreparedStatement pstmt = con.prepareStatement(
             "INSERT INTO patient (IPP, nom, prenom, dateNaissance, sexe) VALUE (?,?,?,?,?)");
         try{
-            pstmt.setInt(1, ipp);
-            pstmt.setString(2, nom);
-            pstmt.setString(3, prenom);
-            pstmt.setDate(4, new java.sql.Date(new SimpleDateFormat("dd-MM-yyyy").parse(date.toString()).getTime()));
-            pstmt.setString(5, sexe.getVal());
+            pstmt.setInt(1, Integer.parseInt( p.getIpp() ));
+            pstmt.setString(2, p.getNom());
+            pstmt.setString(3, p.getPrenom() );
+            pstmt.setDate(4, new java.sql.Date(new SimpleDateFormat("dd / MM / yyyy").parse(p.getDateDeNaissance().toString()).getTime()));
+            pstmt.setString(5, p.getSexe().toString());
             pstmt.executeUpdate();
             
             con.close();
@@ -148,23 +149,27 @@ public class ConnectBD {
         Statement st;
         ResultSet rs;
         String query = 
-        "SELECT patient.* " + 
+        "SELECT patient.*, numChambre, coteLit, serviceGeographique " + 
         "FROM `DM` INNER JOIN patient ON patient.IPP = DM.IPP " +
-        "WHERE dateSortie IS NULL AND lettreSortie IS NOT NULL AND service = \"" + service + "\" ";
+        "INNER JOIN localisation ON patient.IPP = localisation.IPP " +
+        "WHERE numChambre IS NOT NULL AND dateSortie IS NULL AND lettreSortie IS NOT NULL AND service = \"" + service + "\" ";
         
         st = con.createStatement();
         rs = st.executeQuery(query);
         while (rs.next()) {
-            String ipp = rs.getString("patient.IPP");
+            String ipp = rs.getString("patient.ipp");
             String nom = rs.getString("nom");
             String prenom = rs.getString("prenom");
-            Date dateNaissance =  new Date( rs.getDate("dateNaissance") );
+            java.sql.Date dateNaissance = rs.getDate("dateNaissance");
+            int numChambre = rs.getInt("numChambre");
+            Service sg = Service.valueOf( rs.getString("serviceGeographique"));
+            CoteLit cl = CoteLit.valueOf( rs.getString("coteLit"));
             Sexe sexe = Sexe.valueOf( rs.getString("sexe"));
-            listePatients.add( new Patient(ipp, nom, prenom, dateNaissance, sexe));
+            Localisation localisation = new Localisation(numChambre, cl, sg, Service.valueOf(service));
+            listePatients.add( new Patient(ipp, nom, prenom, new fc.Date(dateNaissance), localisation, sexe));
         }
         
         terminateConnexion(con, st, rs);
-        
         return listePatients;
     }
     

@@ -353,7 +353,7 @@ public class PraticienPage extends javax.swing.JFrame {
                     tableConsultation.setModel(model2);
                 } catch (Exception e){
                     System.err.println( e.getMessage() );
-                    Popup.createPopupErreurConnexion();
+                    PopupFactory.createPopupErreurConnexion();
                 }
                 return "";
             }

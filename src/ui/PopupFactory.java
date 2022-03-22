@@ -26,7 +26,7 @@ import javax.swing.JPanel;
  *
  * @author Go
  */
-public class Popup {
+public class PopupFactory {
     
     public static void createPopupCreationPatientReussite(){
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -36,10 +36,10 @@ public class Popup {
         });
     }
     
-    public static void createPopupValider(){
+    public static void createPopupValider(ui.creerDmaPage main){
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PopupValider().setVisible(true);
+                new PopupValider(main).setVisible(true);
             }
         });
     }

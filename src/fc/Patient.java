@@ -13,12 +13,23 @@ public class Patient {
     private Sexe sexe;
     private String medecinGeneraliste;
     private Localisation localisation;
+    private Adresse adresse;
 
     public Patient(String ipp, String nom, String prenom, Date dateDeNaissance) {
         this.ipp = ipp;
         this.nom = nom;
         this.prenom = prenom;
         this.dateDeNaissance = dateDeNaissance;
+    }
+    
+    public Patient(String nom, String prenom, Date dateDeNaissance, Localisation localisation, Sexe sexe, Adresse adresse) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.dateDeNaissance = dateDeNaissance;
+        this.localisation = localisation;
+        this.sexe = sexe;
+        this.adresse = adresse;
+        this.ipp = generateIPP();
     }
     
     public Patient(String ipp, String nom, String prenom, Date dateDeNaissance, Localisation localisation, Sexe sexe) {
@@ -37,7 +48,15 @@ public class Patient {
         this.dateDeNaissance = dateDeNaissance;
         this.sexe = sexe;
     }
-
+    
+    public String generateIPP(){
+        String id = nom + prenom + dateDeNaissance.getJour() + dateDeNaissance.getMois()+ dateDeNaissance.getAnnee();
+        return Integer.toString( java.lang.Math.abs(id.hashCode()) );
+    }
+    
+    public void setIpp(String ipp){
+        this.ipp = ipp;
+    }
     public String getIpp() {
         return ipp;
     }

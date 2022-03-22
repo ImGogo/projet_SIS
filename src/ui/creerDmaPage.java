@@ -5,25 +5,15 @@
  */
 package ui;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.MouseInfo;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.geom.RoundRectangle2D;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.KeyStroke;
-import javax.swing.plaf.basic.BasicScrollBarUI;
 import bdd.ConnectBD;
-import java.sql.SQLException;
+import java.awt.Color;
+import fc.Adresse;
+import fc.Look;
+import fc.Patient;
+import fc.Sexe;
+import fc.TextValidator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -31,13 +21,15 @@ import javax.swing.JOptionPane;
  */
 public class creerDmaPage extends javax.swing.JFrame {
         
+    Adresse adresse;
+    Patient patient;
     /**
      * Creates new form SecretaireAdminPage
      */
     public creerDmaPage() {
         initComponents();
         setLocationRelativeTo(null);
-        setScrollBar();
+        Look.setScrollBar(scrollPane);
         
         
         
@@ -84,13 +76,13 @@ public class creerDmaPage extends javax.swing.JFrame {
         jLabel15 = new javax.swing.JLabel();
         medecinTxt = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
-        jTextField13 = new javax.swing.JTextField();
+        nomRueTxt = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
-        jTextField14 = new javax.swing.JTextField();
+        numRueTxt = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
-        jTextField15 = new javax.swing.JTextField();
+        villeTxt = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
-        jTextField16 = new javax.swing.JTextField();
+        codePostalTxt = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
         profilePictLb3 = new javax.swing.JButton();
         profilePictLb2 = new javax.swing.JButton();
@@ -292,6 +284,11 @@ public class creerDmaPage extends javax.swing.JFrame {
                 jourTxtActionPerformed(evt);
             }
         });
+        jourTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jourTxtKeyTyped(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(31, 58, 105));
@@ -306,6 +303,11 @@ public class creerDmaPage extends javax.swing.JFrame {
                 moisTxtActionPerformed(evt);
             }
         });
+        moisTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                moisTxtKeyTyped(evt);
+            }
+        });
 
         anneeTxt.setBackground(new java.awt.Color(255, 255, 255));
         anneeTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
@@ -317,6 +319,11 @@ public class creerDmaPage extends javax.swing.JFrame {
                 anneeTxtActionPerformed(evt);
             }
         });
+        anneeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                anneeTxtKeyTyped(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(31, 58, 105));
@@ -325,8 +332,13 @@ public class creerDmaPage extends javax.swing.JFrame {
         sexeCbo.setBackground(new java.awt.Color(255, 255, 255));
         sexeCbo.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
         sexeCbo.setForeground(new java.awt.Color(116, 116, 116));
-        sexeCbo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Homme", "Femme" }));
+        sexeCbo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Homme", "Femme", "Inconnu" }));
         sexeCbo.setBorder(javax.swing.BorderFactory.createMatteBorder(2, 2, 2, 2, new java.awt.Color(31, 58, 105)));
+        sexeCbo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sexeCboActionPerformed(evt);
+            }
+        });
 
         numssTxt.setBackground(new java.awt.Color(255, 255, 255));
         numssTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
@@ -374,32 +386,27 @@ public class creerDmaPage extends javax.swing.JFrame {
         jLabel16.setBackground(new java.awt.Color(255, 255, 255));
         jLabel16.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel16.setText("Practicien hospitalier *");
+        jLabel16.setText("Médecin traitant *");
 
-        jTextField13.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField13.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        jTextField13.setForeground(new java.awt.Color(116, 116, 116));
-        jTextField13.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 28, 105), 2, true));
-        jTextField13.setMargin(new java.awt.Insets(5, 5, 5, 5));
-        jTextField13.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField13ActionPerformed(evt);
-            }
-        });
+        nomRueTxt.setBackground(new java.awt.Color(255, 255, 255));
+        nomRueTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        nomRueTxt.setForeground(new java.awt.Color(116, 116, 116));
+        nomRueTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 28, 105), 2, true));
+        nomRueTxt.setMargin(new java.awt.Insets(5, 5, 5, 5));
 
         jLabel17.setBackground(new java.awt.Color(255, 255, 255));
         jLabel17.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel17.setForeground(new java.awt.Color(31, 58, 105));
         jLabel17.setText("Nom de la rue *");
 
-        jTextField14.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField14.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        jTextField14.setForeground(new java.awt.Color(116, 116, 116));
-        jTextField14.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 28, 105), 2, true));
-        jTextField14.setMargin(new java.awt.Insets(5, 5, 5, 5));
-        jTextField14.addActionListener(new java.awt.event.ActionListener() {
+        numRueTxt.setBackground(new java.awt.Color(255, 255, 255));
+        numRueTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        numRueTxt.setForeground(new java.awt.Color(116, 116, 116));
+        numRueTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 28, 105), 2, true));
+        numRueTxt.setMargin(new java.awt.Insets(5, 5, 5, 5));
+        numRueTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField14ActionPerformed(evt);
+                numRueTxtActionPerformed(evt);
             }
         });
 
@@ -408,14 +415,14 @@ public class creerDmaPage extends javax.swing.JFrame {
         jLabel18.setForeground(new java.awt.Color(31, 58, 105));
         jLabel18.setText("Numéro *");
 
-        jTextField15.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField15.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        jTextField15.setForeground(new java.awt.Color(116, 116, 116));
-        jTextField15.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 28, 105), 2, true));
-        jTextField15.setMargin(new java.awt.Insets(5, 5, 5, 5));
-        jTextField15.addActionListener(new java.awt.event.ActionListener() {
+        villeTxt.setBackground(new java.awt.Color(255, 255, 255));
+        villeTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        villeTxt.setForeground(new java.awt.Color(116, 116, 116));
+        villeTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 28, 105), 2, true));
+        villeTxt.setMargin(new java.awt.Insets(5, 5, 5, 5));
+        villeTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField15ActionPerformed(evt);
+                villeTxtActionPerformed(evt);
             }
         });
 
@@ -424,14 +431,14 @@ public class creerDmaPage extends javax.swing.JFrame {
         jLabel19.setForeground(new java.awt.Color(31, 58, 105));
         jLabel19.setText("Ville *");
 
-        jTextField16.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField16.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        jTextField16.setForeground(new java.awt.Color(116, 116, 116));
-        jTextField16.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 28, 105), 2, true));
-        jTextField16.setMargin(new java.awt.Insets(5, 5, 5, 5));
-        jTextField16.addActionListener(new java.awt.event.ActionListener() {
+        codePostalTxt.setBackground(new java.awt.Color(255, 255, 255));
+        codePostalTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        codePostalTxt.setForeground(new java.awt.Color(116, 116, 116));
+        codePostalTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 28, 105), 2, true));
+        codePostalTxt.setMargin(new java.awt.Insets(5, 5, 5, 5));
+        codePostalTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField16ActionPerformed(evt);
+                codePostalTxtActionPerformed(evt);
             }
         });
 
@@ -523,21 +530,21 @@ public class creerDmaPage extends javax.swing.JFrame {
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel19)
-                                    .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(villeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(169, 169, 169)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel20)
-                                    .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(codePostalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(medecinTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 801, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(jPanel3Layout.createSequentialGroup()
                                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel17)
-                                        .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(nomRueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGap(169, 169, 169)
                                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel18)
-                                        .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addComponent(numRueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(0, 186, Short.MAX_VALUE))))
         );
         jPanel3Layout.setVerticalGroup(
@@ -599,21 +606,21 @@ public class creerDmaPage extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel17)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(nomRueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel18)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(numRueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel19)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(villeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel20)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(codePostalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addContainerGap())
@@ -654,33 +661,7 @@ public class creerDmaPage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    private void setScrollBar(){
-        scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
-            @Override
-            protected void configureScrollBarColors() {
-                this.thumbColor = new Color(31, 28, 105);
-                this.trackColor = new Color(255, 255, 255);
-                this.thumbDarkShadowColor = new Color(31, 28, 105);
-            }
-            @Override
-        protected JButton createDecreaseButton(int orientation) {
-            return createZeroButton();
-        }
-
-        @Override    
-        protected JButton createIncreaseButton(int orientation) {
-            return createZeroButton();
-        }
-
-        private JButton createZeroButton() {
-            JButton jbutton = new JButton();
-            jbutton.setPreferredSize(new Dimension(0, 0));
-            jbutton.setMinimumSize(new Dimension(0, 0));
-            jbutton.setMaximumSize(new Dimension(0, 0));
-            return jbutton;
-        }
-        });
-    }
+    
     private void disconnectBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_disconnectBtnMouseEntered
         
     }//GEN-LAST:event_disconnectBtnMouseEntered
@@ -715,7 +696,7 @@ public class creerDmaPage extends javax.swing.JFrame {
     }//GEN-LAST:event_jourTxtActionPerformed
 
     private void moisTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moisTxtActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_moisTxtActionPerformed
 
     private void anneeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_anneeTxtActionPerformed
@@ -734,21 +715,17 @@ public class creerDmaPage extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_medecinTxtActionPerformed
 
-    private void jTextField13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField13ActionPerformed
+    private void numRueTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numRueTxtActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField13ActionPerformed
+    }//GEN-LAST:event_numRueTxtActionPerformed
 
-    private void jTextField14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField14ActionPerformed
+    private void villeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_villeTxtActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField14ActionPerformed
+    }//GEN-LAST:event_villeTxtActionPerformed
 
-    private void jTextField15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField15ActionPerformed
+    private void codePostalTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_codePostalTxtActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField15ActionPerformed
-
-    private void jTextField16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField16ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField16ActionPerformed
+    }//GEN-LAST:event_codePostalTxtActionPerformed
 
     private void profilePictLb2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_profilePictLb2MouseEntered
         // TODO add your handling code here:
@@ -767,22 +744,28 @@ public class creerDmaPage extends javax.swing.JFrame {
     }//GEN-LAST:event_profilePictLb3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-//        String nom = this.nomTxt.getText();
-//        String prenom = this.nomTxt.getText();
-//        int ipp = Integer.valueOf( this.numssTxt.getText() );
-////        System.out.println(jourTxt.getText() + " " + moisTxt.getText() +" " + anneeTxt.getText());
-//        fc.Date dateNaissance = new fc.Date(jourTxt.getText(), moisTxt.getText(), anneeTxt.getText());
-//        fc.Sexe sexe =  fc.Sexe.valueOf( (String) this.sexeCbo.getSelectedItem() );
-//        System.out.println(sexe.getVal());
-
-          Popup.createPopupValider();
-//        try {
-//            ConnectBD.insertPatient(ipp, nom, prenom, dateNaissance);
-//        } catch (SQLException ex) {
-//            Logger.getLogger(creerDmaPage.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        String nom = this.nomTxt.getText();
+        String prenom = this.prenomTxt.getText();
+        String nss =  this.numssTxt.getText();
+        fc.Date dateNaissance = new fc.Date(jourTxt.getText(), moisTxt.getText(), anneeTxt.getText());
+        Sexe sexe =  Sexe.getSexe((String)this.sexeCbo.getSelectedItem());
+        String email = this.mailTxt.getText();
+        String medecin = this.medecinTxt.getText();
+        String nomRue = this.nomRueTxt.getText();
+        String numRue = this.numRueTxt.getText();
+        String ville = this.villeTxt.getText();
+        String cp = this.codePostalTxt.getText();
+        
+        fc.Adresse adresse = new fc.Adresse(nomRue, numRue, cp, ville);
+        fc.Patient patient = new fc.Patient(nom, prenom, dateNaissance, null, sexe, adresse);
+        this.adresse = adresse;
+        this.patient = patient;
+        PopupFactory.createPopupValider(this);
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    
+    public void insertPatientIntoDB() throws Exception {
+        ConnectBD.insertPatient(patient, adresse);
+    } 
     private void profilePictLbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profilePictLbActionPerformed
 
     }//GEN-LAST:event_profilePictLbActionPerformed
@@ -790,6 +773,22 @@ public class creerDmaPage extends javax.swing.JFrame {
     private void profilePictLbMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_profilePictLbMouseEntered
         this.profilePictLb.setBackground(Color.yellow);
     }//GEN-LAST:event_profilePictLbMouseEntered
+
+    private void sexeCboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sexeCboActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sexeCboActionPerformed
+
+    private void jourTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jourTxtKeyTyped
+        TextValidator.consumeNonIntegers(evt, 2, 31);
+    }//GEN-LAST:event_jourTxtKeyTyped
+
+    private void anneeTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_anneeTxtKeyTyped
+        TextValidator.consumeNonIntegers(evt, 4, (new fc.Date()).getAnnee());
+    }//GEN-LAST:event_anneeTxtKeyTyped
+
+    private void moisTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_moisTxtKeyTyped
+        TextValidator.consumeNonIntegers(evt, 2, 12);
+    }//GEN-LAST:event_moisTxtKeyTyped
 
     /**
      * @param args the command line arguments
@@ -832,6 +831,7 @@ public class creerDmaPage extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel HomePanel;
     private javax.swing.JTextField anneeTxt;
+    private javax.swing.JTextField codePostalTxt;
     private javax.swing.JButton disconnectBtn;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
@@ -852,16 +852,14 @@ public class creerDmaPage extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JTextField jTextField13;
-    private javax.swing.JTextField jTextField14;
-    private javax.swing.JTextField jTextField15;
-    private javax.swing.JTextField jTextField16;
     private javax.swing.JTextField jourTxt;
     private javax.swing.JTextField mailTxt;
     private javax.swing.JTextField medecinTxt;
     private javax.swing.JTextField moisTxt;
     private javax.swing.JLabel nameLb;
+    private javax.swing.JTextField nomRueTxt;
     private javax.swing.JTextField nomTxt;
+    private javax.swing.JTextField numRueTxt;
     private javax.swing.JTextField numssTxt;
     private javax.swing.JLabel portalLb;
     private javax.swing.JTextField prenomTxt;
@@ -872,5 +870,6 @@ public class creerDmaPage extends javax.swing.JFrame {
     private javax.swing.JScrollPane scrollPane;
     private javax.swing.JLabel serviceLb;
     private javax.swing.JComboBox<String> sexeCbo;
+    private javax.swing.JTextField villeTxt;
     // End of variables declaration//GEN-END:variables
 }

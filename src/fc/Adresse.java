@@ -10,14 +10,32 @@ package fc;
  * @author Go
  */
 public class Adresse {
-    String IPP, nomRue, numRue, codePostal, Ville;
+    String IPP, nomRue, numRue, codePostal, ville;
 
-    public Adresse(String IPP, String nomRue, String numRue, String codePostal, String Ville) {
+    /**
+     * @param IPP
+     * @param nomRue
+     * @param numRue
+     * @param codePostal
+     * @param ville
+     */
+    public Adresse(String IPP, String nomRue, String numRue, String codePostal, String ville) {
         this.IPP = IPP;
         this.nomRue = nomRue;
         this.numRue = numRue;
         this.codePostal = codePostal;
-        this.Ville = Ville;
+        this.ville = ville;
+    }
+    
+    public Adresse(String nomRue, String numRue, String codePostal, String ville) {
+        this.nomRue = nomRue;
+        this.numRue = numRue;
+        this.codePostal = codePostal;
+        this.ville = ville;
+    }
+    
+    public void setIpp(String ipp){
+        this.IPP = ipp;
     }
 
     public String getIPP() {
@@ -37,7 +55,7 @@ public class Adresse {
     }
 
     public String getVille() {
-        return Ville;
+        return ville;
     }
     
     

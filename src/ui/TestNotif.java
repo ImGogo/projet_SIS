@@ -38,7 +38,7 @@ public class TestNotif extends javax.swing.JFrame {
 
                     System.out.println( serveur.getPatient().getFirstName() );
                 } catch (Exception e){
-                    Popup.createPopupErreurConnexion();
+                    PopupFactory.createPopupErreurConnexion();
                 }
                 return "";
             }

@@ -433,7 +433,7 @@ public class PatientDMPage extends javax.swing.JFrame {
                     table.setModel(model);
                 } catch (Exception e){
                     System.err.println(e.getMessage());
-                    Popup.createPopupErreurConnexion();
+                    PopupFactory.createPopupErreurConnexion();
                 }
                 return "";
             }

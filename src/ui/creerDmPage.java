@@ -40,7 +40,7 @@ public class creerDmPage extends javax.swing.JFrame {
             updateMedecinComboBox(this.cboService.getItemAt(0));
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
-            Popup.createPopupErreurConnexion();
+            PopupFactory.createPopupErreurConnexion();
         }
     }
     
@@ -50,7 +50,7 @@ public class creerDmPage extends javax.swing.JFrame {
             this.cboMedecin.setModel( new DefaultComboBoxModel<>(liste));
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
-            Popup.createPopupErreurConnexion();
+            PopupFactory.createPopupErreurConnexion();
         }
     }
     

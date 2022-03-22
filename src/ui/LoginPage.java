@@ -15,7 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
-import ui.Popup;
+import ui.PopupFactory;
 import ui.PopupLoading;
 
 /**
@@ -212,7 +212,7 @@ public class LoginPage extends javax.swing.JFrame {
         if(id.length() > 2){
             startRequestThread(id, pass);
         } else {
-            Popup.createPopupMdpIncorrect();
+            PopupFactory.createPopupMdpIncorrect();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
     
@@ -230,10 +230,10 @@ public class LoginPage extends javax.swing.JFrame {
                         tmpPersonnel = personnel;
                         return id.substring(0, 2);
                     } else {
-                        Popup.createPopupMdpIncorrect();
+                        PopupFactory.createPopupMdpIncorrect();
                     }
                 } catch (Exception e){
-                    Popup.createPopupErreurConnexion();
+                    PopupFactory.createPopupErreurConnexion();
                 }
                 return "";
             }
