@@ -37,6 +37,19 @@ public class Patient {
         this.ipp = generateIPP();
     }
     
+     public Patient(String ipp, String nom, String prenom, Date dateDeNaissance, Localisation localisation, Sexe sexe, Adresse adresse, String nss, String email, String medecin) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.dateDeNaissance = dateDeNaissance;
+        this.localisation = localisation;
+        this.sexe = sexe;
+        this.adresse = adresse;
+        this.nss = nss;
+        this.medecinGeneraliste = medecin;
+        this.email = email;
+        this.ipp = ipp;
+    }
+    
     public Patient(String ipp, String nom, String prenom, Date dateDeNaissance, Localisation localisation, Sexe sexe) {
         this.ipp = ipp;
         this.nom = nom;
@@ -54,7 +67,7 @@ public class Patient {
         this.sexe = sexe;
     }
     
-    public String generateIPP(){
+    public final String generateIPP(){
         String id = nom + prenom + dateDeNaissance.getJour() + dateDeNaissance.getMois()+ dateDeNaissance.getAnnee();
         return Integer.toString( java.lang.Math.abs(id.hashCode()) );
     }
@@ -70,9 +83,17 @@ public class Patient {
     public String getNom() {
         return nom;
     }
+    
+    public String getNomFormat() {
+        return nom.toUpperCase();
+    }
 
     public String getPrenom() {
         return prenom;
+    }
+    
+    public String getPrenomFormat() {
+        return prenom.substring(0,1).toUpperCase() + prenom.substring(1).toLowerCase();
     }
 
     public Date getDateDeNaissance() {

@@ -5,8 +5,15 @@
  */
 package ui;
 
+import bdd.ConnectBD;
+import fc.TextValidator;
 import java.awt.Color;
 import java.awt.geom.RoundRectangle2D;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.SwingWorker;
 
 /**
  *
@@ -34,16 +41,18 @@ public class searchDmaPage extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
-        ippPanel = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        nomPanel = new javax.swing.JPanel();
+        txtPrenom = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        txtNom = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jourTxt = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        moisTxt = new javax.swing.JTextField();
+        anneeTxt = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -63,10 +72,6 @@ public class searchDmaPage extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel1.setText("Recherche de patient");
-
         jButton2.setBackground(new java.awt.Color(31, 58, 105));
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("X");
@@ -76,124 +81,162 @@ public class searchDmaPage extends javax.swing.JFrame {
             }
         });
 
-        ippPanel.setBackground(new java.awt.Color(255, 255, 255));
-
-        jTextField1.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(31, 58, 105))); // NOI18N
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtPrenom.setBackground(new java.awt.Color(255, 255, 255));
+        txtPrenom.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        txtPrenom.setForeground(new java.awt.Color(116, 116, 116));
+        txtPrenom.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 28, 105), 2, true));
+        txtPrenom.setMargin(new java.awt.Insets(5, 5, 5, 5));
+        txtPrenom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txtPrenomActionPerformed(evt);
             }
         });
 
-        jLabel2.setBackground(new java.awt.Color(31, 58, 105));
-        jLabel2.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel2.setText("Date de naissance");
-
-        javax.swing.GroupLayout ippPanelLayout = new javax.swing.GroupLayout(ippPanel);
-        ippPanel.setLayout(ippPanelLayout);
-        ippPanelLayout.setHorizontalGroup(
-            ippPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTextField1)
-            .addGroup(ippPanelLayout.createSequentialGroup()
-                .addComponent(jLabel2)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        ippPanelLayout.setVerticalGroup(
-            ippPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ippPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        nomPanel.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel3.setBackground(new java.awt.Color(31, 58, 105));
-        jLabel3.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
+        jLabel3.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel3.setText("Prénom");
+        jLabel3.setText("Recherche");
 
-        jTextField2.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(31, 58, 105))); // NOI18N
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        jLabel5.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel5.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(31, 58, 105));
+        jLabel5.setText("Prénom ");
+
+        txtNom.setBackground(new java.awt.Color(255, 255, 255));
+        txtNom.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        txtNom.setForeground(new java.awt.Color(116, 116, 116));
+        txtNom.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 28, 105), 2, true));
+        txtNom.setMargin(new java.awt.Insets(5, 5, 5, 5));
+        txtNom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                txtNomActionPerformed(evt);
             }
         });
 
-        jLabel4.setBackground(new java.awt.Color(31, 58, 105));
-        jLabel4.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel4.setText("Nom");
+        jLabel6.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel6.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(31, 58, 105));
+        jLabel6.setText("Nom");
 
-        jTextField3.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(31, 58, 105))); // NOI18N
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+        jLabel9.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel9.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(31, 58, 105));
+        jLabel9.setText("Date de naissance");
+
+        jourTxt.setBackground(new java.awt.Color(255, 255, 255));
+        jourTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        jourTxt.setForeground(new java.awt.Color(116, 116, 116));
+        jourTxt.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(31, 58, 105)));
+        jourTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jourTxtKeyTyped(evt);
             }
         });
 
-        javax.swing.GroupLayout nomPanelLayout = new javax.swing.GroupLayout(nomPanel);
-        nomPanel.setLayout(nomPanelLayout);
-        nomPanelLayout.setHorizontalGroup(
-            nomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(nomPanelLayout.createSequentialGroup()
-                .addComponent(jLabel3)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(nomPanelLayout.createSequentialGroup()
-                .addComponent(jLabel4)
-                .addContainerGap(280, Short.MAX_VALUE))
-            .addComponent(jTextField3)
-            .addComponent(jTextField2)
-        );
-        nomPanelLayout.setVerticalGroup(
-            nomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, nomPanelLayout.createSequentialGroup()
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18))
-        );
+        jLabel7.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(31, 58, 105));
+        jLabel7.setText("/");
+
+        moisTxt.setBackground(new java.awt.Color(255, 255, 255));
+        moisTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        moisTxt.setForeground(new java.awt.Color(116, 116, 116));
+        moisTxt.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(31, 58, 105)));
+        moisTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                moisTxtActionPerformed(evt);
+            }
+        });
+        moisTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                moisTxtKeyTyped(evt);
+            }
+        });
+
+        anneeTxt.setBackground(new java.awt.Color(255, 255, 255));
+        anneeTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        anneeTxt.setForeground(new java.awt.Color(116, 116, 116));
+        anneeTxt.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(31, 58, 105)));
+        anneeTxt.setMaximumSize(new java.awt.Dimension(0, 28));
+        anneeTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                anneeTxtActionPerformed(evt);
+            }
+        });
+        anneeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                anneeTxtKeyTyped(evt);
+            }
+        });
+
+        jLabel8.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(31, 58, 105));
+        jLabel8.setText("/");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(nomPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ippPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
-                        .addComponent(jButton2))
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(33, 33, 33))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(52, 52, 52)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel9))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(43, 43, 43))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(txtNom, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
+                                .addComponent(txtPrenom, javax.swing.GroupLayout.Alignment.LEADING)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(139, 139, 139)
+                .addComponent(jourTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(moisTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(anneeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 152, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jButton2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(ippPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton2)
+                    .addComponent(jLabel3))
+                .addGap(37, 37, 37)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtPrenom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtNom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel9)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jourTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(moisTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(anneeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(37, 37, 37)
                 .addComponent(jButton1)
-                .addGap(32, 32, 32))
+                .addGap(39, 39, 39))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -210,31 +253,87 @@ public class searchDmaPage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void anneeTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_anneeTxtKeyTyped
+        TextValidator.consumeNonIntegers(evt, 4, (new fc.Date()).getAnnee());
+    }//GEN-LAST:event_anneeTxtKeyTyped
+
+    private void anneeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_anneeTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_anneeTxtActionPerformed
+
+    private void moisTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_moisTxtKeyTyped
+        TextValidator.consumeNonIntegers(evt, 2, 12);
+    }//GEN-LAST:event_moisTxtKeyTyped
+
+    private void moisTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moisTxtActionPerformed
+
+    }//GEN-LAST:event_moisTxtActionPerformed
+
+    private void jourTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jourTxtKeyTyped
+        TextValidator.consumeNonIntegers(evt, 2, 31);
+    }//GEN-LAST:event_jourTxtKeyTyped
+
+    private void txtNomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNomActionPerformed
+
+    private void txtPrenomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrenomActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPrenomActionPerformed
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
-
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new profilPatientPage().setVisible(true);
-            }
-        });
-        this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+        JFrame popup = new PopupLoading();
+        popup.setVisible(true);
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+        String nom = this.txtNom.getText();
+        String prenom = this.txtPrenom.getText();
+        int jour = 0, mois = 0, annee = 0;
+        if( !this.jourTxt.getText().equals(""))
+            jour = Integer.parseInt( this.jourTxt.getText() );
+        if( !this.moisTxt.getText().equals(""))
+            mois = Integer.parseInt( this.moisTxt.getText() );
+        if( !this.anneeTxt.getText().equals(""))
+            annee = Integer.parseInt( this.anneeTxt.getText() );
+        fc.Date date = new fc.Date(jour, mois, annee);
+
+        fc.Patient p = new fc.Patient(null, nom, prenom, date);
+        SwingWorker sw = new SwingWorker(){
+            @Override
+            protected String doInBackground() throws Exception
+            {
+                fc.Patient result = ConnectBD.getPatientByNomPrenomDateNaissance(p);
+                try {
+                    if ( result == null) {
+                        System.out.println("non trouve");
+                    } else {
+                        java.awt.EventQueue.invokeLater(new Runnable() {
+                            public void run() {
+                                new profilPatientPage(result).setVisible(true);
+                            }
+                        });
+                        System.out.println(result);
+                        searchDmaPage.this.dispose();
+                    }
+                } catch (Exception e) {
+                    System.err.println(e);
+                    PopupFactory.createPopupErreurConnexion();
+                }
+                return "";
+            }
+
+            @Override
+            protected void done()
+            {
+                popup.setVisible(false);
+            }
+        };
+        // executes the swingworker on worker thread
+        sw.execute();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -272,17 +371,19 @@ public class searchDmaPage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel ippPanel;
+    private javax.swing.JTextField anneeTxt;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JPanel nomPanel;
+    private javax.swing.JTextField jourTxt;
+    private javax.swing.JTextField moisTxt;
+    private javax.swing.JTextField txtNom;
+    private javax.swing.JTextField txtPrenom;
     // End of variables declaration//GEN-END:variables
 }

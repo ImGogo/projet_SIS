@@ -22,17 +22,37 @@ import javax.swing.KeyStroke;
  * @author Go
  */
 public class profilPatientPage extends javax.swing.JFrame {
-        
+    fc.Patient p;
     /**
      * Creates new form SecretaireAdminPage
      */
     public profilPatientPage() {
         initComponents();
         setLocationRelativeTo(null);
+    }
+    
+    public profilPatientPage(fc.Patient p) {
+        initComponents();
+        setLocationRelativeTo(null);
         
-        
+        this.p = p;
+        initLabels();
     }
 
+    private void initLabels() {
+        this.txtCodePostal.setText( p.getAdresse().getCodePostal() );
+        this.txtVille.setText( p.getAdresse().getVille() );
+        this.txtNomRue.setText( p.getAdresse().getNomRue() );
+        this.txtNumRue.setText( p.getAdresse().getNumRue() );
+        this.txtDate.setText( p.getDateDeNaissance().toString() );
+        this.txtIpp.setText( p.getIpp() );
+        this.txtMail.setText( p.getEmail() );
+        this.txtNom.setText( p.getNomFormat() );
+        this.txtNss.setText( p.getNss() );
+        this.txtPrenom.setText( p.getPrenomFormat() );
+        this.txtSexe.setText( p.getSexe().getVal() );
+        this.txtPh.setText( p.getMedecinGeneraliste() );
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -54,37 +74,39 @@ public class profilPatientPage extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtIpp = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtPrenom = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        txtNom = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        txtMail = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        txtPh = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
-        jTextField7 = new javax.swing.JTextField();
+        txtSexe = new javax.swing.JTextField();
+        txtDate = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
+        txtNss = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jTextField9 = new javax.swing.JTextField();
-        jTextField10 = new javax.swing.JTextField();
+        txtNomRue = new javax.swing.JTextField();
+        txtNumRue = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        jTextField11 = new javax.swing.JTextField();
-        jTextField12 = new javax.swing.JTextField();
+        txtVille = new javax.swing.JTextField();
+        txtCodePostal = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
+        setPreferredSize(new java.awt.Dimension(1280, 720));
         setResizable(false);
 
         HomePanel.setBackground(new java.awt.Color(255, 255, 255));
+        HomePanel.setPreferredSize(new java.awt.Dimension(1280, 720));
 
         jPanel1.setBackground(new java.awt.Color(31, 58, 105));
 
@@ -211,96 +233,93 @@ public class profilPatientPage extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(31, 58, 105));
         jLabel2.setText("IPP :");
 
-        jTextField1.setEditable(false);
-        jTextField1.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField1.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        jTextField1.setForeground(new java.awt.Color(116, 116, 116));
-        jTextField1.setText("22985647");
-        jTextField1.setBorder(null);
+        txtIpp.setEditable(false);
+        txtIpp.setBackground(new java.awt.Color(255, 255, 255));
+        txtIpp.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        txtIpp.setForeground(new java.awt.Color(116, 116, 116));
+        txtIpp.setBorder(null);
+        txtIpp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIppActionPerformed(evt);
+            }
+        });
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 255));
         jLabel3.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(31, 58, 105));
         jLabel3.setText("Prénom :");
 
-        jTextField2.setEditable(false);
-        jTextField2.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField2.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        jTextField2.setForeground(new java.awt.Color(116, 116, 116));
-        jTextField2.setText("Alexis");
-        jTextField2.setBorder(null);
+        txtPrenom.setEditable(false);
+        txtPrenom.setBackground(new java.awt.Color(255, 255, 255));
+        txtPrenom.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        txtPrenom.setForeground(new java.awt.Color(116, 116, 116));
+        txtPrenom.setBorder(null);
 
         jLabel4.setBackground(new java.awt.Color(255, 255, 255));
         jLabel4.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(31, 58, 105));
         jLabel4.setText("Nom :");
 
-        jTextField3.setEditable(false);
-        jTextField3.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField3.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        jTextField3.setForeground(new java.awt.Color(116, 116, 116));
-        jTextField3.setText("ESTADIEU");
-        jTextField3.setBorder(null);
+        txtNom.setEditable(false);
+        txtNom.setBackground(new java.awt.Color(255, 255, 255));
+        txtNom.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        txtNom.setForeground(new java.awt.Color(116, 116, 116));
+        txtNom.setBorder(null);
 
         jLabel5.setBackground(new java.awt.Color(255, 255, 255));
         jLabel5.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(31, 58, 105));
         jLabel5.setText("E-mail :");
 
-        jTextField4.setEditable(false);
-        jTextField4.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField4.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        jTextField4.setForeground(new java.awt.Color(116, 116, 116));
-        jTextField4.setText("alexis.estadieu@gmail.com");
-        jTextField4.setBorder(null);
+        txtMail.setEditable(false);
+        txtMail.setBackground(new java.awt.Color(255, 255, 255));
+        txtMail.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        txtMail.setForeground(new java.awt.Color(116, 116, 116));
+        txtMail.setBorder(null);
 
         jLabel6.setBackground(new java.awt.Color(255, 255, 255));
         jLabel6.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(31, 58, 105));
         jLabel6.setText("Praticien Hospitalier :");
 
-        jTextField5.setEditable(false);
-        jTextField5.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField5.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        jTextField5.setForeground(new java.awt.Color(116, 116, 116));
-        jTextField5.setText("BAKIR Lydia");
-        jTextField5.setBorder(null);
+        txtPh.setEditable(false);
+        txtPh.setBackground(new java.awt.Color(255, 255, 255));
+        txtPh.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        txtPh.setForeground(new java.awt.Color(116, 116, 116));
+        txtPh.setBorder(null);
 
         jLabel7.setBackground(new java.awt.Color(255, 255, 255));
         jLabel7.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(31, 58, 105));
         jLabel7.setText("Sexe :");
 
-        jTextField6.setEditable(false);
-        jTextField6.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField6.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        jTextField6.setForeground(new java.awt.Color(116, 116, 116));
-        jTextField6.setText("Homme");
-        jTextField6.setBorder(null);
+        txtSexe.setEditable(false);
+        txtSexe.setBackground(new java.awt.Color(255, 255, 255));
+        txtSexe.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        txtSexe.setForeground(new java.awt.Color(116, 116, 116));
+        txtSexe.setBorder(null);
 
-        jTextField7.setEditable(false);
-        jTextField7.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField7.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        jTextField7.setForeground(new java.awt.Color(116, 116, 116));
-        jTextField7.setText("18/01/1999");
-        jTextField7.setBorder(null);
+        txtDate.setEditable(false);
+        txtDate.setBackground(new java.awt.Color(255, 255, 255));
+        txtDate.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        txtDate.setForeground(new java.awt.Color(116, 116, 116));
+        txtDate.setBorder(null);
 
         jLabel8.setBackground(new java.awt.Color(255, 255, 255));
         jLabel8.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel8.setText("Date de naissance");
+        jLabel8.setText("Date de naissance :");
 
         jLabel9.setBackground(new java.awt.Color(255, 255, 255));
         jLabel9.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel9.setText("N° Sécurité Sociale");
+        jLabel9.setText("N° Sécurité Sociale :");
 
-        jTextField8.setEditable(false);
-        jTextField8.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField8.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        jTextField8.setForeground(new java.awt.Color(116, 116, 116));
-        jTextField8.setText("199050607098");
-        jTextField8.setBorder(null);
+        txtNss.setEditable(false);
+        txtNss.setBackground(new java.awt.Color(255, 255, 255));
+        txtNss.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        txtNss.setForeground(new java.awt.Color(116, 116, 116));
+        txtNss.setBorder(null);
 
         jLabel10.setBackground(new java.awt.Color(255, 255, 255));
         jLabel10.setFont(new java.awt.Font("Ebrima", 1, 26)); // NOI18N
@@ -312,19 +331,17 @@ public class profilPatientPage extends javax.swing.JFrame {
         jLabel11.setForeground(new java.awt.Color(31, 58, 105));
         jLabel11.setText("Rue :");
 
-        jTextField9.setEditable(false);
-        jTextField9.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField9.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        jTextField9.setForeground(new java.awt.Color(116, 116, 116));
-        jTextField9.setText("Rue des Taillées");
-        jTextField9.setBorder(null);
+        txtNomRue.setEditable(false);
+        txtNomRue.setBackground(new java.awt.Color(255, 255, 255));
+        txtNomRue.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        txtNomRue.setForeground(new java.awt.Color(116, 116, 116));
+        txtNomRue.setBorder(null);
 
-        jTextField10.setEditable(false);
-        jTextField10.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField10.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        jTextField10.setForeground(new java.awt.Color(116, 116, 116));
-        jTextField10.setText("58");
-        jTextField10.setBorder(null);
+        txtNumRue.setEditable(false);
+        txtNumRue.setBackground(new java.awt.Color(255, 255, 255));
+        txtNumRue.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        txtNumRue.setForeground(new java.awt.Color(116, 116, 116));
+        txtNumRue.setBorder(null);
 
         jLabel12.setBackground(new java.awt.Color(255, 255, 255));
         jLabel12.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
@@ -336,19 +353,17 @@ public class profilPatientPage extends javax.swing.JFrame {
         jLabel13.setForeground(new java.awt.Color(31, 58, 105));
         jLabel13.setText("Ville :");
 
-        jTextField11.setEditable(false);
-        jTextField11.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField11.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        jTextField11.setForeground(new java.awt.Color(116, 116, 116));
-        jTextField11.setText("Saint-Martin-d'Hères");
-        jTextField11.setBorder(null);
+        txtVille.setEditable(false);
+        txtVille.setBackground(new java.awt.Color(255, 255, 255));
+        txtVille.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        txtVille.setForeground(new java.awt.Color(116, 116, 116));
+        txtVille.setBorder(null);
 
-        jTextField12.setEditable(false);
-        jTextField12.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField12.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        jTextField12.setForeground(new java.awt.Color(116, 116, 116));
-        jTextField12.setText("38400");
-        jTextField12.setBorder(null);
+        txtCodePostal.setEditable(false);
+        txtCodePostal.setBackground(new java.awt.Color(255, 255, 255));
+        txtCodePostal.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        txtCodePostal.setForeground(new java.awt.Color(116, 116, 116));
+        txtCodePostal.setBorder(null);
 
         jLabel14.setBackground(new java.awt.Color(255, 255, 255));
         jLabel14.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
@@ -382,59 +397,59 @@ public class profilPatientPage extends javax.swing.JFrame {
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel12)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField10))
+                                        .addComponent(txtNumRue))
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel11)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(txtNomRue, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel13)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField11))
+                                        .addComponent(txtVille))
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel14)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField12))))
+                                        .addComponent(txtCodePostal))))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel5)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField4))
+                                        .addComponent(txtMail))
                                     .addComponent(jLabel1)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel4)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField3))
+                                        .addComponent(txtNom))
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel3)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField2))
+                                        .addComponent(txtPrenom))
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel2)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(txtIpp, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel6)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField5)))
+                                        .addComponent(txtPh)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel9)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(txtNss, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(jPanel3Layout.createSequentialGroup()
                                             .addComponent(jLabel7)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(jTextField6))
+                                            .addComponent(txtSexe))
                                         .addGroup(jPanel3Layout.createSequentialGroup()
                                             .addComponent(jLabel8)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(jTextField7)))))
+                                            .addComponent(txtDate)))))
                             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(59, 59, 59))))
         );
@@ -446,43 +461,43 @@ public class profilPatientPage extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtIpp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtSexe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPrenom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNss, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(34, 34, 34)
                 .addComponent(jLabel10)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
-                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNomRue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel13)
-                    .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtVille, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
-                    .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNumRue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel14)
-                    .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCodePostal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
                 .addComponent(jButton1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -493,29 +508,29 @@ public class profilPatientPage extends javax.swing.JFrame {
         HomePanelLayout.setHorizontalGroup(
             HomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(HomePanelLayout.createSequentialGroup()
-                .addGap(120, 120, 120)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, HomePanelLayout.createSequentialGroup()
+                .addContainerGap(111, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(120, 120, 120))
         );
         HomePanelLayout.setVerticalGroup(
             HomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(HomePanelLayout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(70, 70, 70))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(HomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(HomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1281, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(HomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(HomePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 604, Short.MAX_VALUE)
         );
 
         pack();
@@ -558,6 +573,10 @@ public class profilPatientPage extends javax.swing.JFrame {
             }
         });
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void txtIppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIppActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIppActionPerformed
 
     /**
      * @param args the command line arguments
@@ -616,22 +635,22 @@ public class profilPatientPage extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField10;
-    private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField12;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
     private javax.swing.JLabel nameLb;
     private javax.swing.JLabel portalLb;
     private javax.swing.JButton profilePictLb;
     private javax.swing.JButton profilePictLb1;
     private javax.swing.JLabel serviceLb;
+    private javax.swing.JTextField txtCodePostal;
+    private javax.swing.JTextField txtDate;
+    private javax.swing.JTextField txtIpp;
+    private javax.swing.JTextField txtMail;
+    private javax.swing.JTextField txtNom;
+    private javax.swing.JTextField txtNomRue;
+    private javax.swing.JTextField txtNss;
+    private javax.swing.JTextField txtNumRue;
+    private javax.swing.JTextField txtPh;
+    private javax.swing.JTextField txtPrenom;
+    private javax.swing.JTextField txtSexe;
+    private javax.swing.JTextField txtVille;
     // End of variables declaration//GEN-END:variables
 }

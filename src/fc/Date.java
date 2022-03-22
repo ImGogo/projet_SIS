@@ -78,6 +78,10 @@ public class Date {
     public String getHeureMinute(){
         return String.format("%02d", heure) + ":" + String.format("%02d", minute);
     }
+    
+    public String getDateForQuery() {
+        return annee + "-" + mois + "-" + jour;
+    }
 
     public int getJour() {
         return jour;

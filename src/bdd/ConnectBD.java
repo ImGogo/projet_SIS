@@ -407,6 +407,45 @@ public class ConnectBD {
         return p;
     }
     
+    public static Patient getPatientByNomPrenomDateNaissance(Patient r) throws Exception{
+        Patient p = null;
+        Connection con = getConnectionToDB();
+        Statement st;
+        ResultSet rs;
+        
+        String query = 
+        "SELECT * " +
+        "FROM patient INNER JOIN adresse ON patient.IPP = adresse.IPP " +
+        "WHERE nom = \"" + r.getNom() + 
+        "\" AND prenom = \"" + r.getPrenom() + 
+         "\" AND dateNaissance = \"" + r.getDateDeNaissance().getDateForQuery() + "\";";
+        
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+        
+        if (rs.next()) {
+            String ipp = rs.getString("IPP");
+            String nom = rs.getString("nom");
+            String prenom = rs.getString("prenom");
+            Date dateNaiss = new Date( rs.getDate("dateNaissance") );
+            Sexe sexe = Sexe.valueOf( rs.getString("sexe"));
+            String nss = rs.getString("numSecu");
+            String mail = rs.getString("adresseMail");
+            String medecin = rs.getString("nomPH");
+            String nomRue = rs.getString("nomRue");
+            String numRue = rs.getString("numRue");
+            String cp = rs.getString("codePostal");
+            String ville = rs.getString("ville");
+            
+            Adresse a = new Adresse(ipp, nomRue, numRue, cp, ville);
+            p = new Patient(ipp, nom, prenom, dateNaiss, null, sexe, a, nss, mail, medecin);
+        }
+        
+        terminateConnexion(con, st, rs);
+        
+        return p;
+    }
+    
     public static Service[] getListServiceAvecMedecin() throws Exception{
         Connection con = getConnectionToDB();
         Statement st;

@@ -22,7 +22,8 @@ public class TestReq {
      */
     public static void main(String[] args) {
         try {
-            ConnectBD.getVisiteByIdDm("1");
+            fc.Patient r = new fc.Patient(null, "marcal", "mArtiN", new fc.Date(16,3,2006));
+            System.out.println( ConnectBD.getPatientByNomPrenomDateNaissance(r) );
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
             Logger.getLogger(TestReq.class.getName()).log(Level.FINE, null, ex);
