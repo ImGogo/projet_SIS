@@ -28,7 +28,7 @@ public class PopupAjoutPrescription extends javax.swing.JFrame {
 //        this.setContentPane(new RoundedPanel());
         initComponents();
         setLocationRelativeTo(null);
-        
+        this.setAlwaysOnTop(true);
         lblErreur.setVisible(false);
         this.pack();
     }

@@ -25,6 +25,7 @@ public class PopupAjoutPrestation extends javax.swing.JFrame {
         
         initComponents();
         setLocationRelativeTo(null);
+        this.setAlwaysOnTop(true);
         cboService.setModel( new DefaultComboBoxModel<>(Service.values()));
         
         Look.setComboBoxScrollBar(cboService);

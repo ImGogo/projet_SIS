@@ -218,7 +218,6 @@ public class LoginPage extends javax.swing.JFrame {
     
     private void startRequestThread(String id, String pass){
         JFrame popup = new PopupLoading();
-        String type;
         SwingWorker sw = new SwingWorker(){
             @Override
             protected String doInBackground() throws Exception 

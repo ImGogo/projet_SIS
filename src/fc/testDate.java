@@ -21,8 +21,7 @@ public class testDate {
      */
     public static void main(String[] args) { 
         
-        Date d = new Date(8, 9, 1999);
-        System.out.println( d.getAgeString() );
+        System.out.println( "123456".   hashCode() );
     }
     
 }

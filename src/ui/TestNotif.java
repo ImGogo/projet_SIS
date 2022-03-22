@@ -5,21 +5,53 @@
  */
 package ui;
 
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.SwingWorker;
+import library.interfaces.ServeurHL7;
+
 /**
  *
  * @author Go
  */
-public class PopupLoading extends javax.swing.JFrame {
+public class TestNotif extends javax.swing.JFrame {
 
     /**
-     * Creates new form PopupCreationPatientReussite
+     * Creates new form TestNotif
      */
-    public PopupLoading() {
-        
-//        this.setContentPane(new RoundedPanel());
+    public TestNotif() {
         initComponents();
-        setLocationRelativeTo(null);
-        this.setAlwaysOnTop(true);
+        this.setLocationRelativeTo(null);
+        
+        
+        
+        SwingWorker sw = new SwingWorker(){
+            @Override
+            protected String doInBackground() throws Exception 
+            {
+                try{
+                   ServeurHL7 serveur = new ServeurHL7();
+                    serveur.connection(4444);
+                    serveur.ecoute();
+                    String msg = serveur.protocole();
+
+                    System.out.println( serveur.getPatient().getFirstName() );
+                } catch (Exception e){
+                    Popup.createPopupErreurConnexion();
+                }
+                return "";
+            }
+  
+            @Override
+            protected void done() 
+            {
+                jLabel1.setVisible(false);
+            }
+        };
+          
+        // executes the swingworker on worker thread
+        sw.execute(); 
     }
 
     /**
@@ -33,51 +65,35 @@ public class PopupLoading extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 58, 105), 2, true));
 
-        jLabel1.setFont(new java.awt.Font("Ebrima", 1, 26)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel1.setIcon(new javax.swing.ImageIcon("D:\\users\\gmultari\\Desktop\\projet_SIS\\src\\ui\\images\\Pulse-1s-200px.gif")); // NOI18N
-
-        jLabel2.setFont(new java.awt.Font("Ebrima", 1, 24)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel2.setText("Connection en cours, veuillez patienter");
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ui/images/Pulse-1s-200px.gif"))); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(58, 58, 58)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(186, 186, 186)
-                        .addComponent(jLabel1)))
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addGap(301, 301, 301)
+                .addComponent(jLabel1)
+                .addContainerGap(331, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(30, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addGap(33, 33, 33))
+                .addContainerGap(105, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(71, 71, 71))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -104,34 +120,26 @@ public class PopupLoading extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PopupLoading.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TestNotif.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PopupLoading.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TestNotif.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PopupLoading.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TestNotif.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PopupLoading.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TestNotif.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PopupLoading().setVisible(true);
+                new TestNotif().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

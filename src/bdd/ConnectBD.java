@@ -8,6 +8,7 @@ package bdd;
 import fc.Visite;
 import fc.CoteLit;
 import fc.Date;
+import fc.Hebergement;
 import fc.Localisation;
 import fc.Medecin;
 import fc.Patient;
@@ -90,9 +91,9 @@ public class ConnectBD {
         Statement st;
         ResultSet rs;
         String query = 
-        "SELECT patient.IPP, nom, prenom, dateNaissance, numChambre, serviceGeographique, coteLit " + 
+        "SELECT patient.IPP, nom, prenom, dateNaissance, numChambre, serviceGeographique, coteLit, sexe " + 
         "FROM localisation INNER JOIN patient ON patient.IPP = localisation.IPP " +
-        "WHERE serviceOrigine = \"" + service + "\";";
+        "WHERE numChambre IS NOT NULL AND serviceOrigine = \"" + service + "\";";
         
         st = con.createStatement();
         rs = st.executeQuery(query);
@@ -104,8 +105,62 @@ public class ConnectBD {
             int numChambre = rs.getInt("numChambre");
             Service sg = Service.valueOf( rs.getString("serviceGeographique"));
             CoteLit cl = CoteLit.valueOf( rs.getString("coteLit"));
+            Sexe sexe = Sexe.valueOf( rs.getString("sexe"));
             Localisation localisation = new Localisation(numChambre, cl, sg, Service.valueOf(service));
-            listePatients.add( new Patient(ipp, nom, prenom, new fc.Date(dateNaissance), localisation));
+            listePatients.add( new Patient(ipp, nom, prenom, new fc.Date(dateNaissance), localisation, sexe));
+        }
+        
+        terminateConnexion(con, st, rs);
+        
+        return listePatients;
+    }
+    
+    public static ArrayList<Patient> getListePatientSansChambreFromService(String service) throws Exception{
+        ArrayList<Patient> listePatients = new ArrayList<>();
+        Connection con = getConnectionToDB();
+        Statement st;
+        ResultSet rs;
+        String query = 
+        "SELECT patient.* " + 
+        "FROM `DM` INNER JOIN patient ON patient.IPP = DM.IPP " +
+        "INNER JOIN localisation ON localisation.IPP = DM.IPP " +
+        "WHERE localisation.numChambre IS NULL AND serviceOrigine = \"" + service + "\" ";
+        
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+        while (rs.next()) {
+            String ipp = rs.getString("patient.IPP");
+            String nom = rs.getString("nom");
+            String prenom = rs.getString("prenom");
+            Date dateNaissance =  new Date( rs.getDate("dateNaissance") );
+            Sexe sexe = Sexe.valueOf( rs.getString("sexe"));
+            listePatients.add( new Patient(ipp, nom, prenom, dateNaissance, sexe));
+        }
+        
+        terminateConnexion(con, st, rs);
+        
+        return listePatients;
+    }
+    
+    public static ArrayList<Patient> getListePatientEnSortieByService(String service) throws Exception{
+        ArrayList<Patient> listePatients = new ArrayList<>();
+        Connection con = getConnectionToDB();
+        Statement st;
+        ResultSet rs;
+        String query = 
+        "SELECT patient.* " + 
+        "FROM `DM` INNER JOIN patient ON patient.IPP = DM.IPP " +
+        "WHERE dateSortie IS NULL AND lettreSortie IS NOT NULL AND service = \"" + service + "\" ";
+        
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+        while (rs.next()) {
+            String ipp = rs.getString("patient.IPP");
+            String nom = rs.getString("nom");
+            String prenom = rs.getString("prenom");
+            Date dateNaissance =  new Date( rs.getDate("dateNaissance") );
+            Sexe sexe = Sexe.valueOf( rs.getString("sexe"));
+            listePatients.add( new Patient(ipp, nom, prenom, dateNaissance, sexe));
         }
         
         terminateConnexion(con, st, rs);
@@ -130,6 +185,8 @@ public class ConnectBD {
             String ipp = rs.getString("patient.IPP");
             String nom = rs.getString("nom");
             String prenom = rs.getString("prenom");
+            java.sql.Date dateNaissance = rs.getDate("dateNaissance");
+            Sexe sexe = Sexe.valueOf( rs.getString("sexe"));
             // utilisation de la date de naissance pour stocker la date de la consultation
             Date dateEntree = new Date( rs.getTimestamp("dateEntree") ); 
             listePatients.add( new Patient(ipp, nom, prenom, dateEntree));
@@ -138,6 +195,39 @@ public class ConnectBD {
         terminateConnexion(con, st, rs);
         
         return listePatients;
+    }
+    
+    public static ArrayList<Hebergement> getListeHebergementByService(String service) throws Exception{
+        Connection con = getConnectionToDB();
+        ArrayList<Hebergement> liste = new ArrayList<>();
+        
+        Statement st;
+        ResultSet rs;
+        String query = 
+        "SELECT patient.*, serviceSource, serviceArrivee " + 
+        "FROM `migration` " +
+        "INNER JOIN DM ON DM.idDM = migration.idDM " +
+        "INNER JOIN patient ON patient.ipp = DM.ipp " +
+        "WHERE hebergement = 1 AND serviceArrivee = \"" + service  + "\";";
+        
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+        while (rs.next()) {
+            int ipp = rs.getInt("IPP");
+            String serviceSource = rs.getString("serviceSource");
+            String serviceArrivee = rs.getString("serviceArrivee");
+            String nom = rs.getString("nom");
+            String prenom = rs.getString("prenom");
+            Sexe sexe = Sexe.valueOf( rs.getString("sexe"));
+            Date dateNaissance = new Date( rs.getDate("dateNaissance") ); 
+            Patient p = new Patient(Integer.toString(ipp), nom, prenom, dateNaissance, sexe);
+            
+            liste.add( new Hebergement(p, serviceSource, serviceArrivee));
+        }
+        
+        terminateConnexion(con, st, rs);
+        
+        return liste;
     }
     
     public static ArrayList<Visite> getListeConsultationFromIpp(String ipp) throws Exception{
@@ -383,7 +473,6 @@ public class ConnectBD {
             Logger.getLogger(ConnectBD.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
     
     private static String getTableName(String id){
         switch(id.substring(0, 2)){

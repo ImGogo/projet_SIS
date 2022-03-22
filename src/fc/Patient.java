@@ -21,12 +21,13 @@ public class Patient {
         this.dateDeNaissance = dateDeNaissance;
     }
     
-    public Patient(String ipp, String nom, String prenom, Date dateDeNaissance, Localisation localisation) {
+    public Patient(String ipp, String nom, String prenom, Date dateDeNaissance, Localisation localisation, Sexe sexe) {
         this.ipp = ipp;
         this.nom = nom;
         this.prenom = prenom;
         this.dateDeNaissance = dateDeNaissance;
         this.localisation = localisation;
+        this.sexe = sexe;
     }
 
     public Patient(String ipp, String nom, String prenom, Date dateDeNaissance, Sexe sexe) {
@@ -79,6 +80,6 @@ public class Patient {
     }
     @Override
     public String toString() {
-        return getNomPrenomFormat() + " (" + dateDeNaissance.getAgeString() + ")";
+        return getNomPrenomFormat() + " (" + sexe.toString() + "-" + dateDeNaissance.getAgeString() + ")";
     }
 }

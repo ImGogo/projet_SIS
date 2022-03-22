@@ -19,6 +19,7 @@ public class PopupCreationPatientReussite extends javax.swing.JFrame {
 //        this.setContentPane(new RoundedPanel());
         initComponents();
         setLocationRelativeTo(null);
+        this.setAlwaysOnTop(true);
     }
 
     /**

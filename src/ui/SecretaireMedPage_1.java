@@ -6,13 +6,19 @@
 package ui;
 
 import bdd.ConnectBD;
+import fc.Hebergement;
 import fc.Look;
 import fc.Patient;
 import fc.Personnel;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -21,6 +27,9 @@ import javax.swing.table.DefaultTableModel;
  */
 public class SecretaireMedPage_1 extends javax.swing.JFrame {
     ArrayList<Patient> listePatientService;
+    ArrayList<Patient> listePatientEntree;
+    ArrayList<Patient> listePatientSortie;
+    ArrayList<Hebergement> listeHebergement;
     /**
      * Creates new form SecretaireAdminPage
      */
@@ -28,12 +37,12 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         
-        Look.setTableLook(table);
+        Look.setTableLook(tableEntrees);
         Look.setTableLook(this.tablePatientService);
-        Look.setTableLook(this.tableConsultation);
+        Look.setTableLook(this.tableSortie);
         Look.setTableLook(this.tableHebergement);
         
-        initTablePatientService();
+        initAllTables();
     }
     
     public SecretaireMedPage_1(Personnel p) {
@@ -42,6 +51,54 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
         this.nameLb.setText(p.getNom().toUpperCase() + " " + p.getPrenom());
     }
     
+    private void initAllTables() {
+        JFrame popup = new PopupLoading();
+        popup.setVisible(true);
+        SwingWorker sw = new SwingWorker(){
+            @Override
+            protected String doInBackground() throws Exception 
+            {
+                initTablePatientService();
+                initTableHebergement();
+                initTableEntree();
+                initTableSortie();
+                return "";
+            }
+
+            @Override
+            protected void done() 
+            {
+                try {
+                    String id = get().toString();
+
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ExecutionException ex) {
+                    Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                popup.setVisible(false);
+            }
+        };
+        // executes the swingworker on worker thread
+        sw.execute(); 
+    }
+    
+    private void initTableEntree(){
+        try {
+            String headers[] = {"Patient"};
+            DefaultTableModel model = new DefaultTableModel(null, headers);
+            
+            listePatientEntree = ConnectBD.getListePatientSansChambreFromService("Cardiologie");
+            for(Patient p : listePatientEntree) {
+                Object [] row = {p};
+                model.addRow( row );
+            }
+            tableEntrees.setModel(model);
+        } catch(Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
+        
     private void initTablePatientService() {
         try {
             String headers[] = {"Patient", "Localisation"};
@@ -53,6 +110,39 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
                 model.addRow( row );
             }
             tablePatientService.setModel(model);
+        } catch(Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    
+    private void initTableHebergement() {
+        try {
+            String headers[] = {"Patient", "Service demandeur"};
+            DefaultTableModel model = new DefaultTableModel(null, headers);
+            
+            listeHebergement = ConnectBD.getListeHebergementByService("Cardiologie");
+            for(Hebergement h : listeHebergement) {
+                Object [] row = {h.getPatient(), h.getServiceSource()};
+                model.addRow( row );
+            }
+            tableHebergement.setModel(model);
+        } catch(Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    
+    private void initTableSortie() {
+        
+        try {
+            String headers[] = {"Patient", "Localisation"};
+            DefaultTableModel model = new DefaultTableModel(null, headers);
+            
+            listePatientSortie = ConnectBD.getListePatientEnSortieByService("Cardiologie");;
+            for(Patient p : listePatientSortie) {
+                Object [] row = {p, p.getLocalisation()};
+                model.addRow( row );
+            }
+            tableSortie.setModel(model);
         } catch(Exception e) {
             System.err.println(e.getMessage());
         }
@@ -77,10 +167,10 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        table = new javax.swing.JTable();
+        tableEntrees = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        tableConsultation = new javax.swing.JTable();
+        tableSortie = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableHebergement = new javax.swing.JTable();
@@ -200,10 +290,10 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
         jScrollPane1.setBorder(null);
         jScrollPane1.setOpaque(false);
 
-        table.setBackground(new java.awt.Color(255, 255, 255));
-        table.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        table.setForeground(new java.awt.Color(116, 116, 116));
-        table.setModel(new javax.swing.table.DefaultTableModel(
+        tableEntrees.setBackground(new java.awt.Color(255, 255, 255));
+        tableEntrees.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        tableEntrees.setForeground(new java.awt.Color(116, 116, 116));
+        tableEntrees.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -219,18 +309,18 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        table.setGridColor(new java.awt.Color(255, 255, 255));
-        table.setRowHeight(40);
-        table.setRowMargin(5);
-        table.setSelectionBackground(new java.awt.Color(31, 58, 105));
-        table.setShowHorizontalLines(false);
-        table.setShowVerticalLines(false);
-        table.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableEntrees.setGridColor(new java.awt.Color(255, 255, 255));
+        tableEntrees.setRowHeight(40);
+        tableEntrees.setRowMargin(5);
+        tableEntrees.setSelectionBackground(new java.awt.Color(31, 58, 105));
+        tableEntrees.setShowHorizontalLines(false);
+        tableEntrees.setShowVerticalLines(false);
+        tableEntrees.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableMouseClicked(evt);
+                tableEntreesMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(table);
+        jScrollPane1.setViewportView(tableEntrees);
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 255));
         jLabel3.setFont(new java.awt.Font("Ebrima", 1, 26)); // NOI18N
@@ -241,10 +331,10 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
         jScrollPane3.setBorder(null);
         jScrollPane3.setOpaque(false);
 
-        tableConsultation.setBackground(new java.awt.Color(255, 255, 255));
-        tableConsultation.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
-        tableConsultation.setForeground(new java.awt.Color(116, 116, 116));
-        tableConsultation.setModel(new javax.swing.table.DefaultTableModel(
+        tableSortie.setBackground(new java.awt.Color(255, 255, 255));
+        tableSortie.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        tableSortie.setForeground(new java.awt.Color(116, 116, 116));
+        tableSortie.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -260,18 +350,18 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tableConsultation.setGridColor(new java.awt.Color(255, 255, 255));
-        tableConsultation.setRowHeight(40);
-        tableConsultation.setRowMargin(5);
-        tableConsultation.setSelectionBackground(new java.awt.Color(31, 58, 105));
-        tableConsultation.setShowHorizontalLines(false);
-        tableConsultation.setShowVerticalLines(false);
-        tableConsultation.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableSortie.setGridColor(new java.awt.Color(255, 255, 255));
+        tableSortie.setRowHeight(40);
+        tableSortie.setRowMargin(5);
+        tableSortie.setSelectionBackground(new java.awt.Color(31, 58, 105));
+        tableSortie.setShowHorizontalLines(false);
+        tableSortie.setShowVerticalLines(false);
+        tableSortie.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableConsultationMouseClicked(evt);
+                tableSortieMouseClicked(evt);
             }
         });
-        jScrollPane3.setViewportView(tableConsultation);
+        jScrollPane3.setViewportView(tableSortie);
 
         jLabel2.setBackground(new java.awt.Color(255, 255, 255));
         jLabel2.setFont(new java.awt.Font("Ebrima", 1, 26)); // NOI18N
@@ -443,8 +533,7 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     
     private void profilePictLbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profilePictLbActionPerformed
-            
-        
+
     }//GEN-LAST:event_profilePictLbActionPerformed
 
     private void profilePictLbMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_profilePictLbMouseEntered
@@ -464,17 +553,17 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_disconnectBtnActionPerformed
 
-    private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
+    private void tableEntreesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableEntreesMouseClicked
         if(evt.getClickCount() == 2){
             JTable target = (JTable) evt.getSource();
             int row = target.getSelectedRow();
-            JOptionPane.showMessageDialog(null, table.getValueAt(row, 4));
+            JOptionPane.showMessageDialog(null, tableEntrees.getValueAt(row, 4));
         }
-    }//GEN-LAST:event_tableMouseClicked
+    }//GEN-LAST:event_tableEntreesMouseClicked
 
-    private void tableConsultationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableConsultationMouseClicked
+    private void tableSortieMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableSortieMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_tableConsultationMouseClicked
+    }//GEN-LAST:event_tableSortieMouseClicked
 
     private void tableHebergementMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableHebergementMouseClicked
         // TODO add your handling code here:
@@ -540,9 +629,9 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
     private javax.swing.JLabel portalLb;
     private javax.swing.JButton profilePictLb;
     private javax.swing.JLabel serviceLb;
-    private javax.swing.JTable table;
-    private javax.swing.JTable tableConsultation;
+    private javax.swing.JTable tableEntrees;
     private javax.swing.JTable tableHebergement;
     private javax.swing.JTable tablePatientService;
+    private javax.swing.JTable tableSortie;
     // End of variables declaration//GEN-END:variables
 }
