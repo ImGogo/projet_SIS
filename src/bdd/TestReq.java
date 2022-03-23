@@ -5,7 +5,9 @@
  */
 package bdd;
 
+import fc.CoteLit;
 import fc.Prescription;
+import fc.Service;
 import fc.TypePersonnel;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -22,8 +24,7 @@ public class TestReq {
      */
     public static void main(String[] args) {
         try {
-            fc.Patient r = new fc.Patient(null, "marcal", "mArtiN", new fc.Date(16,3,2006));
-            System.out.println( ConnectBD.getPatientByNomPrenomDateNaissance(r) );
+            System.out.println( ConnectBD.login("011", "toto") );
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
             Logger.getLogger(TestReq.class.getName()).log(Level.FINE, null, ex);

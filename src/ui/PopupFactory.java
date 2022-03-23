@@ -5,6 +5,7 @@
  */
 package ui;
 
+import fc.Service;
 import ui.PopupCreationPatientReussite;
 import ui.PopupValider;
 import ui.PopupConnexionImpossible;
@@ -55,6 +56,22 @@ public class PopupFactory {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new PopupMdpIncorrect().setVisible(true);
+            }
+        });
+    }
+    
+    public static void createPopupDemandeMigration(fc.Patient p, fc.Service s) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new PopupDemandeMigration(p, s).setVisible(true);
+            }
+        });
+    }
+    
+    public static void createPopupChoixChambre(JFrame main, Service serviceGeographique, Service serviceOrigine, String ipp) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new PopupChoixChambre(main, serviceGeographique, serviceOrigine, ipp).setVisible(true);
             }
         });
     }

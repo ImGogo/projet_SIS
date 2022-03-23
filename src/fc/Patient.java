@@ -65,6 +65,7 @@ public class Patient {
         this.prenom = prenom;
         this.dateDeNaissance = dateDeNaissance;
         this.sexe = sexe;
+        
     }
     
     public final String generateIPP(){
@@ -153,5 +154,16 @@ public class Patient {
     @Override
     public String toString() {
         return getNomPrenomFormat() + " (" + sexe.toString() + "-" + dateDeNaissance.getAgeString() + ")";
+    }
+    
+    public String getNomPrenomAndIpp(){
+        return this.getNomFormat() + " " + this.getPrenomFormat() + " (" + this.ipp + ")";
+    }
+    
+    public static Patient generateAnonymousPatient(){
+        Date d = new Date();
+        Patient p = new Patient( null, d.getMinuteString(), d.getHeureString(), d);
+        p.setIpp( p.generateIPP() );
+        return p;
     }
 }

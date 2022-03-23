@@ -9,6 +9,7 @@ import bdd.ConnectBD;
 import fc.Visite;
 import fc.Patient;
 import fc.Personnel;
+import fc.Sexe;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.MouseInfo;
@@ -41,19 +42,18 @@ import javax.swing.table.TableModel;
  * @author Go
  */
 public class PatientDMPage extends javax.swing.JFrame {
-    
-    private String ipp = "123456";
-    /**
-     * Creates new form SecretaireAdminPage
-     */
-    public PatientDMPage() {
+    private Patient patient;
+    private JFrame main;
+    public PatientDMPage(Patient p, JFrame main) {
         initComponents();
         setLocationRelativeTo(null);
-        
-        
-        
         setTableLook();
+        
+        this.main = main;
+        this.patient = p;
+        initFields();
         initTable();
+        
     }
 
     /**
@@ -74,21 +74,20 @@ public class PatientDMPage extends javax.swing.JFrame {
         disconnectBtn = new javax.swing.JButton();
         portalLb = new javax.swing.JLabel();
         profilePictLb1 = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        table = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        lblIpp = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        lblNom = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
+        lblPrenom = new javax.swing.JLabel();
+        lblSexe = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        lblDateNaissance = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        table = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -173,7 +172,7 @@ public class PatientDMPage extends javax.swing.JFrame {
 
         portalLb.setFont(new java.awt.Font("Ebrima", 1, 24)); // NOI18N
         portalLb.setForeground(new java.awt.Color(255, 255, 255));
-        portalLb.setText("CONSULTATION PATIENT");
+        portalLb.setText("LISTE DES DOSSIERS MEDICAUX");
 
         profilePictLb1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ui/images/left_arrow.png"))); // NOI18N
         profilePictLb1.setBorder(null);
@@ -197,7 +196,7 @@ public class PatientDMPage extends javax.swing.JFrame {
                 .addComponent(profilePictLb1)
                 .addGap(30, 30, 30)
                 .addComponent(portalLb)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 369, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 386, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -212,14 +211,116 @@ public class PatientDMPage extends javax.swing.JFrame {
                 .addGap(40, 40, 40))
         );
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 58, 105), 2, true));
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel1.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(31, 58, 105));
+        jLabel1.setText("IPP :");
+
+        lblIpp.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        lblIpp.setForeground(new java.awt.Color(116, 116, 116));
+
+        jLabel3.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(31, 58, 105));
+        jLabel3.setText("Nom :");
+
+        lblNom.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        lblNom.setForeground(new java.awt.Color(116, 116, 116));
+
+        jLabel5.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(31, 58, 105));
+        jLabel5.setText("Prénom :");
+
+        lblPrenom.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        lblPrenom.setForeground(new java.awt.Color(116, 116, 116));
+
+        lblSexe.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        lblSexe.setForeground(new java.awt.Color(116, 116, 116));
+
+        jLabel8.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(31, 58, 105));
+        jLabel8.setText("Sexe :");
+
+        lblDateNaissance.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        lblDateNaissance.setForeground(new java.awt.Color(116, 116, 116));
+
+        jLabel10.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(31, 58, 105));
+        jLabel10.setText("Date de naissance :");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblPrenom))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblNom))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblIpp)))
+                        .addGap(25, 25, 25)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblDateNaissance))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(113, 113, 113)
+                        .addComponent(jLabel8)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblSexe))))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(lblIpp)
+                    .addComponent(jLabel10)
+                    .addComponent(lblDateNaissance))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(lblNom)
+                    .addComponent(jLabel8)
+                    .addComponent(lblSexe))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(lblPrenom))
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
+
+        jButton1.setBackground(new java.awt.Color(31, 58, 105));
+        jButton1.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("AJOUTER UNE NOUVELLE CONSULTATION");
+        jButton1.setOpaque(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
-        jScrollPane1.setBorder(null);
+        jScrollPane1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 58, 105), 2, true));
         jScrollPane1.setOpaque(false);
 
         table.setBackground(new java.awt.Color(255, 255, 255));
+        table.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 58, 105), 2, true));
         table.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
         table.setForeground(new java.awt.Color(116, 116, 116));
         table.setModel(new javax.swing.table.DefaultTableModel(
@@ -258,127 +359,6 @@ public class PatientDMPage extends javax.swing.JFrame {
             table.getColumnModel().getColumn(4).setResizable(false);
         }
 
-        jButton1.setBackground(new java.awt.Color(31, 58, 105));
-        jButton1.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("AJOUTER UNE NOUVELLE CONSULTATION");
-        jButton1.setOpaque(false);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1016, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(33, 33, 33))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel1.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel1.setText("IPP :");
-
-        jLabel2.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(116, 116, 116));
-        jLabel2.setText("22222222");
-
-        jLabel3.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel3.setText("Nom :");
-
-        jLabel4.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(116, 116, 116));
-        jLabel4.setText("Alexis");
-
-        jLabel5.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel5.setText("Prénom :");
-
-        jLabel6.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(116, 116, 116));
-        jLabel6.setText("MARTIN");
-
-        jLabel7.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(116, 116, 116));
-        jLabel7.setText("M");
-
-        jLabel8.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel8.setText("Sexe :");
-
-        jLabel9.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(116, 116, 116));
-        jLabel9.setText("01/01/1987");
-
-        jLabel10.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel10.setText("Date de naissance :");
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 594, Short.MAX_VALUE)
-                        .addComponent(jLabel10)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel9))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel6)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel8)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel7)))
-                .addGap(36, 36, 36))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6))
-                .addContainerGap(17, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout HomePanelLayout = new javax.swing.GroupLayout(HomePanel);
         HomePanel.setLayout(HomePanelLayout);
         HomePanelLayout.setHorizontalGroup(
@@ -386,9 +366,10 @@ public class PatientDMPage extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(HomePanelLayout.createSequentialGroup()
                 .addGap(94, 94, 94)
-                .addGroup(HomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(HomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1065, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         HomePanelLayout.setVerticalGroup(
@@ -397,24 +378,34 @@ public class PatientDMPage extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(HomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1190, Short.MAX_VALUE)
+            .addComponent(HomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(HomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(HomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 664, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    
+    private void initFields() {
+        this.lblDateNaissance.setText( patient.getDateDeNaissance().toString() );
+        this.lblIpp.setText( patient.getIpp());
+        this.lblNom.setText( patient.getNom() );
+        this.lblPrenom.setText( patient.getPrenom() );
+        this.lblSexe.setText( patient.getSexe().getVal());
+    }
     
     public final void initTable(){
         JFrame popup = new PopupLoading();
@@ -426,8 +417,9 @@ public class PatientDMPage extends javax.swing.JFrame {
                 String headers[] = {"Date", "Type", "Service", "N° de séjour", "ID"};
                 DefaultTableModel model = new DefaultTableModel(null, headers);
                 popup.setVisible(true);
+                
                 try{
-                    for(Visite c : ConnectBD.getListeConsultationFromIpp(ipp)){
+                    for(Visite c : ConnectBD.getListeConsultationFromIpp(PatientDMPage.this.patient.getIpp())){
                         model.addRow(c.getConsultationForConsultationListe());
                     }
                     table.setModel(model);
@@ -441,14 +433,7 @@ public class PatientDMPage extends javax.swing.JFrame {
             @Override
             protected void done() 
             {
-                try {
-                    String id = get().toString();
-                    
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ExecutionException ex) {
-                    Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                
                 popup.setVisible(false);
             }
         };
@@ -515,7 +500,12 @@ public class PatientDMPage extends javax.swing.JFrame {
             JTable target = (JTable) evt.getSource();
             int row = target.getSelectedRow();
             int col = target.getSelectedColumn();
-            JOptionPane.showMessageDialog(null, table.getValueAt(row, 4));
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    new VisitePage(PatientDMPage.this, table.getValueAt(row, 4).toString(), patient.getIpp());
+                }
+            });
+            this.setVisible(false);
         }
     }//GEN-LAST:event_tableMouseClicked
 
@@ -524,8 +514,13 @@ public class PatientDMPage extends javax.swing.JFrame {
     }//GEN-LAST:event_profilePictLb1MouseEntered
 
     private void profilePictLb1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profilePictLb1ActionPerformed
+        main.setVisible(true);
         dispose();
     }//GEN-LAST:event_profilePictLb1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -552,267 +547,11 @@ public class PatientDMPage extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(PatientDMPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PatientDMPage().setVisible(true);
+                new PatientDMPage(new Patient("123456", "nomPatientTest", "prenomPatientTest", new fc.Date(), Sexe.H), null).setVisible(true);
             }
         });
     }
@@ -823,19 +562,18 @@ public class PatientDMPage extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblDateNaissance;
+    private javax.swing.JLabel lblIpp;
+    private javax.swing.JLabel lblNom;
+    private javax.swing.JLabel lblPrenom;
+    private javax.swing.JLabel lblSexe;
     private javax.swing.JLabel nameLb;
     private javax.swing.JLabel portalLb;
     private javax.swing.JButton profilePictLb;

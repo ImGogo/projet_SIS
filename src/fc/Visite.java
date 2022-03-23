@@ -106,7 +106,7 @@ public class Visite {
     }
     
     public String[] getConsultationForConsultationListe(){
-        String[] s = {dateEntree.toString(), type, nomService, numeroSejour, id};
+        String[] s = {dateEntree.getDateHeure(), type, nomService, numeroSejour, id};
         return s;
     }
     

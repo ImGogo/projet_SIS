@@ -21,6 +21,22 @@ public class Localisation {
         this.serviceOrigine = serviceOrigine;
         this.serviceGeographique = serviceGeographique;
     }
+    
+    public Localisation(String numChambre, CoteLit coteLit){
+        this.numChambre = Integer.parseInt(numChambre);
+        this.coteLit = coteLit;
+    }
+    
+    public int getNumChambre(){
+        return this.numChambre;
+    }
+    public String getNumChambreString(){
+        return Integer.toString(numChambre);
+    }
+    
+    public CoteLit getCoteLit(){
+        return coteLit;
+    }
 
     @Override
     public String toString() {

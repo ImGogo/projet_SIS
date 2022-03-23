@@ -263,7 +263,7 @@ public class LoginPage extends javax.swing.JFrame {
     
     private void createHomePage(String id){
         switch(id){
-            case "01": new SecretaireMedPage(tmpPersonnel).setVisible(true); LoginPage.this.dispose(); break;
+            case "01": new SecretaireMedPage_1(tmpPersonnel).setVisible(true); LoginPage.this.dispose(); break;
             case "02": new SecretaireAdminPage().setVisible(true); LoginPage.this.dispose(); break;
             case "03": new PraticienPage().setVisible(true); LoginPage.this.dispose(); break;
             default: break;

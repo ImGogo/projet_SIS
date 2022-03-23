@@ -47,17 +47,22 @@ import javax.swing.table.TableModel;
  * @author Go
  */
 public class VisitePage extends javax.swing.JFrame {
-    private final String idDM = "1";
-    private final String ipp = "123456";
+    private final String idDM;
+    private final String ipp;
+    private JFrame main;
     private Visite visite;
     private Patient patient;
     /**
      * Creates new form SecretaireAdminPage
      */
-    public VisitePage() {
+    public VisitePage(JFrame main, String idDM, String ipp) {
         initComponents();
         setLocationRelativeTo(null);
+        setVisible(true);
         
+        this.idDM = idDM;
+        this.ipp = ipp;
+        this.main = main;
         initLabelsAndTables();
     }
     
@@ -758,6 +763,7 @@ public class VisitePage extends javax.swing.JFrame {
     }//GEN-LAST:event_profilePictLb1MouseEntered
 
     private void profilePictLb1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profilePictLb1ActionPerformed
+        main.setVisible(true);
         dispose();
     }//GEN-LAST:event_profilePictLb1ActionPerformed
 
@@ -827,7 +833,7 @@ public class VisitePage extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new VisitePage().setVisible(true);
+                new VisitePage(null, "1", "123456").setVisible(true);
             }
         });
     }

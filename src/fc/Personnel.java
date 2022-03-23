@@ -10,14 +10,14 @@ package fc;
  * @author Go
  */
 public class Personnel {
-    String nom, prenom, service;
-
+    String nom, prenom;
+    Service service;
     public Personnel(String nom, String prenom) {
         this.nom = nom;
         this.prenom = prenom;
     }
 
-    public Personnel(String nom, String prenom, String service) {
+    public Personnel(String nom, String prenom, Service service) {
         this.nom = nom;
         this.prenom = prenom;
         this.service = service;
@@ -31,7 +31,7 @@ public class Personnel {
         return prenom;
     }
 
-    public String getService() {
+    public Service getService() {
         return service;
     }
     

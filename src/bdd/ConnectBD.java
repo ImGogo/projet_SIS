@@ -49,31 +49,50 @@ public class ConnectBD {
             "INSERT INTO patient (IPP, nom, prenom, dateNaissance, sexe, nomPH, numSecu, adresseMail) VALUE (?,?,?,?,?,?,?,?)");
         PreparedStatement pstmt2 = con.prepareStatement(
             "INSERT INTO adresse (IPP, nomRue, numRue, codePostal, ville) VALUE (?,?,?,?,?)");
-        try{
-            pstmt.setInt(1, Integer.parseInt( p.getIpp() ));
-            pstmt.setString(2, p.getNom());
-            pstmt.setString(3, p.getPrenom() );
-            pstmt.setDate(4, new java.sql.Date(new SimpleDateFormat("dd / MM / yyyy").parse(p.getDateDeNaissance().toString()).getTime()));
-            pstmt.setString(5, p.getSexe().toString());
-            pstmt.setString(6, p.getMedecinGeneraliste());
-            pstmt.setString(7, p.getNss());
-            pstmt.setString(8, p.getEmail());
-            pstmt.executeUpdate();
-            
-            pstmt.close();
-            
-            pstmt2.setInt(1, Integer.parseInt( p.getIpp() ));
-            pstmt2.setString(2, a.getNomRue() );
-            pstmt2.setInt(3, Integer.parseInt( a.getNumRue()));
-            pstmt2.setInt(4, Integer.parseInt( a.getCodePostal()));
-            pstmt2.setString(5, a.getVille());
-            pstmt2.executeUpdate();
-            
-            pstmt2.close();
-            con.close();
-        } catch(Exception e) {
-            System.err.println(e.getMessage());
-        }
+        
+        pstmt.setInt(1, Integer.parseInt( p.getIpp() ));
+        pstmt.setString(2, p.getNom());
+        pstmt.setString(3, p.getPrenom() );
+        pstmt.setDate(4, new java.sql.Date(new SimpleDateFormat("dd / MM / yyyy").parse(p.getDateDeNaissance().toString()).getTime()));
+        pstmt.setString(5, p.getSexe().toString());
+        pstmt.setString(6, p.getMedecinGeneraliste());
+        pstmt.setString(7, p.getNss());
+        pstmt.setString(8, p.getEmail());
+        pstmt.executeUpdate();
+
+        pstmt.close();
+
+        pstmt2.setInt(1, Integer.parseInt( p.getIpp() ));
+        pstmt2.setString(2, a.getNomRue() );
+        pstmt2.setInt(3, Integer.parseInt( a.getNumRue()));
+        pstmt2.setInt(4, Integer.parseInt( a.getCodePostal()));
+        pstmt2.setString(5, a.getVille());
+        pstmt2.executeUpdate();
+
+        pstmt2.close();
+        con.close();
+    }
+    
+    public static void insertMigration(String type) throws Exception{
+        Connection con = getConnectionToDB();
+        PreparedStatement pstmt = con.prepareStatement(
+            "INSERT INTO patient (IPP, nom, prenom, dateNaissance, sexe, nomPH, numSecu, adresseMail) VALUE (?,?,?,?,?,?,?,?)");
+    }
+    
+    public static void insertLocalisation(Service serviceOrigine, Service serviceGeographique, String ipp, Localisation localisation) throws Exception{
+        Connection con = getConnectionToDB();
+        PreparedStatement pstmt = con.prepareStatement(
+            "INSERT INTO localisation (IPP, numChambre, coteLit, serviceGeographique, serviceOrigine) VALUE (?,?,?,?,?)");
+        
+        pstmt.setInt(1, Integer.parseInt( ipp ));
+        pstmt.setInt(2, localisation.getNumChambre() );
+        pstmt.setString(3, localisation.getCoteLit().toString() );
+        pstmt.setString(4, serviceGeographique.toString());
+        pstmt.setString(5, serviceOrigine.toString());
+        pstmt.executeUpdate();
+
+        pstmt.close();
+        con.close();
     }
     
     public static Personnel login(String id, String inPass) throws Exception {
@@ -85,13 +104,19 @@ public class ConnectBD {
         if(id.equals("Identifiant") || id.equals("") || id.length() < 3){
             return null;
         }
-        String query = "select mdp, nom, prenom from " + getTableName(id) + " where id=" + id;
+        String query = "select * from " + getTableName(id) + " where id=" + id;
         st = con.createStatement();
         rs = st.executeQuery(query);
         while (rs.next()) {
             String dbPass = rs.getString("mdp");
-            if(fc.PasswordHandler.isEqual(inPass, dbPass))
-                personnel = new Personnel(rs.getString("nom"), rs.getString("prenom"));
+            if(fc.PasswordHandler.isEqual(inPass, dbPass)){
+                if(getTableName(id).equals("secretaire")){
+                    Service service = Service.valueOf( rs.getString("service") );
+                    personnel = new Personnel(rs.getString("nom"), rs.getString("prenom"), service);
+                } else {
+                    personnel = new Personnel(rs.getString("nom"), rs.getString("prenom"));
+                }
+            }
         }
         
         terminateConnexion(con, st, rs);
@@ -139,6 +164,32 @@ public class ConnectBD {
         "FROM `DM` INNER JOIN patient ON patient.IPP = DM.IPP " +
         "INNER JOIN localisation ON localisation.IPP = DM.IPP " +
         "WHERE localisation.numChambre IS NULL AND serviceOrigine = \"" + service + "\" ";
+        
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+        while (rs.next()) {
+            String ipp = rs.getString("patient.IPP");
+            String nom = rs.getString("nom");
+            String prenom = rs.getString("prenom");
+            Date dateNaissance =  new Date( rs.getDate("dateNaissance") );
+            Sexe sexe = Sexe.valueOf( rs.getString("sexe"));
+            listePatients.add( new Patient(ipp, nom, prenom, dateNaissance, sexe));
+        }
+        
+        terminateConnexion(con, st, rs);
+        
+        return listePatients;
+    }
+    
+    public static ArrayList<Patient> getListeEntreesFromService(String service) throws Exception{
+        ArrayList<Patient> listePatients = new ArrayList<>();
+        Connection con = getConnectionToDB();
+        Statement st;
+        ResultSet rs;
+        String query = 
+        "SELECT patient.* " + 
+        "FROM patient INNER JOIN migration ON migration.IPP = patient.IPP " +
+        "WHERE hebergement = 0 AND serviceArrivee = \"" + service + "\" ";
         
         st = con.createStatement();
         rs = st.executeQuery(query);
@@ -224,8 +275,7 @@ public class ConnectBD {
         String query = 
         "SELECT patient.*, serviceSource, serviceArrivee " + 
         "FROM `migration` " +
-        "INNER JOIN DM ON DM.idDM = migration.idDM " +
-        "INNER JOIN patient ON patient.ipp = DM.ipp " +
+        "INNER JOIN patient ON patient.ipp = migration.ipp " +
         "WHERE hebergement = 1 AND serviceArrivee = \"" + service  + "\";";
         
         st = con.createStatement();
@@ -257,8 +307,7 @@ public class ConnectBD {
         String query = 
         "SELECT DM.*, nom, prenom " + 
         "FROM DM INNER JOIN praticien ON idPH = praticien.id " +
-        "WHERE ipp = \"" + ipp + "\";";
-        
+        "WHERE ipp = " + ipp + ";";
         st = con.createStatement();
         rs = st.executeQuery(query);
         while (rs.next()) {
@@ -278,7 +327,7 @@ public class ConnectBD {
         terminateConnexion(con, st, rs);
         
         return listeConsultation;
-    }
+    }   
     
     public static Visite getVisiteByIdDm(String idDM) throws Exception{
         Visite visite = null;
@@ -351,7 +400,6 @@ public class ConnectBD {
         
         return liste;
     }
-    
     
     public static ArrayList<Prestation> getListePrestationByIdDM(String idDM, Connection con) throws Exception{
         ArrayList<Prestation> liste = new ArrayList<>();
@@ -510,7 +558,6 @@ public class ConnectBD {
         
         return liste;
     }
-    
     
     private static void terminateConnexion(Connection con, Statement st, ResultSet rs){
         try {

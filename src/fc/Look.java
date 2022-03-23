@@ -15,6 +15,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
@@ -69,17 +70,18 @@ public class Look {
              @Override
              public void paintCurrentValue(Graphics g, Rectangle bounds, boolean hasFocus) {
                 ListCellRenderer renderer = comboBox.getRenderer();
-                Component c;
+                Component c = new JPanel();
                 Dimension d;
                 c =
                     renderer.getListCellRendererComponent(
                         listBox, comboBox.getSelectedItem(), -1, false, false);
-//                c.setFont(comboBox.getFont());
                 c.setFont( new Font("Ebrima", Font.BOLD, 19));
+                this.padding = new java.awt.Insets(5, 5, 5, 5);
                 
                 c.setForeground(new Color(116, 116, 116));
                 d = c.getPreferredSize();
-                currentValuePane.paintComponent(g, c, comboBox, bounds.x, bounds.y, bounds.width, d.height);
+                currentValuePane.paintComponent(g, c, comboBox, bounds.x, bounds.y, bounds.width, d.height + 10);
+                
               }
             @Override
             protected JButton createArrowButton() {
@@ -150,6 +152,7 @@ public class Look {
                 return comboPopup;
             }
         });
+        
     }
     
     public static final void setScrollBar(JScrollPane s){

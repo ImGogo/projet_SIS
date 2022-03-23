@@ -20,8 +20,9 @@ public class testDate {
      * @param args the command line arguments
      */
     public static void main(String[] args) { 
-        
-        System.out.println( "123456".   hashCode() );
+        for(Service s: Service.values(Service.Urgences)) {
+            System.out.println(s);
+        }
     }
     
 }

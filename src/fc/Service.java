@@ -10,6 +10,7 @@ package fc;
  * @author Go
  */
 public enum Service {
+    Accueil("ACCL"),
     Cardiologie("CARD"),
     Anesthesie("ANES"),
     Diabétologie("DIAB"),
@@ -25,6 +26,7 @@ public enum Service {
     Pediatrie("PEDT"),
     Pneumologie("PNEM"),
     Rhumatologie("RHUM"),
+    Urgences("URGC"),
     Imagerie("IMAG"),
     Laboratoire_Biologie_Medicale("BIOM"),
     Laboratoire_Anatomie_Cytologie("ANAC");
@@ -38,5 +40,25 @@ public enum Service {
     
     public String getVal(){
         return this.val;
+    }
+
+    @Override
+    public String toString() {
+        return this.name().replace("_", " ");
+    }
+    
+    public static Service[] values(Service req) {
+        Service[] values = Service.values();
+        Service[] newValues = new Service[values.length-1];
+        int i = 0;
+        int j = 0;
+        while ( i < values.length ) {
+            if( !values[i].getVal().equals(req.getVal())){
+                newValues[j] = values[i];
+                j++;
+            } 
+            i++;
+        }
+        return newValues;
     }
 }

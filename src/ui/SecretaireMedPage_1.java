@@ -10,6 +10,7 @@ import fc.Hebergement;
 import fc.Look;
 import fc.Patient;
 import fc.Personnel;
+import fc.Service;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -30,13 +31,14 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
     ArrayList<Patient> listePatientEntree;
     ArrayList<Patient> listePatientSortie;
     ArrayList<Hebergement> listeHebergement;
+    Personnel personnel;
     /**
      * Creates new form SecretaireAdminPage
      */
     public SecretaireMedPage_1() {
         initComponents();
         setLocationRelativeTo(null);
-        
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Look.setTableLook(tableEntrees);
         Look.setTableLook(this.tablePatientService);
         Look.setTableLook(this.tableSortie);
@@ -51,7 +53,21 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
     public SecretaireMedPage_1(Personnel p) {
         initComponents();
         setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        this.personnel = p;
+        Look.setTableLook(tableEntrees);
+        Look.setTableLook(this.tablePatientService);
+        Look.setTableLook(this.tableSortie);
+        Look.setTableLook(this.tableHebergement);
+        Look.setScrollBar(jScrollPane1);
+        Look.setScrollBar(jScrollPane2);
+        Look.setScrollBar(jScrollPane3);
+        Look.setScrollBar(jScrollPane4);
+        initAllTables();
+        
         this.nameLb.setText(p.getNom().toUpperCase() + " " + p.getPrenom());
+        this.serviceLb.setText( p.getService().toString());
     }
     
     private void initAllTables() {
@@ -91,7 +107,7 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
             String headers[] = {"Patient"};
             DefaultTableModel model = new DefaultTableModel(null, headers);
             
-            listePatientEntree = ConnectBD.getListePatientSansChambreFromService("Cardiologie");
+            listePatientEntree = ConnectBD.getListeEntreesFromService("Cardiologie");
             for(Patient p : listePatientEntree) {
                 Object [] row = {p};
                 model.addRow( row );
@@ -551,7 +567,7 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
     }//GEN-LAST:event_disconnectBtnMouseEntered
 
     private void disconnectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectBtnActionPerformed
-    java.awt.EventQueue.invokeLater(new Runnable() {
+        java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new LoginPage().setVisible(true);
             }
@@ -563,7 +579,10 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
         if(evt.getClickCount() == 2){
             JTable target = (JTable) evt.getSource();
             int row = target.getSelectedRow();
-            JOptionPane.showMessageDialog(null, tableEntrees.getValueAt(row, 4));
+           
+            Patient patientSelect = (Patient) tableEntrees.getValueAt(row, 4);
+            PopupFactory.createPopupChoixChambre(this, personnel.getService(),  personnel.getService(), patientSelect.getIpp());
+        this.setVisible(false);
         }
     }//GEN-LAST:event_tableEntreesMouseClicked
 
@@ -576,7 +595,14 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
     }//GEN-LAST:event_tableHebergementMouseClicked
 
     private void tablePatientServiceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablePatientServiceMouseClicked
-        // TODO add your handling code here:
+        if(evt.getClickCount() == 2){
+            JTable target = (JTable) evt.getSource();
+            int row = target.getSelectedRow();
+            
+            new PatientDMPage( (Patient) tableEntrees.getValueAt(row, 0), SecretaireMedPage_1.this).setVisible(true);
+            
+            this.setVisible(false);
+        }
     }//GEN-LAST:event_tablePatientServiceMouseClicked
 
     /**
