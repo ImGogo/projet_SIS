@@ -20,9 +20,7 @@ public class testDate {
      * @param args the command line arguments
      */
     public static void main(String[] args) { 
-        for(Service s: Service.values(Service.Urgences)) {
-            System.out.println(s);
-        }
+        System.out.println(TextValidator.isValidDate("01221999"));
     }
     
 }

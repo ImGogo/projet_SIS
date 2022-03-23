@@ -5,6 +5,8 @@
  */
 package ui;
 
+import fc.Personnel;
+import fc.Service;
 import java.awt.Color;
 import java.awt.MouseInfo;
 import java.awt.event.KeyEvent;
@@ -22,16 +24,19 @@ import javax.swing.KeyStroke;
  * @author Go
  */
 public class SecretaireAdminPage extends javax.swing.JFrame {
-        
+     Personnel p;
     /**
      * Creates new form SecretaireAdminPage
      */
-    public SecretaireAdminPage() {
+    
+    public SecretaireAdminPage(Personnel p){
         initComponents();
-        setLocationRelativeTo(null);
-        
-        
-    }
+        setLocationRelativeTo(null); 
+        this.nameLb.setText( p.toString() );
+        this.serviceLb.setText( p.getService().toString() );
+        this.p = p;
+    } 
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -157,7 +162,7 @@ public class SecretaireAdminPage extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(31, 31, 31)
                 .addComponent(portalLb)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 400, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -200,13 +205,13 @@ public class SecretaireAdminPage extends javax.swing.JFrame {
             HomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(HomePanelLayout.createSequentialGroup()
-                .addGap(149, 149, 149)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(createDmaBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 168, Short.MAX_VALUE)
+                .addGap(144, 144, 144)
                 .addComponent(searchDmaBtn)
-                .addGap(113, 113, 113)
+                .addGap(115, 115, 115)
                 .addComponent(urgencyBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(139, 139, 139))
+                .addGap(161, 161, 161))
         );
         HomePanelLayout.setVerticalGroup(
             HomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -214,14 +219,14 @@ public class SecretaireAdminPage extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(HomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(HomePanelLayout.createSequentialGroup()
-                        .addGap(112, 112, 112)
+                        .addGap(142, 142, 142)
                         .addGroup(HomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(createDmaBtn)
                             .addComponent(searchDmaBtn)))
                     .addGroup(HomePanelLayout.createSequentialGroup()
-                        .addGap(94, 94, 94)
+                        .addGap(127, 127, 127)
                         .addComponent(urgencyBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(232, Short.MAX_VALUE))
+                .addContainerGap(199, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -254,9 +259,10 @@ public class SecretaireAdminPage extends javax.swing.JFrame {
     private void createDmaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createDmaBtnActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new creerDmaPage().setVisible(true);
+                new creerDmaPage(SecretaireAdminPage.this, p).setVisible(true);
             }
-        });     
+        });    
+        this.setVisible(false);
     }//GEN-LAST:event_createDmaBtnActionPerformed
 
     private void searchDmaBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchDmaBtnMouseEntered
@@ -266,13 +272,9 @@ public class SecretaireAdminPage extends javax.swing.JFrame {
     private void searchDmaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchDmaBtnActionPerformed
        java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new searchDmaPage().setVisible(true);
+                new searchDmaPage(SecretaireAdminPage.this).setVisible(true);
             }
         });
-        
-       
-       
-       
     }//GEN-LAST:event_searchDmaBtnActionPerformed
 
     private void disconnectBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_disconnectBtnMouseEntered
@@ -280,7 +282,7 @@ public class SecretaireAdminPage extends javax.swing.JFrame {
     }//GEN-LAST:event_disconnectBtnMouseEntered
 
     private void disconnectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectBtnActionPerformed
-    java.awt.EventQueue.invokeLater(new Runnable() {
+        java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new LoginPage().setVisible(true);
             }
@@ -294,7 +296,11 @@ public class SecretaireAdminPage extends javax.swing.JFrame {
     }//GEN-LAST:event_urgencyBtnMouseEntered
 
     private void urgencyBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_urgencyBtnActionPerformed
-        
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new PopupAjouterPatientUrgence().setVisible(true);
+            }
+        });
     }//GEN-LAST:event_urgencyBtnActionPerformed
 
     /**
@@ -327,7 +333,7 @@ public class SecretaireAdminPage extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SecretaireAdminPage().setVisible(true);
+                new SecretaireAdminPage( new Personnel("GARDNER", "HANNA", Service.Accueil)).setVisible(true);
             }
         });
     }

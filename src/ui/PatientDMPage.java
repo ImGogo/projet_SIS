@@ -8,34 +8,15 @@ package ui;
 import bdd.ConnectBD;
 import fc.Visite;
 import fc.Patient;
-import fc.Personnel;
 import fc.Sexe;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.MouseInfo;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.geom.RoundRectangle2D;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JTable;
-import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
 
 /**
  *
@@ -260,16 +241,13 @@ public class PatientDMPage extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(lblPrenom))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblNom))
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblIpp)))
-                        .addGap(25, 25, 25)))
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblNom))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblIpp)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
@@ -402,8 +380,8 @@ public class PatientDMPage extends javax.swing.JFrame {
     private void initFields() {
         this.lblDateNaissance.setText( patient.getDateDeNaissance().toString() );
         this.lblIpp.setText( patient.getIpp());
-        this.lblNom.setText( patient.getNom() );
-        this.lblPrenom.setText( patient.getPrenom() );
+        this.lblNom.setText( patient.getNomFormat() );
+        this.lblPrenom.setText( patient.getPrenomFormat() );
         this.lblSexe.setText( patient.getSexe().getVal());
     }
     

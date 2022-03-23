@@ -343,8 +343,10 @@ public class PraticienPage extends javax.swing.JFrame {
                 DefaultTableModel model = new DefaultTableModel(null, headers);
                 DefaultTableModel model2 = new DefaultTableModel(null, headers2);
                 try{
-                    for(Patient p : ConnectBD.getListePatientFromService("Cardiologie")){
+                    java.sql.Connection con = bdd.ConnectBD.getConnectionToDB();
+                    for(Patient p : ConnectBD.getListePatientFromService("Cardiologie", con)){
                         model.addRow(p.getPatientForPatientList());
+                        con.close();
                     }
                     for(Patient p : ConnectBD.getListeConsultationsByidPH(idPH)){
                         model2.addRow( p.getPatientForConsultationList() );

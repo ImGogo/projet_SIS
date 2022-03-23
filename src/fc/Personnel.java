@@ -23,6 +23,11 @@ public class Personnel {
         this.service = service;
     }
 
+    @Override
+    public String toString() {
+        return nom.toUpperCase() + " " + prenom.substring(0,1).toUpperCase() + prenom.substring(1).toLowerCase();
+    }
+
     public String getNom() {
         return nom;
     }

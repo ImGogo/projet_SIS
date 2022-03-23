@@ -5,23 +5,21 @@
  */
 package ui;
 
-import javax.swing.InputMap;
-import javax.swing.JComponent;
-import static javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW;
-
 /**
  *
  * @author Go
  */
-public class PopupMdpIncorrect extends javax.swing.JFrame {
+public class PopupPatientNonTrouvé extends javax.swing.JFrame {
 
     /**
      * Creates new form PopupCreationPatientReussite
      */
-    public PopupMdpIncorrect() {
+    public PopupPatientNonTrouvé() {
         
+//        this.setContentPane(new RoundedPanel());
         initComponents();
         setLocationRelativeTo(null);
+        this.setAlwaysOnTop(true);
     }
 
     /**
@@ -42,11 +40,10 @@ public class PopupMdpIncorrect extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 58, 105), 2, true));
-        jPanel1.setMaximumSize(new java.awt.Dimension(656, 169));
 
         jLabel1.setFont(new java.awt.Font("Ebrima", 1, 26)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel1.setText("Identifiant ou mot de passe incorrect");
+        jLabel1.setText("Le patient n'est pas enregistré ");
 
         jButton1.setBackground(new java.awt.Color(31, 58, 105));
         jButton1.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
@@ -68,18 +65,18 @@ public class PopupMdpIncorrect extends javax.swing.JFrame {
                         .addGap(34, 34, 34)
                         .addComponent(jLabel1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(198, 198, 198)
+                        .addGap(160, 160, 160)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -117,23 +114,21 @@ public class PopupMdpIncorrect extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PopupMdpIncorrect.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PopupPatientNonTrouvé.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PopupMdpIncorrect.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PopupPatientNonTrouvé.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PopupMdpIncorrect.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PopupPatientNonTrouvé.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PopupMdpIncorrect.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PopupPatientNonTrouvé.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PopupMdpIncorrect().setVisible(true);
+                new PopupPatientNonTrouvé().setVisible(true);
             }
         });
     }

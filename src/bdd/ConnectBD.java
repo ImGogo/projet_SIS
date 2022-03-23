@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  */
 public class ConnectBD {
     
-    private static Connection getConnectionToDB() throws Exception{
+    public static Connection getConnectionToDB() throws Exception{
         Class.forName("com.mysql.jdbc.Driver");
         String lien = "jdbc:mysql://mysql-lygalma.alwaysdata.net:3306/lygalma_test";
         
@@ -73,10 +73,20 @@ public class ConnectBD {
         con.close();
     }
     
-    public static void insertMigration(String type) throws Exception{
+    public static void insertMigration(String type, String ipp, Service source, Service arrivee) throws Exception{
         Connection con = getConnectionToDB();
         PreparedStatement pstmt = con.prepareStatement(
-            "INSERT INTO patient (IPP, nom, prenom, dateNaissance, sexe, nomPH, numSecu, adresseMail) VALUE (?,?,?,?,?,?,?,?)");
+            "INSERT INTO migration (ipp, serviceSource, serviceArrivee, hebergement) VALUE (?,?,?,?)");
+        
+        pstmt.setString(1, ipp);
+        pstmt.setString(2, source.toString());
+        pstmt.setString(3, arrivee.toString());
+        pstmt.setString(4, type);
+        
+        pstmt.execute();
+        
+        pstmt.close();
+        con.close();
     }
     
     public static void removeMigration(String ipp) throws Exception{
@@ -88,6 +98,7 @@ public class ConnectBD {
         pstmt.close();
         con.close();
     }
+    
     public static void insertLocalisation(Service serviceOrigine, Service serviceGeographique, String ipp, Localisation localisation) throws Exception{
         Connection con = getConnectionToDB();
         PreparedStatement pstmt = con.prepareStatement(
@@ -133,9 +144,9 @@ public class ConnectBD {
         return personnel;
     }
     
-    public static ArrayList<Patient> getListePatientFromService(String service) throws Exception{
+    public static ArrayList<Patient> getListePatientFromService(String service, Connection con) throws Exception{
         ArrayList<Patient> listePatients = new ArrayList<>();
-        Connection con = getConnectionToDB();
+
         Statement st;
         ResultSet rs;
         String query = 
@@ -158,7 +169,7 @@ public class ConnectBD {
             listePatients.add( new Patient(ipp, nom, prenom, new fc.Date(dateNaissance), localisation, sexe));
         }
         
-        terminateConnexion(con, st, rs);
+        terminateConnexion(st, rs);
         
         return listePatients;
     }
@@ -190,9 +201,9 @@ public class ConnectBD {
         return listePatients;
     }
     
-    public static ArrayList<Patient> getListeEntreesFromService(String service) throws Exception{
+    public static ArrayList<Patient> getListeEntreesFromService(String service, Connection con) throws Exception{
         ArrayList<Patient> listePatients = new ArrayList<>();
-        Connection con = getConnectionToDB();
+
         Statement st;
         ResultSet rs;
         String query = 
@@ -211,14 +222,14 @@ public class ConnectBD {
             listePatients.add( new Patient(ipp, nom, prenom, dateNaissance, sexe));
         }
         
-        terminateConnexion(con, st, rs);
+        terminateConnexion(st, rs);
         
         return listePatients;
     }
     
-    public static ArrayList<Patient> getListePatientEnSortieByService(String service) throws Exception{
+    public static ArrayList<Patient> getListePatientEnSortieByService(String service, Connection con) throws Exception{
         ArrayList<Patient> listePatients = new ArrayList<>();
-        Connection con = getConnectionToDB();
+        
         Statement st;
         ResultSet rs;
         String query = 
@@ -242,7 +253,7 @@ public class ConnectBD {
             listePatients.add( new Patient(ipp, nom, prenom, new fc.Date(dateNaissance), localisation, sexe));
         }
         
-        terminateConnexion(con, st, rs);
+        terminateConnexion(st, rs);
         return listePatients;
     }
     
@@ -275,8 +286,8 @@ public class ConnectBD {
         return listePatients;
     }
     
-    public static ArrayList<Hebergement> getListeHebergementByService(String service) throws Exception{
-        Connection con = getConnectionToDB();
+    public static ArrayList<Hebergement> getListeHebergementByService(String service, Connection con) throws Exception{
+
         ArrayList<Hebergement> liste = new ArrayList<>();
         
         Statement st;
@@ -302,7 +313,7 @@ public class ConnectBD {
             liste.add( new Hebergement(p, serviceSource, serviceArrivee));
         }
         
-        terminateConnexion(con, st, rs);
+        terminateConnexion(st, rs);
         
         return liste;
     }

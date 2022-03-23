@@ -10,10 +10,13 @@ import java.awt.Color;
 import fc.Adresse;
 import fc.Look;
 import fc.Patient;
+import fc.Service;
 import fc.Sexe;
 import fc.TextValidator;
+import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 
 /**
  *
@@ -23,16 +26,20 @@ public class creerDmaPage extends javax.swing.JFrame {
         
     Adresse adresse;
     Patient patient;
+    JFrame main;
     /**
      * Creates new form SecretaireAdminPage
      */
-    public creerDmaPage() {
+    public creerDmaPage(JFrame main, fc.Personnel p) {
         initComponents();
         setLocationRelativeTo(null);
         Look.setScrollBar(scrollPane);
         lblNssInvalide.setForeground( new Color(255,255,255));
+        this.main = main;
         
-        
+        this.nameLb.setText(p.getNom().toUpperCase() + " " + p.getPrenom().substring(0,1).toUpperCase() + p.getPrenom().substring(1).toLowerCase());
+        this.serviceLb.setText( p.getService().toString());
+        this.lblDateInvalide.setVisible(false);
     }
 
     /**
@@ -87,13 +94,19 @@ public class creerDmaPage extends javax.swing.JFrame {
         profilePictLb3 = new javax.swing.JButton();
         profilePictLb2 = new javax.swing.JButton();
         lblNssInvalide = new javax.swing.JLabel();
+        lbErreur = new javax.swing.JLabel();
+        lblDateInvalide = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
+        setMaximumSize(new java.awt.Dimension(1280, 720));
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setResizable(false);
 
         HomePanel.setBackground(new java.awt.Color(255, 255, 255));
+        HomePanel.setMaximumSize(new java.awt.Dimension(1280, 720));
+        HomePanel.setMinimumSize(new java.awt.Dimension(1280, 720));
+        HomePanel.setPreferredSize(new java.awt.Dimension(1280, 720));
 
         jPanel1.setBackground(new java.awt.Color(31, 58, 105));
 
@@ -193,22 +206,23 @@ public class creerDmaPage extends javax.swing.JFrame {
                 .addComponent(profilePictLb1)
                 .addGap(18, 18, 18)
                 .addComponent(portalLb)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 547, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addComponent(portalLb))
             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addComponent(profilePictLb1))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(portalLb)
+                .addGap(40, 40, 40))
         );
 
         scrollPane.setBackground(new java.awt.Color(255, 255, 255));
-        scrollPane.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 28, 105), 1, true));
+        scrollPane.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 28, 105), 2, true));
         scrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
@@ -222,7 +236,7 @@ public class creerDmaPage extends javax.swing.JFrame {
         jLabel3.setBackground(new java.awt.Color(255, 255, 255));
         jLabel3.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel3.setText("Prénom *");
+        jLabel3.setText("Prénom");
 
         prenomTxt.setBackground(new java.awt.Color(255, 255, 255));
         prenomTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
@@ -253,7 +267,7 @@ public class creerDmaPage extends javax.swing.JFrame {
         jLabel4.setBackground(new java.awt.Color(255, 255, 255));
         jLabel4.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel4.setText("Sexe *");
+        jLabel4.setText("Sexe");
 
         nomTxt.setBackground(new java.awt.Color(255, 255, 255));
         nomTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
@@ -269,12 +283,12 @@ public class creerDmaPage extends javax.swing.JFrame {
         jLabel5.setBackground(new java.awt.Color(255, 255, 255));
         jLabel5.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel5.setText("Nom *");
+        jLabel5.setText("Nom");
 
         jLabel6.setBackground(new java.awt.Color(255, 255, 255));
         jLabel6.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel6.setText("Date de naissance *");
+        jLabel6.setText("Date de naissance");
 
         jourTxt.setBackground(new java.awt.Color(255, 255, 255));
         jourTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
@@ -286,6 +300,9 @@ public class creerDmaPage extends javax.swing.JFrame {
             }
         });
         jourTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jourTxtKeyReleased(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 jourTxtKeyTyped(evt);
             }
@@ -305,6 +322,9 @@ public class creerDmaPage extends javax.swing.JFrame {
             }
         });
         moisTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                moisTxtKeyReleased(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 moisTxtKeyTyped(evt);
             }
@@ -321,6 +341,9 @@ public class creerDmaPage extends javax.swing.JFrame {
             }
         });
         anneeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                anneeTxtKeyReleased(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 anneeTxtKeyTyped(evt);
             }
@@ -347,6 +370,12 @@ public class creerDmaPage extends javax.swing.JFrame {
         numssTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 28, 105), 2, true));
         numssTxt.setMargin(new java.awt.Insets(5, 5, 5, 5));
         numssTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                numssTxtKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                numssTxtKeyReleased(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 numssTxtKeyTyped(evt);
             }
@@ -355,7 +384,7 @@ public class creerDmaPage extends javax.swing.JFrame {
         jLabel9.setBackground(new java.awt.Color(255, 255, 255));
         jLabel9.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel9.setText("N° de Sécurité sociale *");
+        jLabel9.setText("N° de Sécurité sociale");
 
         mailTxt.setBackground(new java.awt.Color(255, 255, 255));
         mailTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
@@ -387,7 +416,7 @@ public class creerDmaPage extends javax.swing.JFrame {
         jLabel16.setBackground(new java.awt.Color(255, 255, 255));
         jLabel16.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel16.setText("Médecin traitant *");
+        jLabel16.setText("Médecin traitant");
 
         nomRueTxt.setBackground(new java.awt.Color(255, 255, 255));
         nomRueTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
@@ -398,7 +427,7 @@ public class creerDmaPage extends javax.swing.JFrame {
         jLabel17.setBackground(new java.awt.Color(255, 255, 255));
         jLabel17.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel17.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel17.setText("Nom de la rue *");
+        jLabel17.setText("Nom de la rue");
 
         numRueTxt.setBackground(new java.awt.Color(255, 255, 255));
         numRueTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
@@ -414,7 +443,7 @@ public class creerDmaPage extends javax.swing.JFrame {
         jLabel18.setBackground(new java.awt.Color(255, 255, 255));
         jLabel18.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel18.setText("Numéro *");
+        jLabel18.setText("Numéro");
 
         villeTxt.setBackground(new java.awt.Color(255, 255, 255));
         villeTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
@@ -430,7 +459,7 @@ public class creerDmaPage extends javax.swing.JFrame {
         jLabel19.setBackground(new java.awt.Color(255, 255, 255));
         jLabel19.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel19.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel19.setText("Ville *");
+        jLabel19.setText("Ville");
 
         codePostalTxt.setBackground(new java.awt.Color(255, 255, 255));
         codePostalTxt.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
@@ -446,7 +475,7 @@ public class creerDmaPage extends javax.swing.JFrame {
         jLabel20.setBackground(new java.awt.Color(255, 255, 255));
         jLabel20.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         jLabel20.setForeground(new java.awt.Color(31, 58, 105));
-        jLabel20.setText("Code postal *");
+        jLabel20.setText("Code postal");
 
         profilePictLb3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ui/images/icone_perso.png"))); // NOI18N
         profilePictLb3.setBorder(null);
@@ -478,6 +507,14 @@ public class creerDmaPage extends javax.swing.JFrame {
         lblNssInvalide.setForeground(new java.awt.Color(255, 51, 51));
         lblNssInvalide.setText("INVALIDE");
 
+        lbErreur.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        lbErreur.setForeground(new java.awt.Color(255, 255, 255));
+        lbErreur.setText("VEUILLEZ RENSEIGNER CORRECTEMENT L'INTEGRALITE DES CHAMPS");
+
+        lblDateInvalide.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        lblDateInvalide.setForeground(new java.awt.Color(255, 51, 51));
+        lblDateInvalide.setText("INVALIDE");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -492,9 +529,6 @@ public class creerDmaPage extends javax.swing.JFrame {
                         .addComponent(profilePictLb2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(59, 59, 59))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel9)
@@ -524,8 +558,10 @@ public class creerDmaPage extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel8)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(anneeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                        .addComponent(anneeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(lblDateInvalide)))
+                                .addGap(0, 166, Short.MAX_VALUE))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(mailTxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
@@ -534,8 +570,9 @@ public class creerDmaPage extends javax.swing.JFrame {
                                     .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.LEADING))
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel19)
                                     .addComponent(villeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -543,17 +580,20 @@ public class creerDmaPage extends javax.swing.JFrame {
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel20)
                                     .addComponent(codePostalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(medecinTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 801, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel3Layout.createSequentialGroup()
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel17)
-                                        .addComponent(nomRueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGap(169, 169, 169)
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel18)
-                                        .addComponent(numRueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(0, 186, Short.MAX_VALUE))))
+                            .addComponent(medecinTxt, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel17)
+                                    .addComponent(nomRueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(169, 169, 169)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel18)
+                                    .addComponent(numRueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 89, Short.MAX_VALUE))))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(179, 179, 179)
+                .addComponent(lbErreur)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -586,7 +626,8 @@ public class creerDmaPage extends javax.swing.JFrame {
                     .addComponent(moisTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
                     .addComponent(anneeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sexeCbo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sexeCbo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDateInvalide))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -631,7 +672,9 @@ public class creerDmaPage extends javax.swing.JFrame {
                         .addComponent(jLabel20)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(codePostalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addComponent(lbErreur)
+                .addGap(18, 18, 18)
                 .addComponent(jButton1)
                 .addContainerGap())
         );
@@ -644,17 +687,17 @@ public class creerDmaPage extends javax.swing.JFrame {
             HomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(HomePanelLayout.createSequentialGroup()
-                .addGap(80, 80, 80)
-                .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1072, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addGap(160, 160, 160)
+                .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 952, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         HomePanelLayout.setVerticalGroup(
             HomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(HomePanelLayout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 513, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 542, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(43, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -677,12 +720,13 @@ public class creerDmaPage extends javax.swing.JFrame {
     }//GEN-LAST:event_disconnectBtnMouseEntered
 
     private void disconnectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectBtnActionPerformed
-    java.awt.EventQueue.invokeLater(new Runnable() {
+        java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new LoginPage().setVisible(true);
             }
         });
         this.dispose();
+        main.dispose();
     }//GEN-LAST:event_disconnectBtnActionPerformed
 
     private void profilePictLb1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_profilePictLb1MouseEntered
@@ -690,6 +734,7 @@ public class creerDmaPage extends javax.swing.JFrame {
     }//GEN-LAST:event_profilePictLb1MouseEntered
 
     private void profilePictLb1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profilePictLb1ActionPerformed
+        main.setVisible(true);
         dispose();
     }//GEN-LAST:event_profilePictLb1ActionPerformed
 
@@ -750,24 +795,42 @@ public class creerDmaPage extends javax.swing.JFrame {
     }//GEN-LAST:event_profilePictLb3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String nom = this.nomTxt.getText();
-        String prenom = this.prenomTxt.getText();
-        String nss =  this.numssTxt.getText();
-        fc.Date dateNaissance = new fc.Date(jourTxt.getText(), moisTxt.getText(), anneeTxt.getText());
-        Sexe sexe =  Sexe.getSexe((String)this.sexeCbo.getSelectedItem());
-        String email = this.mailTxt.getText();
-        String medecin = this.medecinTxt.getText();
-        String nomRue = this.nomRueTxt.getText();
-        String numRue = this.numRueTxt.getText();
-        String ville = this.villeTxt.getText();
-        String cp = this.codePostalTxt.getText();
-        
-        this.adresse = new fc.Adresse(nomRue, numRue, cp, ville);
-        this.patient = new fc.Patient(nom, prenom, dateNaissance, null, sexe, adresse, nss, email, medecin);
-        
-        PopupFactory.createPopupValider(this);
+        if( !TextValidator.allFieldsAreFilled(jPanel3) || !Patient.verifyINSEE(numssTxt.getText()) || !dateIsValid()){
+            this.lbErreur.setForeground( Color.RED);
+        } else {
+            String nom = this.nomTxt.getText();
+            String prenom = this.prenomTxt.getText();
+            String nss =  this.numssTxt.getText();
+            fc.Date dateNaissance = new fc.Date(jourTxt.getText(), moisTxt.getText(), anneeTxt.getText());
+            Sexe sexe =  Sexe.getSexe((String)this.sexeCbo.getSelectedItem());
+            String email = this.mailTxt.getText();
+            String medecin = this.medecinTxt.getText();
+            String nomRue = this.nomRueTxt.getText();
+            String numRue = this.numRueTxt.getText();
+            String ville = this.villeTxt.getText();
+            String cp = this.codePostalTxt.getText();
+
+            this.adresse = new fc.Adresse(nomRue, numRue, cp, ville);
+            this.patient = new fc.Patient(nom, prenom, dateNaissance, null, sexe, adresse, nss, email, medecin);
+            
+            if(patientExists()){
+                PopupFactory.createPopupPatientExistant();
+            } else {
+                PopupFactory.createPopupValider(this);
+                this.lbErreur.setForeground( Color.white);
+            }
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
     
+    private boolean patientExists(){
+        Patient p = null;
+        try {
+            p = ConnectBD.getPatientByNomPrenomDateNaissance(patient);
+        } catch (Exception ex) {
+            PopupFactory.createPopupErreurConnexion();
+        }
+        return p != null;
+    }
     public void insertPatientIntoDB() throws Exception {
         ConnectBD.insertPatient(patient, adresse);
     } 
@@ -796,20 +859,43 @@ public class creerDmaPage extends javax.swing.JFrame {
     }//GEN-LAST:event_moisTxtKeyTyped
 
     private void numssTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_numssTxtKeyTyped
-        
-        if(numssTxt.getText().length() >= 14) {
-            if (Patient.verifyINSEE(numssTxt.getText())) {
-                lblNssInvalide.setForeground( new Color(255,255,255));
-            } else {
-                lblNssInvalide.setForeground( new Color(255,0,0));
-            }
-        } else {
-            lblNssInvalide.setForeground( new Color(255,255,255));
-        }
-        
         TextValidator.consumeNonIntegers(evt, 15, 0);
     }//GEN-LAST:event_numssTxtKeyTyped
 
+    private void numssTxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_numssTxtKeyPressed
+       
+    }//GEN-LAST:event_numssTxtKeyPressed
+
+    private void numssTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_numssTxtKeyReleased
+        
+        if (Patient.verifyINSEE(numssTxt.getText())) {
+            lblNssInvalide.setForeground( new Color(255,255,255));
+        } else {
+            lblNssInvalide.setForeground( new Color(255,0,0));
+        }
+    }//GEN-LAST:event_numssTxtKeyReleased
+
+    private void jourTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jourTxtKeyReleased
+        this.lblDateInvalide.setVisible(!dateIsValid());
+    }//GEN-LAST:event_jourTxtKeyReleased
+
+    private void moisTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_moisTxtKeyReleased
+        this.lblDateInvalide.setVisible(!dateIsValid());
+    }//GEN-LAST:event_moisTxtKeyReleased
+
+    private void anneeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_anneeTxtKeyReleased
+        this.lblDateInvalide.setVisible(!dateIsValid());
+    }//GEN-LAST:event_anneeTxtKeyReleased
+    
+    public boolean dateIsValid(){
+        String jour = this.jourTxt.getText();
+        String mois = this.moisTxt.getText();
+        String annee = this.anneeTxt.getText();
+        if( jour.length() + mois.length() + annee.length() == 8 ) {
+            return TextValidator.isValidDate(jour + mois + annee);
+        }
+        return false;
+    }
     /**
      * @param args the command line arguments
      */
@@ -843,7 +929,7 @@ public class creerDmaPage extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new creerDmaPage().setVisible(true);
+                new creerDmaPage(null, new fc.Personnel("nom", "prenom", Service.Accueil)).setVisible(true);
             }
         });
     }
@@ -873,6 +959,8 @@ public class creerDmaPage extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JTextField jourTxt;
+    private javax.swing.JLabel lbErreur;
+    private javax.swing.JLabel lblDateInvalide;
     private javax.swing.JLabel lblNssInvalide;
     private javax.swing.JTextField mailTxt;
     private javax.swing.JTextField medecinTxt;

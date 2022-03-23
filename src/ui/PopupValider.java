@@ -151,6 +151,7 @@ public class PopupValider extends javax.swing.JFrame {
                     main.insertPatientIntoDB();
                 } catch (Exception e){
                     PopupFactory.createPopupErreurConnexion();
+                    System.out.println(e.getMessage());
                     return "err";
                 }
                 return "";

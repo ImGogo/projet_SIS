@@ -53,7 +53,7 @@ public class Look {
                 if(isSelected){
                     c.setBackground(new Color(31, 58, 105));
                 }else{
-                    if (row%2 == 0){
+                    if (row%2 == 1  ){
                         c.setBackground(Color.WHITE);
                     }
                     else {

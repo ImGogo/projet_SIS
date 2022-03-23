@@ -7,6 +7,9 @@ package fc;
 
 import java.awt.Component;
 import java.awt.event.KeyEvent;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -37,5 +40,17 @@ public class TextValidator {
             i++;
         }
         return areFilled;
+    }
+    
+    
+    public static boolean isValidDate(String dateStr) {
+        DateFormat sdf = new SimpleDateFormat("ddMMyyyy");
+        sdf.setLenient(false);
+        try {
+            sdf.parse(dateStr);
+        } catch (ParseException e) {
+            return false;
+        }
+        return true;
     }
 }

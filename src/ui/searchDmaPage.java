@@ -20,14 +20,14 @@ import javax.swing.SwingWorker;
  * @author Go
  */
 public class searchDmaPage extends javax.swing.JFrame {
-
+    JFrame main;
     /**
      * Creates new form searchDmaPage
      */
-    public searchDmaPage() {
+    public searchDmaPage(JFrame main) {
         initComponents();
         this.setLocationRelativeTo(null);
-        
+        this.main = main;
     }
 
     /**
@@ -312,11 +312,12 @@ public class searchDmaPage extends javax.swing.JFrame {
                     } else {
                         java.awt.EventQueue.invokeLater(new Runnable() {
                             public void run() {
-                                new profilPatientPage(result).setVisible(true);
+                                new ProfilPatientPage(result, main).setVisible(true);
                             }
                         });
                         System.out.println(result);
                         searchDmaPage.this.dispose();
+                        main.setVisible(false);
                     }
                 } catch (Exception e) {
                     System.err.println(e);
@@ -365,7 +366,7 @@ public class searchDmaPage extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new searchDmaPage().setVisible(true);
+                new searchDmaPage(null).setVisible(true);
             }
         });
     }

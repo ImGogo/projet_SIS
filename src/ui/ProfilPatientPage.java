@@ -21,20 +21,21 @@ import javax.swing.KeyStroke;
  *
  * @author Go
  */
-public class profilPatientPage extends javax.swing.JFrame {
+public class ProfilPatientPage extends javax.swing.JFrame {
     fc.Patient p;
+    JFrame main;
     /**
      * Creates new form SecretaireAdminPage
      */
-    public profilPatientPage() {
+    public ProfilPatientPage() {
         initComponents();
         setLocationRelativeTo(null);
     }
     
-    public profilPatientPage(fc.Patient p) {
+    public ProfilPatientPage(fc.Patient p, JFrame main) {
         initComponents();
         setLocationRelativeTo(null);
-        
+        this.main = main;
         this.p = p;
         initLabels();
     }
@@ -102,7 +103,6 @@ public class profilPatientPage extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
-        setPreferredSize(new java.awt.Dimension(1280, 720));
         setResizable(false);
 
         HomePanel.setBackground(new java.awt.Color(255, 255, 255));
@@ -530,7 +530,7 @@ public class profilPatientPage extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(HomePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 604, Short.MAX_VALUE)
+            .addComponent(HomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE)
         );
 
         pack();
@@ -563,6 +563,7 @@ public class profilPatientPage extends javax.swing.JFrame {
     }//GEN-LAST:event_profilePictLb1MouseEntered
 
     private void profilePictLb1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profilePictLb1ActionPerformed
+        main.setVisible(true);
         dispose();
     }//GEN-LAST:event_profilePictLb1ActionPerformed
 
@@ -595,21 +596,23 @@ public class profilPatientPage extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(profilPatientPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProfilPatientPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(profilPatientPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProfilPatientPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(profilPatientPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProfilPatientPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(profilPatientPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProfilPatientPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new profilPatientPage().setVisible(true);
+                new ProfilPatientPage().setVisible(true);
             }
         });
     }
