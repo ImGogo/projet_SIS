@@ -156,7 +156,7 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
             String headers[] = {"Patient", "Localisation"};
             DefaultTableModel model = new DefaultTableModel(null, headers);
             
-            listePatientSortie = ConnectBD.getListePatientEnSortieByService("Cardiologie");
+            listePatientSortie = ConnectBD.getListePatientEnSortieByService(personnel.getService().toString());
             for(Patient p : listePatientSortie) {
                 Object [] row = {p, p.getLocalisation()};
                 model.addRow( row );
@@ -165,6 +165,10 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
         } catch(Exception e) {
             System.err.println(e.getMessage());
         }
+    }
+    
+    public void refreshTables(){
+        this.initAllTables();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -580,9 +584,9 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
             JTable target = (JTable) evt.getSource();
             int row = target.getSelectedRow();
            
-            Patient patientSelect = (Patient) tableEntrees.getValueAt(row, 4);
+            Patient patientSelect = (Patient) tableEntrees.getValueAt(row, 0);
+            
             PopupFactory.createPopupChoixChambre(this, personnel.getService(),  personnel.getService(), patientSelect.getIpp());
-        this.setVisible(false);
         }
     }//GEN-LAST:event_tableEntreesMouseClicked
 
@@ -599,7 +603,7 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
             JTable target = (JTable) evt.getSource();
             int row = target.getSelectedRow();
             
-            new PatientDMPage( (Patient) tableEntrees.getValueAt(row, 0), SecretaireMedPage_1.this).setVisible(true);
+            new PatientDMPage( (Patient) tablePatientService.getValueAt(row, 0), SecretaireMedPage_1.this).setVisible(true);
             
             this.setVisible(false);
         }

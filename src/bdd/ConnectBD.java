@@ -79,6 +79,15 @@ public class ConnectBD {
             "INSERT INTO patient (IPP, nom, prenom, dateNaissance, sexe, nomPH, numSecu, adresseMail) VALUE (?,?,?,?,?,?,?,?)");
     }
     
+    public static void removeMigration(String ipp) throws Exception{
+        Connection con = getConnectionToDB();
+        PreparedStatement pstmt = con.prepareStatement(
+            "DELETE FROM `migration` WHERE ipp = ?");
+        pstmt.setString(1, ipp);
+        pstmt.execute();
+        pstmt.close();
+        con.close();
+    }
     public static void insertLocalisation(Service serviceOrigine, Service serviceGeographique, String ipp, Localisation localisation) throws Exception{
         Connection con = getConnectionToDB();
         PreparedStatement pstmt = con.prepareStatement(

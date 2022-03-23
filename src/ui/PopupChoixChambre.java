@@ -25,9 +25,9 @@ import javax.swing.JFrame;
  */
 public class PopupChoixChambre extends javax.swing.JFrame {
     javax.swing.JFrame main = null;
-    String ipp = "353613012";
     Service serviceGeographique;
     Service serviceOrigine;
+    String ipp;
     /**
      * Creates new form PopupCreationPatientReussite
      */
@@ -37,7 +37,7 @@ public class PopupChoixChambre extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         this.setAlwaysOnTop(true);
         cboCoteLit.setModel( new DefaultComboBoxModel<>(CoteLit.values()));
-        
+        this.ipp = "1";
         Look.setComboBoxScrollBar(cboCoteLit);
         
         this.pack();
@@ -51,7 +51,7 @@ public class PopupChoixChambre extends javax.swing.JFrame {
         cboCoteLit.setModel( new DefaultComboBoxModel<>(CoteLit.values()));
         this.serviceGeographique = serviceGeographique;
         this.serviceOrigine = serviceOrigine;
-        
+        this.ipp = ipp;
         Look.setComboBoxScrollBar(cboCoteLit);
         this.pack();
     }
@@ -205,6 +205,10 @@ public class PopupChoixChambre extends javax.swing.JFrame {
             try {
                 ConnectBD.insertLocalisation(serviceOrigine, serviceGeographique, ipp, localisation);
                 PopupFactory.createPopupCreationPatientReussite();
+                if( main instanceof SecretaireMedPage_1){
+                    ConnectBD.removeMigration(ipp);
+                    ((SecretaireMedPage_1) main).refreshTables();
+                }
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
                 PopupFactory.createPopupErreurConnexion();
