@@ -126,7 +126,7 @@ public class PopupAjouterPatientUrgence extends javax.swing.JFrame {
         fc.Patient p = Patient.generateAnonymousPatient();
         try {
             ConnectBD.insertPatientAnonyme(p);
-            PopupFactory.createPopupDemandeMigration(p, Service.Urgences);
+            PopupFactory.createPopupDemandeMigration(p, Service.Urgences, null);
             this.dispose();
         } catch (Exception e) {
             PopupFactory.createPopupErreurConnexion();

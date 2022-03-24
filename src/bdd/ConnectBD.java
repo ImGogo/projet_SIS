@@ -77,16 +77,30 @@ public class ConnectBD {
         
         Connection con = getConnectionToDB();
         PreparedStatement pstmt = con.prepareStatement(
-            "INSERT INTO patient (IPP, nom, prenom, dateNaissance) VALUE (?,?,?,?)");
+            "INSERT INTO patient (IPP, nom, prenom, dateNaissance, sexe) VALUE (?,?,?,?,?)");
         
         pstmt.setInt(1, Integer.parseInt( p.getIpp() ));
         pstmt.setString(2, p.getNom());
         pstmt.setString(3, p.getPrenom() );
         pstmt.setDate(4, new java.sql.Date(new SimpleDateFormat("dd / MM / yyyy").parse(p.getDateDeNaissance().toString()).getTime()));
+        pstmt.setString(5, "I");
         
         pstmt.executeUpdate();
 
         con.close();
+    }
+    
+    public static void insertDateSortie(Patient p, Connection con) throws Exception{
+        
+        PreparedStatement pstmt = con.prepareStatement(
+            "UPDATE `DM` SET dateSortie = ? WHERE ipp = ? and lettreSortie IS NOT NULL; ");
+        
+        pstmt.setTimestamp(1, new java.sql.Timestamp(new SimpleDateFormat("dd / MM / yyyy HH:mm").parse((new Date()).getDateHeure()).getTime()));
+        pstmt.setString(2, p.getIpp());
+        
+        pstmt.executeUpdate();
+        pstmt.close();
+
     }
     
     public static void insertDM(String numSejour, String type, int idPH, Date dateEntree, String ipp, String motif, String service) throws Exception {
@@ -123,8 +137,8 @@ public class ConnectBD {
 //        con.close();
     }
     
-    public static void insertMigration(String type, String ipp, Service source, Service arrivee) throws Exception{
-        Connection con = getConnectionToDB();
+    public static void insertMigration(String type, String ipp, Service source, Service arrivee, Connection con) throws Exception{
+        
         PreparedStatement pstmt = con.prepareStatement(
             "INSERT INTO migration (ipp, serviceSource, serviceArrivee, hebergement) VALUE (?,?,?,?)");
         
@@ -146,8 +160,17 @@ public class ConnectBD {
         pstmt.setString(1, ipp);
         pstmt.execute();
         pstmt.close();
-        con.close();
     }
+    
+    public static void removeLocalisation(String ipp, Connection con) throws Exception{
+        
+        PreparedStatement pstmt = con.prepareStatement(
+            "DELETE FROM `localisation` WHERE ipp = ?");
+        pstmt.setString(1, ipp);
+        pstmt.execute();
+        pstmt.close();
+    }
+    
     
     public static void insertLocalisation(Service serviceOrigine, Service serviceGeographique, String ipp, Localisation localisation) throws Exception{
         Connection con = getConnectionToDB();

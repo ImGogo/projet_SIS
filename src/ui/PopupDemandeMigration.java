@@ -6,10 +6,13 @@
 package ui;
 
 import bdd.ConnectBD;
+import fc.Date;
 import fc.Look;
 import fc.Service;
 import java.awt.Font;
+import java.sql.Connection;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
 
 /**
  *
@@ -18,6 +21,7 @@ import javax.swing.DefaultComboBoxModel;
 public class PopupDemandeMigration extends javax.swing.JFrame {
     fc.Patient patient = null;
     fc.Service origine = null;
+    JFrame main = null;
     /**
      * Creates new form PopupCreationPatientReussite
      */
@@ -34,14 +38,17 @@ public class PopupDemandeMigration extends javax.swing.JFrame {
         this.pack();
     }
     
-     public PopupDemandeMigration(fc.Patient patient, fc.Service origine) {
+     public PopupDemandeMigration(fc.Patient patient, fc.Service origine, JFrame main) {
         
         this.patient = patient;
+        this.main = main;
+        this.origine = origine;
+        
         initComponents();
         setLocationRelativeTo(null);
-        this.origine = origine;
         cboService.setModel( new DefaultComboBoxModel<>(Service.values(this.origine)));
         Look.setComboBoxScrollBar(cboService);
+        if(main != null ) { this.cbxHebergement.setEnabled(false);}
         this.lblPatient.setText(patient.getNomPrenomAndIpp());
         this.lblService.setText(origine.toString());
         this.pack();
@@ -236,16 +243,32 @@ public class PopupDemandeMigration extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String type;
         try{
+            
             if(cbxHebergement.isSelected()) {
                 type = "1";
             } else {
                 type = "0";
             }
-            ConnectBD.insertMigration(type, patient.getIpp(), origine, (Service) this.cboService.getSelectedItem());
+            
+            Connection con = ConnectBD.getConnectionToDB();
+            
+            if(main != null) {
+                this.jButton1.setEnabled(false);
+                this.jButton2.setEnabled(false);
+                type = "0";
+                
+                ConnectBD.insertDateSortie(patient, con);
+                ConnectBD.removeLocalisation(patient.getIpp(), con);
+                
+                ((SecretaireMedPage_1) main).refreshTables();
+            }
+            
+            ConnectBD.insertMigration(type, patient.getIpp(), origine, (Service) this.cboService.getSelectedItem(), con);
+            
             new PopupDemandeMigrationReussite().setVisible(true);
             this.dispose();
         } catch (Exception e){
-            
+            System.out.println(e.getMessage());
         }
         
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -351,7 +374,7 @@ public class PopupDemandeMigration extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PopupDemandeMigration(fc.Patient.generateAnonymousPatient(), Service.Accueil).setVisible(true);
+                new PopupDemandeMigration(fc.Patient.generateAnonymousPatient(), Service.Accueil, null).setVisible(true);
             }
         });
     }

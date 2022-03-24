@@ -35,6 +35,7 @@ public class creerDmaPage extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         Look.setScrollBar(scrollPane);
         lblNssInvalide.setForeground( new Color(255,255,255));
+        Look.setComboBoxScrollBar(sexeCbo);
         this.main = main;
         
         this.nameLb.setText(p.getNom().toUpperCase() + " " + p.getPrenom().substring(0,1).toUpperCase() + p.getPrenom().substring(1).toLowerCase());
@@ -100,7 +101,6 @@ public class creerDmaPage extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
         setMaximumSize(new java.awt.Dimension(1280, 720));
-        setPreferredSize(new java.awt.Dimension(1280, 720));
         setResizable(false);
 
         HomePanel.setBackground(new java.awt.Color(255, 255, 255));
@@ -471,6 +471,11 @@ public class creerDmaPage extends javax.swing.JFrame {
                 codePostalTxtActionPerformed(evt);
             }
         });
+        codePostalTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                codePostalTxtKeyTyped(evt);
+            }
+        });
 
         jLabel20.setBackground(new java.awt.Color(255, 255, 255));
         jLabel20.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
@@ -815,6 +820,8 @@ public class creerDmaPage extends javax.swing.JFrame {
             
             if(patientExists()){
                 PopupFactory.createPopupPatientExistant();
+                main.setVisible(rootPaneCheckingEnabled);
+                this.dispose();
             } else {
                 PopupFactory.createPopupValider(this);
                 this.lbErreur.setForeground( Color.white);
@@ -886,6 +893,10 @@ public class creerDmaPage extends javax.swing.JFrame {
     private void anneeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_anneeTxtKeyReleased
         this.lblDateInvalide.setVisible(!dateIsValid());
     }//GEN-LAST:event_anneeTxtKeyReleased
+
+    private void codePostalTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_codePostalTxtKeyTyped
+        TextValidator.consumeNonIntegers(evt, 5, 99999);
+    }//GEN-LAST:event_codePostalTxtKeyTyped
     
     public boolean dateIsValid(){
         String jour = this.jourTxt.getText();

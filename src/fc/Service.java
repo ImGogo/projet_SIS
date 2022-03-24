@@ -49,11 +49,11 @@ public enum Service {
     
     public static Service[] values(Service req) {
         Service[] values = Service.values();
-        Service[] newValues = new Service[values.length-1];
+        Service[] newValues = new Service[values.length-3];
         int i = 0;
         int j = 0;
         while ( i < values.length ) {
-            if( !values[i].getVal().equals(req.getVal())){
+            if( !values[i].getVal().equals(req.getVal()) && !values[i].getVal().equals("ACCL") && !values[i].getVal().equals("URGC")){
                 newValues[j] = values[i];
                 j++;
             } 

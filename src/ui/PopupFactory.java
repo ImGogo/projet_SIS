@@ -53,10 +53,10 @@ public class PopupFactory {
         });
     }
     
-    public static void createPopupDemandeMigration(fc.Patient p, fc.Service s) {
+    public static void createPopupDemandeMigration(fc.Patient p, fc.Service s, JFrame main) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PopupDemandeMigration(p, s).setVisible(true);
+                new PopupDemandeMigration(p, s, main).setVisible(true);
             }
         });
     }

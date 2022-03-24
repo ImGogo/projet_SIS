@@ -633,7 +633,7 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
             int row = target.getSelectedRow();
             if( row  != -1){
                 Patient p = (Patient) tableSortie.getValueAt(row, 0);
-                PopupFactory.createPopupDemandeMigration(p, personnel.getService());
+                PopupFactory.createPopupDemandeMigration(p, personnel.getService(), this);
             }
         }
     }//GEN-LAST:event_tableSortieMouseClicked
