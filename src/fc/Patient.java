@@ -17,6 +17,7 @@ public class Patient {
     private String nss;
     private Adresse adresse;
     private String numSejour;
+    private String idDM;
 
     public Patient(String ipp, String nom, String prenom, Date dateDeNaissance) {
         this.ipp = ipp;
@@ -124,7 +125,7 @@ public class Patient {
     }
     
     public String[] getPatientForConsultationList(){
-        return new String[] {nom, prenom, dateDeNaissance.toString(), dateDeNaissance.getHeureMinute(), ipp};
+        return new String[] {nom, prenom, dateDeNaissance.toString(), dateDeNaissance.getHeureMinute(), ipp, idDM};
     }
     
     public Adresse getAdresse(){
@@ -161,6 +162,9 @@ public class Patient {
         return this.getNomFormat() + " " + this.getPrenomFormat() + " (" + this.ipp + ")";
     }
     
+    public String getNomPrenomSexe(){
+        return this.getNomPrenomFormat() + " (" + this.sexe.name() + ")";
+    }
     public static Patient generateAnonymousPatient(){
         Date d = new Date();
         Patient p = new Patient( null, d.getMinuteString(), d.getHeureString(), d);
@@ -178,5 +182,13 @@ public class Patient {
     
     public String getNumSejour(){
         return this.numSejour;
+    }
+    
+    public void setIdDM(String idDM){
+        this.idDM = idDM;
+    }
+    
+    public String getIdDM(){
+        return this.idDM;
     }
 }

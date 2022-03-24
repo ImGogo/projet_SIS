@@ -8,6 +8,7 @@ package ui;
 import bdd.ConnectBD;
 import fc.Look;
 import fc.Patient;
+import fc.Personnel;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -26,6 +27,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class PraticienPage extends javax.swing.JFrame {
     private String idPH = "31";
+    
     /**
      * Creates new form SecretaireAdminPage
      */
@@ -340,14 +342,16 @@ public class PraticienPage extends javax.swing.JFrame {
             @Override
             protected String doInBackground() throws Exception 
             {
-                String headers[] = {"Nom", "Prénom", "Date de naissance", "Localisation", "IPP"};
-                String headers2[] = {"Nom", "Prénom", "Date", "Heure", "IPP"};
+                String headers[] = {"Patient", "Localisation"};
+                String headers2[] = {"Nom", "Prenom", "Date", "Heure", "IPP", "ID"};
                 DefaultTableModel model = new DefaultTableModel(null, headers);
                 DefaultTableModel model2 = new DefaultTableModel(null, headers2);
                 try{
                     java.sql.Connection con = bdd.ConnectBD.getConnectionToDB();
+                    
                     for(Patient p : ConnectBD.getListePatientFromService("Cardiologie", con)){
-                        model.addRow(p.getPatientForPatientList());
+                        Object [] row = {p, p.getLocalisation()};
+                        model.addRow( row );
                         con.close();
                     }
                     for(Patient p : ConnectBD.getListeConsultationsByidPH(idPH)){
@@ -406,13 +410,27 @@ public class PraticienPage extends javax.swing.JFrame {
     private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
         if(evt.getClickCount() == 2){
             JTable target = (JTable) evt.getSource();
+            
             int row = target.getSelectedRow();
-            JOptionPane.showMessageDialog(null, table.getValueAt(row, 4));
+            if (row != -1 ){
+                new PatientDMPage( (Patient) table.getValueAt(row, 0), PraticienPage.this).setVisible(true);
+                this.setVisible(false);
+            }
+                
         }
     }//GEN-LAST:event_tableMouseClicked
 
     private void tableConsultationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableConsultationMouseClicked
-        // TODO add your handling code here:
+        if(evt.getClickCount() == 2){
+            JTable target = (JTable) evt.getSource();
+            
+            int row = target.getSelectedRow();
+            if (row != -1 ){
+                new PatientDMPage( (Patient) table.getValueAt(row, 0), PraticienPage.this).setVisible(true);
+                this.setVisible(false);
+            }
+                
+        }
     }//GEN-LAST:event_tableConsultationMouseClicked
 
     /**

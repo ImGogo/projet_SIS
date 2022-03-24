@@ -121,20 +121,56 @@ public class ConnectBD {
         con.close();
     }
     
-    public static void insertVisite(Visite v, boolean entree) throws Exception{
-        
+    public static void insertVisite(Visite v) throws Exception{
+        Date d = new Date();
         Connection con = getConnectionToDB();
-        PreparedStatement pstmt = con.prepareStatement(
-            "INSERT INTO DM (IPP, nom, prenom, dateNaissance) VALUE (?,?,?,?)");
         
-//        pstmt.setInt(1, Integer.parseInt( p.getIpp() ));
-//        pstmt.setString(2, p.getNom());
-//        pstmt.setString(3, p.getPrenom() );
-//        pstmt.setDate(4, new java.sql.Date(new SimpleDateFormat("dd / MM / yyyy").parse(p.getDateDeNaissance().toString()).getTime()));
-//        
-//        pstmt.executeUpdate();
-//
-//        con.close();
+        PreparedStatement pstmt  = con.prepareStatement(
+                "UPDATE `DM` SET dateSortie = ?, observation = ?, lettreSortie = ? WHERE idDM = " + v.getId());
+        
+        pstmt.setTimestamp(1, new java.sql.Timestamp(new SimpleDateFormat("dd / MM / yyyy HH:mm").parse(d.getDateHeure()).getTime()));
+        pstmt.setString(2, v.getObservation());
+        pstmt.setString(3, v.getLettreSortie());
+        
+        pstmt.executeUpdate();
+        
+        for(Prestation p: v.getPrestations()){
+            insertPrestation(p, v.getId(), con);
+        }
+        
+        for(Prescription p: v.getPrescriptions()){
+            insertPrescription(p, v.getId(), con);
+        }
+
+        con.close();
+    }
+    
+    public static void insertPrestation(Prestation p, String id, Connection con) throws Exception{
+        PreparedStatement pstmt = con.prepareStatement(
+            "INSERT INTO prestation (idDM, typePrestation, service, observations) VALUE (?,?,?,?)");
+        
+        pstmt.setString(1, id);
+        pstmt.setString(2, p.getPrestation());
+        pstmt.setString(3, p.getService().name());
+        pstmt.setString(4, p.getObservations());
+        
+        pstmt.executeUpdate();
+        pstmt.close();
+    }
+    
+    public static void insertPrescription(Prescription p, String id, Connection con) throws Exception{
+        PreparedStatement pstmt = con.prepareStatement(
+            "INSERT INTO prescription (idDM, medicament, dateDebut, dateFin, posologie, dosage) VALUE (?,?,?,?,?,?)");
+        
+        pstmt.setString(1, id);
+        pstmt.setString(2, p.getMedicament());
+        pstmt.setTimestamp(3, new java.sql.Timestamp(new SimpleDateFormat("dd / MM / yyyy HH:mm").parse(p.getDateDebut().getDateHeure()).getTime()));
+        pstmt.setTimestamp(4, new java.sql.Timestamp(new SimpleDateFormat("dd / MM / yyyy HH:mm").parse(p.getDateFin().getDateHeure()).getTime()));
+        pstmt.setString(5, p.getPosologie());
+        pstmt.setString(6, p.getDose());
+        
+        pstmt.executeUpdate();
+        pstmt.close();
     }
     
     public static void insertMigration(String type, String ipp, Service source, Service arrivee, Connection con) throws Exception{
@@ -169,8 +205,7 @@ public class ConnectBD {
         pstmt.setString(1, ipp);
         pstmt.execute();
         pstmt.close();
-    }
-    
+    } 
     
     public static void insertLocalisation(String ipp, Localisation localisation) throws Exception{
         Connection con = getConnectionToDB();
@@ -282,7 +317,7 @@ public class ConnectBD {
         String query = 
         "SELECT patient.* " + 
         "FROM patient INNER JOIN migration ON migration.IPP = patient.IPP " +
-        "WHERE hebergement = 0  AND serviceArrivee = \"" + service + "\" ";
+        "WHERE hebergement = 0 AND serviceArrivee = \"" + service + "\" ";
         
         st = con.createStatement();
         rs = st.executeQuery(query);
@@ -339,7 +374,7 @@ public class ConnectBD {
         Statement st;
         ResultSet rs;
         String query = 
-        "SELECT nom, prenom, dateEntree, patient.ipp " + 
+        "SELECT nom, prenom, dateEntree, patient.ipp, idDM " + 
         "FROM `DM` INNER JOIN patient on patient.IPP = DM.IPP " +
         "WHERE type = \"Consultation\" AND lettreSortie IS NULL AND idPH = \"" + idPH + "\" " +
         "ORDER BY dateEntree ASC;";
@@ -350,11 +385,14 @@ public class ConnectBD {
             String ipp = rs.getString("patient.IPP");
             String nom = rs.getString("nom");
             String prenom = rs.getString("prenom");
+            String id = rs.getString("idDM");
 //            java.sql.Date dateNaissance = rs.getDate("dateNaissance");
 //            Sexe sexe = Sexe.valueOf( rs.getString("sexe"));
             // utilisation de la date de naissance pour stocker la date de la consultation
             Date dateEntree = new Date( rs.getTimestamp("dateEntree") ); 
-            listePatients.add( new Patient(ipp, nom, prenom, dateEntree));
+            Patient p = new Patient(ipp, nom, prenom, dateEntree);
+            p.setIdDM(id);
+            listePatients.add( p );
         }
         
         terminateConnexion(con, st, rs);

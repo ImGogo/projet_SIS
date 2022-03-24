@@ -13,7 +13,7 @@ import java.util.List;
  * @author Go
  */
 public class Visite {
-    String numeroSejour, IPP, idPh, motif, observation, nomService, type, id, nomPh;
+    String numeroSejour, IPP, idPh, motif, observation, nomService, type, id, nomPh, lettreSortie;
     Date dateEntree, dateSortie;
     List<Prescription> prescriptions;
     List<Prestation> prestations;
@@ -137,6 +137,10 @@ public class Visite {
     public String getNumeroSejour() {
         return numeroSejour;
     }
+    
+    public void addObservation(String observation) {
+        this.observation = observation;
+    }
 
     public String getIPP() {
         return IPP;
@@ -152,5 +156,25 @@ public class Visite {
 
     public String getNomService() {
         return nomService;
+    }
+    
+    public void setId(String id){
+        this.id = id;
+    }
+    
+    public String getId(){
+        return this.id;
+    }
+
+    public void setDateSortie(Date dateSortie) {
+        this.dateSortie = dateSortie;
+    }
+    
+    public void setLettreSortie(String lettreSortie){
+        this.lettreSortie = lettreSortie;
+    }
+    
+    public String getLettreSortie(){
+        return this.lettreSortie;
     }
 }

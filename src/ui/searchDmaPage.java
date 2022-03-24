@@ -7,11 +7,6 @@ package ui;
 
 import bdd.ConnectBD;
 import fc.TextValidator;
-import java.awt.Color;
-import java.awt.geom.RoundRectangle2D;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.SwingWorker;
 
@@ -308,7 +303,11 @@ public class searchDmaPage extends javax.swing.JFrame {
                 fc.Patient result = ConnectBD.getPatientByNomPrenomDateNaissance(p);
                 try {
                     if ( result == null) {
-                        System.out.println("non trouve");
+                        java.awt.EventQueue.invokeLater(new Runnable() {
+                            public void run() {
+                                new PopupPatientNonTrouve().setVisible(true);
+                            }
+                        });
                     } else {
                         java.awt.EventQueue.invokeLater(new Runnable() {
                             public void run() {

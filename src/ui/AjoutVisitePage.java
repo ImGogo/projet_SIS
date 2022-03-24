@@ -22,12 +22,10 @@ import javax.swing.table.DefaultTableModel;
  * @author Go
  */
 public class AjoutVisitePage extends javax.swing.JFrame {
-    private String idDM = "1";
-    private String ipp = "123456";
+    private String idDM;
+    private String ipp;
     private Visite visite = null;
     private Personnel personnel;
-    private String nomPH = "NOM Prenom";
-    private String service = "Cardiologie";
     /**
      * Creates new form SecretaireAdminPage
      */
@@ -147,6 +145,7 @@ public class AjoutVisitePage extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        lblErreur = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -532,6 +531,11 @@ public class AjoutVisitePage extends javax.swing.JFrame {
             }
         });
 
+        lblErreur.setBackground(new java.awt.Color(255, 255, 255));
+        lblErreur.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        lblErreur.setForeground(new java.awt.Color(255, 255, 255));
+        lblErreur.setText("VEUILLEZ ENTRER UNE OBSERVATION");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -577,6 +581,10 @@ public class AjoutVisitePage extends javax.swing.JFrame {
                                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(scrollPanePrestation))))
                         .addGap(0, 121, Short.MAX_VALUE))))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(344, 344, 344)
+                .addComponent(lblErreur)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -618,9 +626,11 @@ public class AjoutVisitePage extends javax.swing.JFrame {
                             .addComponent(jButton1))))
                 .addGap(18, 18, 18)
                 .addComponent(scrollPanePrestation, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
+                .addGap(18, 18, 18)
+                .addComponent(lblErreur)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(jButton3)
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         scrollPane.setViewportView(jPanel3);
@@ -727,7 +737,17 @@ public class AjoutVisitePage extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        if (this.txtObservations.getText().isEmpty()){
+            this.lblErreur.setForeground(Color.RED);
+        } else {
+            visite.addObservation(this.txtObservations.getText());
+            visite.setLettreSortie("out");
+            try {
+                ConnectBD.insertVisite(visite);
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
@@ -800,6 +820,7 @@ public class AjoutVisitePage extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JLabel lblDate;
+    private javax.swing.JLabel lblErreur;
     private javax.swing.JLabel lblHeure;
     private javax.swing.JLabel lblHeureConsultation;
     private javax.swing.JLabel lblMotif;
