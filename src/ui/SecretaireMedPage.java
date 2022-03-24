@@ -236,7 +236,7 @@ public class SecretaireMedPage extends javax.swing.JFrame {
     private void createDmaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createDmaBtnActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new creerDmPage().setVisible(true);
+                new creerDmPage(null, null, null).setVisible(true);
             }
         });
     }//GEN-LAST:event_createDmaBtnActionPerformed

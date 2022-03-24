@@ -5,6 +5,7 @@
  */
 package ui;
 
+import bdd.ConnectBD;
 import fc.Look;
 import fc.Service;
 import java.awt.Font;
@@ -16,7 +17,7 @@ import javax.swing.DefaultComboBoxModel;
  */
 public class PopupDemandeMigration extends javax.swing.JFrame {
     fc.Patient patient = null;
-    fc.Service service = null;
+    fc.Service origine = null;
     /**
      * Creates new form PopupCreationPatientReussite
      */
@@ -33,17 +34,16 @@ public class PopupDemandeMigration extends javax.swing.JFrame {
         this.pack();
     }
     
-     public PopupDemandeMigration(fc.Patient patient, fc.Service service) {
+     public PopupDemandeMigration(fc.Patient patient, fc.Service origine) {
         
         this.patient = patient;
         initComponents();
         setLocationRelativeTo(null);
-        this.service = service;
-        cboService.setModel( new DefaultComboBoxModel<>(Service.values(this.service)));
+        this.origine = origine;
+        cboService.setModel( new DefaultComboBoxModel<>(Service.values(this.origine)));
         Look.setComboBoxScrollBar(cboService);
         this.lblPatient.setText(patient.getNomPrenomAndIpp());
-        this.lblService.setText(service.toString());
-        this.service = service;
+        this.lblService.setText(origine.toString());
         this.pack();
     }
 
@@ -234,13 +234,20 @@ public class PopupDemandeMigration extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if(cbxHebergement.isSelected()) {
+        String type;
+        try{
+            if(cbxHebergement.isSelected()) {
+                type = "1";
+            } else {
+                type = "0";
+            }
+            ConnectBD.insertMigration(type, patient.getIpp(), origine, (Service) this.cboService.getSelectedItem());
             new PopupDemandeMigrationReussite().setVisible(true);
             this.dispose();
-        } else {
-            new PopupDemandeMigrationReussite().setVisible(true);
-            this.dispose();
+        } catch (Exception e){
+            
         }
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void cbxHebergementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxHebergementActionPerformed

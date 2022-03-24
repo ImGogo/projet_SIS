@@ -124,8 +124,13 @@ public class PopupAjouterPatientUrgence extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         fc.Patient p = Patient.generateAnonymousPatient();
-        PopupFactory.createPopupDemandeMigration(p, Service.Urgences);
-        this.dispose();
+        try {
+            ConnectBD.insertPatientAnonyme(p);
+            PopupFactory.createPopupDemandeMigration(p, Service.Urgences);
+            this.dispose();
+        } catch (Exception e) {
+            PopupFactory.createPopupErreurConnexion();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

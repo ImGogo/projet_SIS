@@ -3,7 +3,7 @@ package fc;
 public enum Sexe {
     F("Femme"), // femme
     H("Homme"), // homme
-    I("Inconnu"); // inconnu
+    I("Inconnu");
     
     private final String val;
     
@@ -19,7 +19,7 @@ public enum Sexe {
         switch(s){
             case "Femme": return Sexe.F;
             case "Homme": return Sexe.H;
-            default: return Sexe.I;
+            default: return Sexe.F;
         }
     }
     

@@ -27,6 +27,14 @@ public class Localisation {
         this.coteLit = coteLit;
     }
     
+    public Localisation(Service serviceOrigine) {
+        this.serviceOrigine = serviceOrigine;
+    }
+    
+    public Service getServiceOrigine() {
+        return this.serviceOrigine;
+    }
+    
     public int getNumChambre(){
         return this.numChambre;
     }

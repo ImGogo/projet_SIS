@@ -73,6 +73,38 @@ public class ConnectBD {
         con.close();
     }
     
+    public static void insertPatientAnonyme(Patient p) throws Exception{
+        
+        Connection con = getConnectionToDB();
+        PreparedStatement pstmt = con.prepareStatement(
+            "INSERT INTO patient (IPP, nom, prenom, dateNaissance) VALUE (?,?,?,?)");
+        
+        pstmt.setInt(1, Integer.parseInt( p.getIpp() ));
+        pstmt.setString(2, p.getNom());
+        pstmt.setString(3, p.getPrenom() );
+        pstmt.setDate(4, new java.sql.Date(new SimpleDateFormat("dd / MM / yyyy").parse(p.getDateDeNaissance().toString()).getTime()));
+        
+        pstmt.executeUpdate();
+
+        con.close();
+    }
+    
+    public static void insertVisite(Visite v, boolean entree) throws Exception{
+        
+        Connection con = getConnectionToDB();
+        PreparedStatement pstmt = con.prepareStatement(
+            "INSERT INTO DM (IPP, nom, prenom, dateNaissance) VALUE (?,?,?,?)");
+        
+//        pstmt.setInt(1, Integer.parseInt( p.getIpp() ));
+//        pstmt.setString(2, p.getNom());
+//        pstmt.setString(3, p.getPrenom() );
+//        pstmt.setDate(4, new java.sql.Date(new SimpleDateFormat("dd / MM / yyyy").parse(p.getDateDeNaissance().toString()).getTime()));
+//        
+//        pstmt.executeUpdate();
+//
+//        con.close();
+    }
+    
     public static void insertMigration(String type, String ipp, Service source, Service arrivee) throws Exception{
         Connection con = getConnectionToDB();
         PreparedStatement pstmt = con.prepareStatement(
@@ -207,10 +239,11 @@ public class ConnectBD {
         Statement st;
         ResultSet rs;
         String query = 
-        "SELECT patient.* " + 
+        "SELECT patient.*, serviceArrivee " + 
         "FROM patient INNER JOIN migration ON migration.IPP = patient.IPP " +
         "WHERE hebergement = 0 AND serviceArrivee = \"" + service + "\" ";
         
+        System.out.println(query);
         st = con.createStatement();
         rs = st.executeQuery(query);
         while (rs.next()) {
@@ -219,7 +252,11 @@ public class ConnectBD {
             String prenom = rs.getString("prenom");
             Date dateNaissance =  new Date( rs.getDate("dateNaissance") );
             Sexe sexe = Sexe.valueOf( rs.getString("sexe"));
-            listePatients.add( new Patient(ipp, nom, prenom, dateNaissance, sexe));
+            String serviceArrivee = rs.getString("serviceArrivee");
+            
+            Patient p = new Patient(ipp, nom, prenom, dateNaissance, sexe);
+            p.setLocalisation( new Localisation(Service.valueOf( serviceArrivee )));
+            listePatients.add(p);
         }
         
         terminateConnexion(st, rs);
@@ -607,3 +644,4 @@ public class ConnectBD {
         return null;
     }
 }
+

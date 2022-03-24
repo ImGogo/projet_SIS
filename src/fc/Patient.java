@@ -166,4 +166,8 @@ public class Patient {
         p.setIpp( p.generateIPP() );
         return p;
     }
+    
+    public void setLocalisation(Localisation localisation) {
+        this.localisation = localisation;
+    }
 }
