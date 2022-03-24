@@ -47,12 +47,13 @@ public class PopupChoixChambre extends javax.swing.JFrame {
      public PopupChoixChambre(JFrame main, Service serviceGeographique, Service serviceOrigine, String ipp) {
         
         this.main = main;
-        initComponents();
-        setLocationRelativeTo(null);
-        cboCoteLit.setModel( new DefaultComboBoxModel<>(CoteLit.values()));
         this.serviceGeographique = serviceGeographique;
         this.serviceOrigine = serviceOrigine;
         this.ipp = ipp;
+        
+        initComponents();
+        setLocationRelativeTo(null);
+        cboCoteLit.setModel( new DefaultComboBoxModel<>(CoteLit.values()));
         Look.setComboBoxScrollBar(cboCoteLit);
         this.pack();
     }
@@ -202,9 +203,10 @@ public class PopupChoixChambre extends javax.swing.JFrame {
         if(TextValidator.allFieldsAreFilled(jPanel1)){
             String numChambre = this.fldNumChambre.getText();
             CoteLit coteLit = CoteLit.valueOf( this.cboCoteLit.getSelectedItem().toString() );
-            Localisation localisation = new Localisation(numChambre, coteLit);
+            Localisation localisation = new Localisation(Integer.parseInt(numChambre), coteLit, serviceOrigine, serviceGeographique);
+          
             try {
-                ConnectBD.insertLocalisation(serviceOrigine, serviceGeographique, ipp, localisation);
+                ConnectBD.insertLocalisation(ipp, localisation);
                 PopupFactory.createPopupCreationPatientReussite();
                 if( main instanceof SecretaireMedPage_1){
                     ConnectBD.removeMigration(ipp);

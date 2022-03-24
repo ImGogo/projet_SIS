@@ -64,7 +64,7 @@ public class PopupFactory {
     public static void createPopupChoixChambre(JFrame main, Service serviceGeographique, Service serviceOrigine, String ipp) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PopupChoixChambre().setVisible(true);
+                new PopupChoixChambre(main, serviceGeographique, serviceOrigine, ipp).setVisible(true);
             }
         });
     }

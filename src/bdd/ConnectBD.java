@@ -172,7 +172,7 @@ public class ConnectBD {
     }
     
     
-    public static void insertLocalisation(Service serviceOrigine, Service serviceGeographique, String ipp, Localisation localisation) throws Exception{
+    public static void insertLocalisation(String ipp, Localisation localisation) throws Exception{
         Connection con = getConnectionToDB();
         PreparedStatement pstmt = con.prepareStatement(
             "INSERT INTO localisation (IPP, numChambre, coteLit, serviceGeographique, serviceOrigine) VALUE (?,?,?,?,?)");
@@ -180,8 +180,8 @@ public class ConnectBD {
         pstmt.setInt(1, Integer.parseInt( ipp ));
         pstmt.setInt(2, localisation.getNumChambre() );
         pstmt.setString(3, localisation.getCoteLit().toString() );
-        pstmt.setString(4, serviceGeographique.toString());
-        pstmt.setString(5, serviceOrigine.toString());
+        pstmt.setString(4, localisation.getServiceGeographique().toString());
+        pstmt.setString(5, localisation.getServiceOrigine().toString());
         pstmt.executeUpdate();
 
         pstmt.close();

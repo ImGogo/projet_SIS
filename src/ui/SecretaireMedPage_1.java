@@ -622,7 +622,8 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
             
             if( row != -1 ){
                 Patient p = (Patient) tableHebergement.getValueAt(row, 0);
-                PopupFactory.createPopupChoixChambre(this, this.personnel.getService(), this.personnel.getService(), p.getIpp());
+                Service origine = Service.valueOf( (String) tableHebergement.getValueAt(row, 1) );
+                PopupFactory.createPopupChoixChambre(this, this.personnel.getService(), origine, p.getIpp());
             }
         }
     }//GEN-LAST:event_tableHebergementMouseClicked

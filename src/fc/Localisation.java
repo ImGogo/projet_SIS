@@ -46,6 +46,10 @@ public class Localisation {
         return coteLit;
     }
 
+    public Service getServiceGeographique() {
+        return serviceGeographique;
+    }
+
     @Override
     public String toString() {
         return String.format("%03d", numChambre) + coteLit.toString() + "-" + serviceGeographique.getVal();
