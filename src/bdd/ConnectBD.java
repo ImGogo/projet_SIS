@@ -282,7 +282,7 @@ public class ConnectBD {
         String query = 
         "SELECT patient.* " + 
         "FROM patient INNER JOIN migration ON migration.IPP = patient.IPP " +
-        "WHERE hebergement = 0 AND serviceArrivee = \"" + service + "\" ";
+        "WHERE hebergement = 0  AND serviceArrivee = \"" + service + "\" ";
         
         st = con.createStatement();
         rs = st.executeQuery(query);
@@ -350,8 +350,8 @@ public class ConnectBD {
             String ipp = rs.getString("patient.IPP");
             String nom = rs.getString("nom");
             String prenom = rs.getString("prenom");
-            java.sql.Date dateNaissance = rs.getDate("dateNaissance");
-            Sexe sexe = Sexe.valueOf( rs.getString("sexe"));
+//            java.sql.Date dateNaissance = rs.getDate("dateNaissance");
+//            Sexe sexe = Sexe.valueOf( rs.getString("sexe"));
             // utilisation de la date de naissance pour stocker la date de la consultation
             Date dateEntree = new Date( rs.getTimestamp("dateEntree") ); 
             listePatients.add( new Patient(ipp, nom, prenom, dateEntree));

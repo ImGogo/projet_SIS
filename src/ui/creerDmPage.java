@@ -45,6 +45,7 @@ public class creerDmPage extends javax.swing.JFrame {
         Look.setComboBoxScrollBar(cboMedecin);
         Look.setComboBoxScrollBar(cboType);
         Look.setComboBoxScrollBar(cboCoteLit);
+        
         cboCoteLit.setModel( new DefaultComboBoxModel<>(CoteLit.values()));
         
         this.nameLb.setText( personnel.getNom().toUpperCase() + " " + personnel.getPrenom().substring(0, 1).toUpperCase() + personnel.getPrenom().substring(1));
@@ -323,8 +324,13 @@ public class creerDmPage extends javax.swing.JFrame {
         cboType.setBackground(new java.awt.Color(255, 255, 255));
         cboType.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
         cboType.setForeground(new java.awt.Color(31, 58, 105));
-        cboType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Consultation", "Hospitalisation" }));
+        cboType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hospitalisation", "Consultation" }));
         cboType.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 58, 105), 2, true));
+        cboType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboTypeActionPerformed(evt);
+            }
+        });
 
         txtMotif.setBackground(new java.awt.Color(255, 255, 255));
         txtMotif.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
@@ -620,34 +626,44 @@ public class creerDmPage extends javax.swing.JFrame {
     }//GEN-LAST:event_txtMinuteActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
-        if ( !TextValidator.allFieldsAreFilled(jPanel3) || !TextValidator.isValidDate(this.dayTxt.getText()+this.monthTxt.getText()+this.yearTxt.getText())){
+        if(this.cboType.getSelectedItem().toString().equals("Consultation")){
+            if( this.txtMotif.getText().isEmpty() || !TextValidator.isValidDate(this.dayTxt.getText()+this.monthTxt.getText()+this.yearTxt.getText()) ) {
+                lblErreur.setForeground( Color.RED );
+                return;
+            }
+        } else if ( !TextValidator.allFieldsAreFilled(jPanel3) || !TextValidator.isValidDate(this.dayTxt.getText()+this.monthTxt.getText()+this.yearTxt.getText())){
             lblErreur.setForeground( Color.RED );
-        } else {
-            try {
-                ConnectBD.insertDM(
-                        patient.getNumSejour(),
-                        this.cboType.getSelectedItem().toString(),
-                        ((Medecin) this.cboMedecin.getSelectedItem()).getId(),
-                        new fc.Date(),
-                        patient.getIpp(),
-                        this.txtMotif.getText(),
-                        personnel.getService().toString()
-                );
+            return;
+        } 
+        
+        try {
+            ConnectBD.insertDM(
+                    patient.getNumSejour(),
+                    this.cboType.getSelectedItem().toString(),
+                    ((Medecin) this.cboMedecin.getSelectedItem()).getId(),
+                    new fc.Date(),
+                    patient.getIpp(),
+                    this.txtMotif.getText(),
+                    personnel.getService().toString()
+            );
+            
+            if( this.cboType.getSelectedItem().toString().equals("Hospitalisation")) {
                 String numChambre = this.fldNumChambre.getText();
-                
+
                 CoteLit coteLit = CoteLit.valueOf( this.cboCoteLit.getSelectedItem().toString() );
                 Localisation localisation = new Localisation(Integer.parseInt(numChambre), coteLit, personnel.getService(), personnel.getService());
-           
+
                 ConnectBD.insertLocalisation(patient.getIpp(), localisation);
-                ConnectBD.removeMigration(patient.getIpp());
-                
-                ((SecretaireMedPage_1) main).refreshTables();
-                PopupFactory.createPopupCreationPatientReussite(main ,this);
-            } catch (Exception ex) {
-                PopupFactory.createPopupErreurConnexion();
             }
+            
+            ConnectBD.removeMigration(patient.getIpp());
+
+            ((SecretaireMedPage_1) main).refreshTables();
+            PopupFactory.createPopupCreationPatientReussite(main ,this);
+        } catch (Exception ex) {
+            PopupFactory.createPopupErreurConnexion();
         }
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void txtMinuteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMinuteKeyTyped
@@ -665,6 +681,16 @@ public class creerDmPage extends javax.swing.JFrame {
     private void fldNumChambreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fldNumChambreKeyTyped
         TextValidator.consumeNonIntegers(evt, 3, 999);
     }//GEN-LAST:event_fldNumChambreKeyTyped
+
+    private void cboTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboTypeActionPerformed
+        if(this.cboType.getSelectedItem().toString().equals("Consultation")){
+            this.fldNumChambre.setEnabled(false);
+            this.cboCoteLit.setEnabled(false);
+        } else {
+            this.fldNumChambre.setEnabled(true);
+            this.cboCoteLit.setEnabled(true);
+        }
+    }//GEN-LAST:event_cboTypeActionPerformed
 
     /**
      * @param args the command line arguments

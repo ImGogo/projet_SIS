@@ -12,54 +12,32 @@ import fc.Patient;
 import fc.Personnel;
 import fc.Prescription;
 import fc.Prestation;
+import fc.Service;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.MouseInfo;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.geom.RoundRectangle2D;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.KeyStroke;
-import javax.swing.SwingWorker;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.plaf.basic.BasicScrollBarUI;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
 
 /**
  *
  * @author Go
  */
 public class AjoutVisitePage extends javax.swing.JFrame {
-    private final String idDM = "1";
-    private final String ipp = "123456";
-    private Visite visite;
-    private Patient patient;
+    private String idDM = "1";
+    private String ipp = "123456";
+    private Visite visite = null;
+    private Personnel personnel;
     private String nomPH = "NOM Prenom";
     private String service = "Cardiologie";
     /**
      * Creates new form SecretaireAdminPage
      */
-    public AjoutVisitePage() {
+    public AjoutVisitePage(JFrame main, Personnel personnel, String idDM, String ipp) {
         initComponents();
         setLocationRelativeTo(null);
+        
+        this.ipp = ipp;
+        this.idDM = idDM;
+        this.personnel = personnel;
         
         initLabels();
         Look.setScrollBar(scrollPane);
@@ -68,16 +46,28 @@ public class AjoutVisitePage extends javax.swing.JFrame {
         Look.setScrollBar(scrollPanePrestation);
         Look.setTableLook(prestationTable);
         Look.setTableLook(prescriptionTable);
-        visite = new Visite();
+        
     }
     
     public final void initLabels(){
-        fc.Date d = new fc.Date();
         
-        this.lblPraticien.setText( this.nomPH );
-        this.lblService.setText( this.service );
-        this.lblDate.setText( d.toString() );
-        this.lblHeure.setText( d.getHeureMinute() );
+        
+        this.lblPraticien.setText( personnel.toString() );
+        this.lblService.setText( personnel.getService().toString() );
+        this.nameLb.setText( personnel.toString() );
+        this.serviceLb.setText( personnel.getService().toString() );
+        
+        try {
+            this.visite = ConnectBD.getVisiteByIdDm(idDM);
+            this.lblTypeVisite.setText( visite.getType() );
+            this.portalLb.setText( visite.getType().toUpperCase() );
+            fc.Date d = visite.getDateEntree();
+            this.lblDate.setText( d.toString() );
+            this.lblHeure.setText( d.getHeureMinute() );
+            this.lblMotif.setText( visite.getMotif() );
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
     
     public void addPrescription(Prescription p){
@@ -156,6 +146,7 @@ public class AjoutVisitePage extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -263,12 +254,13 @@ public class AjoutVisitePage extends javax.swing.JFrame {
                 .addComponent(profilePictLb1)
                 .addGap(30, 30, 30)
                 .addComponent(portalLb)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 678, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 510, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addComponent(profilePictLb1))
@@ -530,6 +522,16 @@ public class AjoutVisitePage extends javax.swing.JFrame {
             }
         });
 
+        jButton3.setBackground(new java.awt.Color(31, 58, 105));
+        jButton3.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        jButton3.setForeground(new java.awt.Color(255, 255, 255));
+        jButton3.setText("CLORE CE DOSSIER MEDICAL");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -539,31 +541,15 @@ public class AjoutVisitePage extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(profilePictLb3)
+                        .addGap(12, 12, 12)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblTypeVisite, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(73, 73, 73)
-                                .addComponent(lblMotif)
-                                .addGap(0, 2038, Short.MAX_VALUE))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblTypeVisite, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addGap(331, 331, 331)
-                                        .addComponent(lblHeureConsultation)))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addGap(331, 331, 331)
+                                .addComponent(lblHeureConsultation)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(profilePictLb6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(scrollPanePrescription)
-                                    .addComponent(scrollPanePrestation)))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(profilePictLb5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -575,8 +561,22 @@ public class AjoutVisitePage extends javax.swing.JFrame {
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel4)
                                     .addComponent(scrollPaneObs, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel6))))
-                        .addGap(0, 1210, Short.MAX_VALUE))))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblMotif))
+                                    .addComponent(scrollPanePrescription)))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(profilePictLb6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(scrollPanePrestation))))
+                        .addGap(0, 121, Short.MAX_VALUE))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -591,10 +591,10 @@ public class AjoutVisitePage extends javax.swing.JFrame {
                 .addGap(13, 13, 13)
                 .addComponent(lblHeureConsultation)
                 .addGap(16, 16, 16)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblMotif)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(lblMotif))
+                .addGap(27, 27, 27)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scrollPaneObs, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -608,7 +608,7 @@ public class AjoutVisitePage extends javax.swing.JFrame {
                             .addComponent(jButton2))))
                 .addGap(30, 30, 30)
                 .addComponent(scrollPanePrescription, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addGap(31, 31, 31)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(profilePictLb6)
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -618,7 +618,9 @@ public class AjoutVisitePage extends javax.swing.JFrame {
                             .addComponent(jButton1))))
                 .addGap(18, 18, 18)
                 .addComponent(scrollPanePrestation, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34))
+                .addGap(35, 35, 35)
+                .addComponent(jButton3)
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         scrollPane.setViewportView(jPanel3);
@@ -724,6 +726,10 @@ public class AjoutVisitePage extends javax.swing.JFrame {
         new PopupAjoutPrescription(this).setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -770,7 +776,7 @@ public class AjoutVisitePage extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AjoutVisitePage().setVisible(true);
+                new AjoutVisitePage(null, new Personnel("Dr. DUFOUR", "Marie", Service.Cardiologie), "10", "343530093").setVisible(true);
             }
         });
     }
@@ -780,6 +786,7 @@ public class AjoutVisitePage extends javax.swing.JFrame {
     private javax.swing.JPanel homePanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;

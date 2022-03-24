@@ -35,7 +35,9 @@ public class PraticienPage extends javax.swing.JFrame {
         table.setBorder(null);
         
         Look.setTableLook(table);
+        Look.setScrollBar(jScrollPane1);
         Look.setTableLook(this.tableConsultation);
+        Look.setScrollBar(jScrollPane3);
         DefaultTableCellRenderer head_render = new DefaultTableCellRenderer(); 
         
         head_render.setBackground(new Color(255,255,255));
