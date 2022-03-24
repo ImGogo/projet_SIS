@@ -637,9 +637,9 @@ public class creerDmPage extends javax.swing.JFrame {
                 String numChambre = this.fldNumChambre.getText();
                 
                 CoteLit coteLit = CoteLit.valueOf( this.cboCoteLit.getSelectedItem().toString() );
-                Localisation localisation = new Localisation(numChambre, coteLit);
+                Localisation localisation = new Localisation(Integer.parseInt(numChambre), coteLit, personnel.getService(), personnel.getService());
            
-                ConnectBD.insertLocalisation(personnel.getService(), personnel.getService(), patient.getIpp(), localisation);
+                ConnectBD.insertLocalisation(patient.getIpp(), localisation);
                 ConnectBD.removeMigration(patient.getIpp());
                 
                 ((SecretaireMedPage_1) main).refreshTables();
