@@ -16,6 +16,7 @@ public class Patient {
     private String email;
     private String nss;
     private Adresse adresse;
+    private String numSejour;
 
     public Patient(String ipp, String nom, String prenom, Date dateDeNaissance) {
         this.ipp = ipp;
@@ -169,5 +170,13 @@ public class Patient {
     
     public void setLocalisation(Localisation localisation) {
         this.localisation = localisation;
+    }
+    
+    public void setNumSejour(String numSejour){
+        this.numSejour = numSejour;
+    }
+    
+    public String getNumSejour(){
+        return this.numSejour;
     }
 }

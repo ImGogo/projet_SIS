@@ -5,21 +5,33 @@
  */
 package ui;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author Go
  */
 public class PopupCreationPatientReussite extends javax.swing.JFrame {
-
+    private JFrame main = null;
+    private JFrame parent = null;
     /**
      * Creates new form PopupCreationPatientReussite
      */
     public PopupCreationPatientReussite() {
         
-//        this.setContentPane(new RoundedPanel());
         initComponents();
         setLocationRelativeTo(null);
         this.setAlwaysOnTop(true);
+    }
+    
+    public PopupCreationPatientReussite(JFrame main, JFrame parent) {
+        
+        initComponents();
+        setLocationRelativeTo(null);
+        this.setAlwaysOnTop(true);
+        
+        this.main = main;
+        this.parent = parent;
     }
 
     /**
@@ -94,6 +106,10 @@ public class PopupCreationPatientReussite extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if(this.main != null){
+            parent.dispose();
+            main.setVisible(true);
+        }
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 

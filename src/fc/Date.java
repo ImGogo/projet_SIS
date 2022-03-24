@@ -9,15 +9,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.Period;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 
 /**
  *
  * @author Go
  */
 public class Date {
-    int jour, mois , annee;
+    int jour, mois, annee;
     int heure, minute;
     
     public Date(){
@@ -50,8 +48,6 @@ public class Date {
         
     }
     
-    
-    
     public Date(int jour, int mois, int annee) {
         this.jour = jour;
         this.mois = mois;
@@ -62,6 +58,14 @@ public class Date {
         this.jour = Integer.parseInt(jour);
         this.mois = Integer.parseInt(mois);
         this.annee = Integer.parseInt(annee);
+    }
+    
+    public Date(String jour, String mois, String annee, String heure, String minute) {
+        this.jour = Integer.parseInt(jour);
+        this.mois = Integer.parseInt(mois);
+        this.annee = Integer.parseInt(annee);
+        this.heure = Integer.parseInt(heure);
+        this.minute = Integer.parseInt(minute);
     }
 
     @Override

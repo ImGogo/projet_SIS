@@ -36,6 +36,7 @@ public class PopupChoixChambre extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         this.setAlwaysOnTop(true);
+        
         cboCoteLit.setModel( new DefaultComboBoxModel<>(CoteLit.values()));
         this.ipp = "1";
         Look.setComboBoxScrollBar(cboCoteLit);

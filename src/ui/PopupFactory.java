@@ -22,6 +22,14 @@ public class PopupFactory {
         });
     }
     
+    public static void createPopupCreationPatientReussite(JFrame main, JFrame parent){
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new PopupCreationPatientReussite(main, parent).setVisible(true);
+            }
+        });
+    }
+    
     public static void createPopupValider(ui.creerDmaPage main){
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -54,7 +62,11 @@ public class PopupFactory {
     }
     
     public static void createPopupChoixChambre(JFrame main, Service serviceGeographique, Service serviceOrigine, String ipp) {
-        
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new PopupChoixChambre().setVisible(true);
+            }
+        });
     }
     
     public static void createPopupPatientExistant(){

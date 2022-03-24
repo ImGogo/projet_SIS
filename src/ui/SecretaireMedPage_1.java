@@ -33,6 +33,7 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
     ArrayList<Patient> listePatientSortie;
     ArrayList<Hebergement> listeHebergement;
     Personnel personnel;
+    Patient selectedPatient;
     /**
      * Creates new form SecretaireAdminPage
      */
@@ -632,23 +633,33 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
             int row = target.getSelectedRow();
             if( row  != -1){
                 Patient p = (Patient) tableSortie.getValueAt(row, 0);
-                PopupFactory.createPopupChoixChambre(this, this.personnel.getService(), this.personnel.getService(), p.getIpp());
-                this.setVisible(false);
+                PopupFactory.createPopupDemandeMigration(p, personnel.getService());
             }
         }
     }//GEN-LAST:event_tableSortieMouseClicked
-
+    
+    public void fireCreatePopupChoixChambre() {
+        this.setVisible(true);
+        PopupFactory.createPopupChoixChambre(this, personnel.getService(),  personnel.getService(), selectedPatient.getIpp());
+    }
+    
     private void tableEntreesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableEntreesMouseClicked
         if(evt.getClickCount() == 2){
             JTable target = (JTable) evt.getSource();
             int row = target.getSelectedRow();
             if( row != -1){
-                Patient patientSelect = (Patient) tableEntrees.getValueAt(row, 0);
-                PopupFactory.createPopupChoixChambre(this, personnel.getService(),  personnel.getService(), patientSelect.getIpp());
+                selectedPatient = (Patient) tableEntrees.getValueAt(row, 0);
+                try {
+                    new creerDmPage(selectedPatient, personnel, this).setVisible(true);
+                    this.setVisible(false);
+                } catch (Exception e){
+                    
+                }
+                
             }
         }
     }//GEN-LAST:event_tableEntreesMouseClicked
-    PENSER NUMSEJOUR
+    
     /**
      * @param args the command line arguments
      */

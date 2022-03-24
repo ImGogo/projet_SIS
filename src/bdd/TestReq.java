@@ -5,11 +5,6 @@
  */
 package bdd;
 
-import fc.CoteLit;
-import fc.Prescription;
-import fc.Service;
-import fc.TypePersonnel;
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

@@ -89,6 +89,24 @@ public class ConnectBD {
         con.close();
     }
     
+    public static void insertDM(String numSejour, String type, int idPH, Date dateEntree, String ipp, String motif, String service) throws Exception {
+        Connection con = getConnectionToDB();
+        PreparedStatement pstmt = con.prepareStatement(
+            "INSERT INTO DM (numSejour, ipp, dateEntree, idPH, motif, type, service) VALUE (?,?,?,?,?,?,?)");
+        
+        pstmt.setInt(1, Integer.parseInt( numSejour ));
+        pstmt.setInt(2, Integer.parseInt( ipp ));
+        pstmt.setTimestamp(3, new java.sql.Timestamp(new SimpleDateFormat("dd / MM / yyyy HH:mm").parse(dateEntree.getDateHeure()).getTime()));
+        pstmt.setInt(4, idPH );
+        pstmt.setString(5, motif);
+        pstmt.setString(6, type);
+        pstmt.setString(7, service);
+        
+        pstmt.executeUpdate();
+
+        con.close();
+    }
+    
     public static void insertVisite(Visite v, boolean entree) throws Exception{
         
         Connection con = getConnectionToDB();
@@ -239,11 +257,10 @@ public class ConnectBD {
         Statement st;
         ResultSet rs;
         String query = 
-        "SELECT patient.*, serviceArrivee " + 
+        "SELECT patient.* " + 
         "FROM patient INNER JOIN migration ON migration.IPP = patient.IPP " +
         "WHERE hebergement = 0 AND serviceArrivee = \"" + service + "\" ";
         
-        System.out.println(query);
         st = con.createStatement();
         rs = st.executeQuery(query);
         while (rs.next()) {
@@ -252,10 +269,9 @@ public class ConnectBD {
             String prenom = rs.getString("prenom");
             Date dateNaissance =  new Date( rs.getDate("dateNaissance") );
             Sexe sexe = Sexe.valueOf( rs.getString("sexe"));
-            String serviceArrivee = rs.getString("serviceArrivee");
             
             Patient p = new Patient(ipp, nom, prenom, dateNaissance, sexe);
-            p.setLocalisation( new Localisation(Service.valueOf( serviceArrivee )));
+            p.setNumSejour( getNumSejourFromIpp(ipp, con) );
             listePatients.add(p);
         }
         
@@ -614,6 +630,33 @@ public class ConnectBD {
         terminateConnexion(con, st, rs);
         
         return liste;
+    }
+    
+    public static String getNumSejourFromIpp(String ipp, Connection con) throws Exception{
+        
+        Statement st;
+        ResultSet rs;
+        
+        String query = 
+        "SELECT max(numSejour) " +
+        "FROM DM " +
+        "WHERE ipp = " + ipp + ";";
+        
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+        String numSejour = "1";
+        
+        if(rs.next()){
+            String tmp = rs.getString("max(numSejour)");
+            if( tmp != null) {
+                numSejour = Integer.toString( Integer.parseInt(tmp) + 1 );
+            }
+        }
+        
+        rs.close();
+        st.close();
+        
+        return numSejour;
     }
     
     private static void terminateConnexion(Connection con, Statement st, ResultSet rs){

@@ -6,12 +6,17 @@
 package ui;
 
 import bdd.ConnectBD;
+import fc.CoteLit;
+import fc.Localisation;
 import fc.Look;
 import fc.Medecin;
 import fc.Patient;
 import fc.Personnel;
 import fc.Service;
+import fc.TextValidator;
 import java.awt.Color;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 
@@ -39,10 +44,12 @@ public class creerDmPage extends javax.swing.JFrame {
         fillServiceComboBox();
         Look.setComboBoxScrollBar(cboMedecin);
         Look.setComboBoxScrollBar(cboType);
+        Look.setComboBoxScrollBar(cboCoteLit);
+        cboCoteLit.setModel( new DefaultComboBoxModel<>(CoteLit.values()));
         
         this.nameLb.setText( personnel.getNom().toUpperCase() + " " + personnel.getPrenom().substring(0, 1).toUpperCase() + personnel.getPrenom().substring(1));
         this.serviceLb.setText( personnel.getService().toString());
-        
+        this.lblNumSejour.setText(patient.getNumSejour());
     }
     
     private void fillServiceComboBox() {
@@ -110,6 +117,12 @@ public class creerDmPage extends javax.swing.JFrame {
         txtHeure = new javax.swing.JTextField();
         txtMinute = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        lblNumSejour = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        cboCoteLit = new javax.swing.JComboBox<>();
+        fldNumChambre = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -327,7 +340,7 @@ public class creerDmPage extends javax.swing.JFrame {
         lblErreur.setBackground(new java.awt.Color(255, 255, 255));
         lblErreur.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         lblErreur.setForeground(new java.awt.Color(255, 255, 255));
-        lblErreur.setText("Veuillez renseigner un motif");
+        lblErreur.setText("Veuillez remplir l'intégralité des champs");
 
         jLabel9.setBackground(new java.awt.Color(255, 255, 255));
         jLabel9.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
@@ -353,10 +366,60 @@ public class creerDmPage extends javax.swing.JFrame {
                 txtMinuteActionPerformed(evt);
             }
         });
+        txtMinute.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtMinuteKeyTyped(evt);
+            }
+        });
 
         jLabel10.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(31, 58, 105));
         jLabel10.setText(":");
+
+        jLabel5.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel5.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(31, 58, 105));
+        jLabel5.setText("N° de séjour :");
+
+        lblNumSejour.setBackground(new java.awt.Color(255, 255, 255));
+        lblNumSejour.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        lblNumSejour.setForeground(new java.awt.Color(116, 116, 116));
+
+        jLabel12.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel12.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(31, 58, 105));
+        jLabel12.setText("Côté lit:");
+
+        cboCoteLit.setBackground(new java.awt.Color(255, 255, 255));
+        cboCoteLit.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        cboCoteLit.setForeground(new java.awt.Color(116, 116, 116));
+        cboCoteLit.setBorder(javax.swing.BorderFactory.createMatteBorder(2, 2, 2, 2, new java.awt.Color(31, 58, 105)));
+        cboCoteLit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboCoteLitActionPerformed(evt);
+            }
+        });
+
+        fldNumChambre.setBackground(new java.awt.Color(255, 255, 255));
+        fldNumChambre.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        fldNumChambre.setForeground(new java.awt.Color(116, 116, 116));
+        fldNumChambre.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(31, 28, 105), 2, true));
+        fldNumChambre.setMargin(new java.awt.Insets(5, 5, 5, 5));
+        fldNumChambre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fldNumChambreActionPerformed(evt);
+            }
+        });
+        fldNumChambre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                fldNumChambreKeyTyped(evt);
+            }
+        });
+
+        jLabel6.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel6.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(31, 58, 105));
+        jLabel6.setText("Chambre :");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -364,50 +427,72 @@ public class creerDmPage extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(76, 76, 76)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dayTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(monthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(yearTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtHeure, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtMinute, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblNumSejour)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtMotif))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(cboType, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(cboMedecin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(52, 52, 52))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dayTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(monthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(yearTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtHeure, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtMinute, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtMotif))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(cboType, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(cboMedecin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(52, 52, 52))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblErreur)
-                .addGap(261, 261, 261))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fldNumChambre, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32)
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboCoteLit, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(245, 245, 245))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(lblErreur)
+                        .addGap(179, 179, 179))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(70, 70, 70)
+                .addGap(26, 26, 26)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(lblNumSejour))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(dayTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -429,15 +514,21 @@ public class creerDmPage extends javax.swing.JFrame {
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cboMedecin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(69, 69, 69)
+                .addGap(41, 41, 41)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(txtMotif, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(41, 41, 41)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fldNumChambre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel12)
+                    .addComponent(cboCoteLit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(lblErreur)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addComponent(jButton1)
-                .addGap(56, 56, 56))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout HomePanelLayout = new javax.swing.GroupLayout(HomePanel);
@@ -454,9 +545,9 @@ public class creerDmPage extends javax.swing.JFrame {
             HomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(HomePanelLayout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(68, 68, 68)
+                .addGap(30, 30, 30)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addContainerGap(81, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -500,7 +591,8 @@ public class creerDmPage extends javax.swing.JFrame {
     }//GEN-LAST:event_profilePictLb1MouseEntered
 
     private void profilePictLb1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profilePictLb1ActionPerformed
-        dispose();
+        
+        this.dispose();
     }//GEN-LAST:event_profilePictLb1ActionPerformed
 
     private void monthTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_monthTxtActionPerformed
@@ -520,7 +612,7 @@ public class creerDmPage extends javax.swing.JFrame {
     }//GEN-LAST:event_txtMotifActionPerformed
 
     private void txtHeureKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHeureKeyTyped
-        // TODO add your handling code here:
+        TextValidator.consumeNonIntegers(evt, 2, 24);
     }//GEN-LAST:event_txtHeureKeyTyped
 
     private void txtMinuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMinuteActionPerformed
@@ -528,15 +620,51 @@ public class creerDmPage extends javax.swing.JFrame {
     }//GEN-LAST:event_txtMinuteActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if ( txtMotif.getText().isEmpty() ){
+
+        if ( !TextValidator.allFieldsAreFilled(jPanel3) || !TextValidator.isValidDate(this.dayTxt.getText()+this.monthTxt.getText()+this.yearTxt.getText())){
             lblErreur.setForeground( Color.RED );
-        } else if( cboMedecin.getSelectedItem() == null){
-            
         } else {
-            System.out.println((Medecin)this.cboMedecin.getSelectedItem());
-            System.out.println(this.txtMotif.getText());
+            try {
+                ConnectBD.insertDM(
+                        patient.getNumSejour(),
+                        this.cboType.getSelectedItem().toString(),
+                        ((Medecin) this.cboMedecin.getSelectedItem()).getId(),
+                        new fc.Date(),
+                        patient.getIpp(),
+                        this.txtMotif.getText(),
+                        personnel.getService().toString()
+                );
+                String numChambre = this.fldNumChambre.getText();
+                
+                CoteLit coteLit = CoteLit.valueOf( this.cboCoteLit.getSelectedItem().toString() );
+                Localisation localisation = new Localisation(numChambre, coteLit);
+           
+                ConnectBD.insertLocalisation(personnel.getService(), personnel.getService(), patient.getIpp(), localisation);
+                ConnectBD.removeMigration(patient.getIpp());
+                
+                ((SecretaireMedPage_1) main).refreshTables();
+                PopupFactory.createPopupCreationPatientReussite(main ,this);
+            } catch (Exception ex) {
+                PopupFactory.createPopupErreurConnexion();
+            }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void txtMinuteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMinuteKeyTyped
+        TextValidator.consumeNonIntegers(evt, 2, 60);
+    }//GEN-LAST:event_txtMinuteKeyTyped
+
+    private void cboCoteLitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboCoteLitActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cboCoteLitActionPerformed
+
+    private void fldNumChambreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fldNumChambreActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fldNumChambreActionPerformed
+
+    private void fldNumChambreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fldNumChambreKeyTyped
+        TextValidator.consumeNonIntegers(evt, 3, 999);
+    }//GEN-LAST:event_fldNumChambreKeyTyped
 
     /**
      * @param args the command line arguments
@@ -578,16 +706,21 @@ public class creerDmPage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel HomePanel;
+    private javax.swing.JComboBox<CoteLit> cboCoteLit;
     private javax.swing.JComboBox<Medecin> cboMedecin;
     private javax.swing.JComboBox<String> cboType;
     private javax.swing.JTextField dayTxt;
     private javax.swing.JButton disconnectBtn;
+    private javax.swing.JTextField fldNumChambre;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -595,6 +728,7 @@ public class creerDmPage extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lblErreur;
+    private javax.swing.JLabel lblNumSejour;
     private javax.swing.JTextField monthTxt;
     private javax.swing.JLabel nameLb;
     private javax.swing.JLabel portalLb;
