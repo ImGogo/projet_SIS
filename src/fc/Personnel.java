@@ -12,6 +12,7 @@ package fc;
 public class Personnel {
     String nom, prenom;
     Service service;
+    String id;
     public Personnel(String nom, String prenom) {
         this.nom = nom;
         this.prenom = prenom;
@@ -22,7 +23,17 @@ public class Personnel {
         this.prenom = prenom;
         this.service = service;
     }
+    
+    public Personnel(String nom, String prenom, Service service, String id) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.service = service;
+        this.id = id;
+    }
 
+    public String getId(){
+        return this.id;
+    }
     @Override
     public String toString() {
         return nom.toUpperCase() + " " + prenom.substring(0,1).toUpperCase() + prenom.substring(1).toLowerCase();

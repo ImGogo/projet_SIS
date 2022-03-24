@@ -14,11 +14,7 @@ import fc.Service;
 import java.awt.Color;
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
@@ -118,7 +114,7 @@ public class SecretaireMedPage_1 extends javax.swing.JFrame {
             String headers[] = {"Patient", "Localisation"};
             DefaultTableModel model = new DefaultTableModel(null, headers);
             
-            listePatientService = ConnectBD.getListePatientFromService("Cardiologie", con);
+            listePatientService = ConnectBD.getListePatientFromService(personnel.getService().name(), con);
             for(Patient p : listePatientService) {
                 Object [] row = {p, p.getLocalisation()};
                 model.addRow( row );

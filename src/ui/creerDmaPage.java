@@ -820,7 +820,7 @@ public class creerDmaPage extends javax.swing.JFrame {
             
             if(patientExists()){
                 PopupFactory.createPopupPatientExistant();
-                main.setVisible(rootPaneCheckingEnabled);
+                main.setVisible(true);
                 this.dispose();
             } else {
                 PopupFactory.createPopupValider(this);

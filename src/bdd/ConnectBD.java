@@ -238,12 +238,13 @@ public class ConnectBD {
         while (rs.next()) {
             String dbPass = rs.getString("mdp");
             if(fc.PasswordHandler.isEqual(inPass, dbPass)){
+                
+                Service service = Service.valueOf( rs.getString("service") );
                 if(getTableName(id).equals("secretaire")){
-                    Service service = Service.valueOf( rs.getString("service") );
                     personnel = new Personnel(rs.getString("nom"), rs.getString("prenom"), service);
                 } else {
-                    personnel = new Personnel(rs.getString("nom"), rs.getString("prenom"));
-                }
+                    personnel = new Personnel(rs.getString("nom"), rs.getString("prenom"), service, rs.getString("id"));
+                } 
             }
         }
         

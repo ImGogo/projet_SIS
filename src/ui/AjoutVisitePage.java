@@ -26,6 +26,7 @@ public class AjoutVisitePage extends javax.swing.JFrame {
     private String ipp;
     private Visite visite = null;
     private Personnel personnel;
+    private JFrame main;
     /**
      * Creates new form SecretaireAdminPage
      */
@@ -36,6 +37,7 @@ public class AjoutVisitePage extends javax.swing.JFrame {
         this.ipp = ipp;
         this.idDM = idDM;
         this.personnel = personnel;
+        this.main = main;
         
         initLabels();
         Look.setScrollBar(scrollPane);
@@ -701,6 +703,10 @@ public class AjoutVisitePage extends javax.swing.JFrame {
     }//GEN-LAST:event_profilePictLb1MouseEntered
 
     private void profilePictLb1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profilePictLb1ActionPerformed
+        if(main instanceof PraticienPage){
+            ((PraticienPage) main).initTable();
+        }
+        main.setVisible(true);
         dispose();
     }//GEN-LAST:event_profilePictLb1ActionPerformed
 

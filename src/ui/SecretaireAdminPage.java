@@ -8,16 +8,6 @@ package ui;
 import fc.Personnel;
 import fc.Service;
 import java.awt.Color;
-import java.awt.MouseInfo;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.geom.RoundRectangle2D;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.KeyStroke;
 
 /**
  *

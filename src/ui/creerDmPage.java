@@ -597,7 +597,7 @@ public class creerDmPage extends javax.swing.JFrame {
     }//GEN-LAST:event_profilePictLb1MouseEntered
 
     private void profilePictLb1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profilePictLb1ActionPerformed
-        
+        main.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_profilePictLb1ActionPerformed
 

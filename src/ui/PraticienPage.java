@@ -9,6 +9,7 @@ import bdd.ConnectBD;
 import fc.Look;
 import fc.Patient;
 import fc.Personnel;
+import fc.Service;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -26,20 +27,26 @@ import javax.swing.table.DefaultTableModel;
  * @author Go
  */
 public class PraticienPage extends javax.swing.JFrame {
-    private String idPH = "31";
+    private String idPH;
+    private Personnel p;
     
     /**
      * Creates new form SecretaireAdminPage
      */
-    public PraticienPage() {
+    public PraticienPage(Personnel p) {
         initComponents();
         setLocationRelativeTo(null);
         table.setBorder(null);
         
+        this.p = p;
+        
         Look.setTableLook(table);
         Look.setScrollBar(jScrollPane1);
-        Look.setTableLook(this.tableConsultation);
+        Look.setTableLook(tableConsultation);
         Look.setScrollBar(jScrollPane3);
+        
+        this.nameLb.setText(p.getNom().toUpperCase() + " " + p.getPrenom());
+        this.serviceLb.setText(p.getService().toString());
         DefaultTableCellRenderer head_render = new DefaultTableCellRenderer(); 
         
         head_render.setBackground(new Color(255,255,255));
@@ -354,7 +361,7 @@ public class PraticienPage extends javax.swing.JFrame {
                         model.addRow( row );
                         con.close();
                     }
-                    for(Patient p : ConnectBD.getListeConsultationsByidPH(idPH)){
+                    for(Patient p : ConnectBD.getListeConsultationsByidPH(p.getId())){
                         model2.addRow( p.getPatientForConsultationList() );
                     }
                     table.setModel(model);
@@ -369,14 +376,6 @@ public class PraticienPage extends javax.swing.JFrame {
             @Override
             protected void done() 
             {
-                try {
-                    String id = get().toString();
-                    
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ExecutionException ex) {
-                    Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
-                }
                 popup.setVisible(false);
             }
         };
@@ -426,7 +425,10 @@ public class PraticienPage extends javax.swing.JFrame {
             
             int row = target.getSelectedRow();
             if (row != -1 ){
-                new PatientDMPage( (Patient) table.getValueAt(row, 0), PraticienPage.this).setVisible(true);
+                String ipp = (String )tableConsultation.getValueAt(row, 4); 
+                String id =(String) tableConsultation.getValueAt(row, 5);
+                
+                new AjoutVisitePage(this, this.p, id, ipp).setVisible(true);
                 this.setVisible(false);
             }
                 
@@ -459,42 +461,12 @@ public class PraticienPage extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(PraticienPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
+        
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PraticienPage().setVisible(true);
+                new PraticienPage(new Personnel("Test", "Test", Service.Cardiologie)).setVisible(true);
             }
         });
     }
